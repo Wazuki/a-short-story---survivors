@@ -1,8 +1,7 @@
-[gd_scene load_steps=10 format=4 uid="uid://c756hxrovtgc5"]
+[gd_scene load_steps=9 format=4 uid="uid://c756hxrovtgc5"]
 
 [ext_resource type="Texture2D" uid="uid://iv7uou23q7dy" path="res://sprites/SciFi_DungeonTileset16x16_0x72Like.png" id="1_mlf6e"]
 [ext_resource type="PackedScene" uid="uid://bivcmhjsdsyy2" path="res://prefabs/player.tscn" id="2_po0ka"]
-[ext_resource type="PackedScene" uid="uid://di0ipr2avn3g4" path="res://prefabs/enemy.tscn" id="4_mixcd"]
 [ext_resource type="Theme" uid="uid://b1mqo7cbopwv1" path="res://maintheme.tres" id="6_e7dbq"]
 [ext_resource type="PackedScene" uid="uid://clb7lgpy4ix3o" path="res://prefabs/level_up_ui.tscn" id="6_kdryc"]
 [ext_resource type="PackedScene" uid="uid://cqph8d6325sto" path="res://prefabs/main_menu.tscn" id="7_6e45b"]
@@ -263,18 +262,6 @@ curve = SubResource("Curve2D_mixcd")
 unique_name_in_owner = true
 position = Vector2(682, 379)
 
-[node name="Enemy" parent="." instance=ExtResource("4_mixcd")]
-position = Vector2(806, 691)
-
-[node name="Enemy2" parent="." instance=ExtResource("4_mixcd")]
-position = Vector2(804, 457)
-
-[node name="Enemy3" parent="." instance=ExtResource("4_mixcd")]
-position = Vector2(1133, 441)
-
-[node name="Enemy4" parent="." instance=ExtResource("4_mixcd")]
-position = Vector2(1076, 714)
-
 [node name="EnemySpawnTimer" type="Timer" parent="."]
 unique_name_in_owner = true
 wait_time = 0.5
@@ -285,8 +272,8 @@ autostart = true
 [node name="PlayerInfoContainer" type="PanelContainer" parent="UI"]
 offset_left = 10.0
 offset_top = 10.0
-offset_right = 155.0
-offset_bottom = 182.0
+offset_right = 171.0
+offset_bottom = 212.0
 
 [node name="Panel" type="Panel" parent="UI/PlayerInfoContainer"]
 layout_mode = 2
@@ -306,7 +293,8 @@ theme_override_constants/margin_bottom = 8
 [node name="PlayerInfoText" type="RichTextLabel" parent="UI/PlayerInfoContainer/Panel/MarginContainer"]
 process_mode = 3
 layout_mode = 2
-text = "Level: 1
+bbcode_enabled = true
+text = "[p align=\"center\"]Level: 1
 XP: 1
 TNL: 10
 HP: 100"

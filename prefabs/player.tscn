@@ -1,29 +1,16 @@
-[gd_scene load_steps=14 format=3 uid="uid://bivcmhjsdsyy2"]
+[gd_scene load_steps=13 format=3 uid="uid://bivcmhjsdsyy2"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_py671"]
 [ext_resource type="SpriteFrames" uid="uid://bjaasfha8sw2h" path="res://sprites/frames/tank_sprite_frames.tres" id="2_a2ns6"]
 [ext_resource type="PackedScene" uid="uid://cs8qatetudify" path="res://prefabs/energy_sword.tscn" id="3_1yiyo"]
 [ext_resource type="AudioStream" uid="uid://h0ln3dnbqsfw" path="res://sounds/BLLTRico_Ricochet Metallic_04.wav" id="3_lihhf"]
+[ext_resource type="PackedScene" uid="uid://remf34e7bwbp" path="res://healthbar.tscn" id="3_ydbw3"]
 [ext_resource type="PackedScene" uid="uid://dtoe3hkqfi5gw" path="res://prefabs/spreadfire.tscn" id="4_lteaw"]
 [ext_resource type="AudioStream" uid="uid://b505215xfthyh" path="res://sounds/High-Tech Gadget Activate.wav" id="4_rg687"]
 [ext_resource type="AudioStream" uid="uid://db3xpb1qqhqnv" path="res://sounds/Holographic Interaction-32.wav" id="5_g5n55"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lihhf"]
 size = Vector2(10, 15)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i3pqv"]
-bg_color = Color(0.152941, 0.168627, 0.188235, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hqtel"]
-bg_color = Color(0.388235, 0.8, 0.372549, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ejt68"]
 
@@ -43,28 +30,17 @@ shape = SubResource("RectangleShape2D_lihhf")
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(3.5, 3.5)
 
-[node name="HealthBar" type="ProgressBar" parent="."]
-unique_name_in_owner = true
-process_mode = 3
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -12.0
-offset_top = -24.0
-offset_right = 12.0
-offset_bottom = -20.0
-grow_horizontal = 2
-theme_override_styles/background = SubResource("StyleBoxFlat_i3pqv")
-theme_override_styles/fill = SubResource("StyleBoxFlat_hqtel")
-value = 100.0
-show_percentage = false
-
 [node name="Spritesheet" type="AnimatedSprite2D" parent="."]
 unique_name_in_owner = true
 texture_filter = 1
 sprite_frames = ExtResource("2_a2ns6")
 animation = &"idle"
 autoplay = "idle"
+
+[node name="HealthBar" parent="." instance=ExtResource("3_ydbw3")]
+unique_name_in_owner = true
+offset_top = -26.0
+offset_bottom = -19.0
 
 [node name="HurtBox" type="Area2D" parent="."]
 unique_name_in_owner = true

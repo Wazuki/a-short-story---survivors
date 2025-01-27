@@ -9,7 +9,7 @@ var speed
 var experience: float
 var level
 var xp_to_next_level
-var enemy_damage_rate = 5.0
+# var enemy_damage_rate = 5.0
 
 @onready var player_info_text : RichTextLabel = get_node("/root/GameScene/UI/PlayerInfoContainer/Panel/MarginContainer/PlayerInfoText")
 
@@ -29,7 +29,7 @@ func _physics_process(delta: float) -> void:
 		move_and_slide() # Automatically moves character based on velocity. Applies delta automatically
 		
 		# If the player is moving, play the walk animation. Otherwise, play the idle animation. Flip the sprite based on direction.
-		
+
 		if velocity.length() > 0:
 			%Spritesheet.animation = "walk"
 			if velocity.x < 0:
@@ -42,7 +42,11 @@ func _physics_process(delta: float) -> void:
 		var overlapping_mobs = %HurtBox.get_overlapping_bodies()
 		
 		if not overlapping_mobs.is_empty():
-			health -= enemy_damage_rate * overlapping_mobs.size() * delta # Deal damage for each mob touching the player times delta so they don't explode
+			var total_damage = 0
+
+			for m in overlapping_mobs: total_damage += m.damage
+
+			health -= total_damage * overlapping_mobs.size() * delta # Deal damage for each mob touching the player times delta so they don't explode
 			%HealthBar.value = health
 			# Firing weapons moved to each weapon function to make them independent of the player.
 			
@@ -114,7 +118,7 @@ func update_player_info_text() -> void:
 
 func _on_spritesheet_animation_finished() -> void:
 	# Tell the UI we're dead
-	print_debug("Our animation is " + %Spritesheet.animation)
+	# print_debug("Our animation is " + %Spritesheet.animation)
 	if %Spritesheet.animation == "death":
 		print("Player died!")
 		emit_signal("_health_depleted")

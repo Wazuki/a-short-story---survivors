@@ -57,9 +57,11 @@ func set_value(v: int) -> void:
 	
 	#Set the XP to different sprites based on how much XP they have
 	if xp_value >= HUGE_XP_THREADHOLD:
+		print_debug("Huge XP")
 		%Spritesheet.frame = 2
 		scale = Vector2.ONE * 2
 	elif xp_value >= LARGE_XP_THRESHOLD:
+		print_debug("Large XP")
 		%Spritesheet.frame = 1
 		scale = Vector2.ONE * 1.5
 	else: %Spritesheet.frame = 0

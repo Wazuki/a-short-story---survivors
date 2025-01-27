@@ -10,6 +10,9 @@ extends Node
 @onready var enemy_spawn_timer: Timer = get_node("/root/GameScene/EnemySpawnTimer")
 
 @onready var game_over_UI: PanelContainer = get_node("/root/GameScene/UI/GameOverUI")
+
+var total_enemies_spawned: int = 0
+
 var enemies: Array[Node2D]
 var spawned_xp: Array[Node2D]
 
@@ -32,11 +35,21 @@ func _ready() -> void:
 
 
 func spawn_enemy() -> void:
-	# print_debug("spawn enemy")
+	total_enemies_spawned += 1
+
+	# Spawn a basic enemy. Every 20 enemies, spawn an elite. Every 50, spawn a boss.
 	mob_spawn_point.progress_ratio = randf()
 	var new_enemy = preload("res://prefabs/enemy.tscn").instantiate()
 	new_enemy.global_position = mob_spawn_point.global_position 
 	add_child(new_enemy)
+
+	if total_enemies_spawned % 50 == 0:
+		new_enemy.initialize("boss")
+	elif total_enemies_spawned % 20 == 0:
+		new_enemy.initialize("elite")
+	else:
+		new_enemy.initialize("basic")
+
 	enemies.append(new_enemy)
 	
 func stop_tracking_enemy(e: Node2D) -> void:
@@ -45,17 +58,18 @@ func stop_tracking_enemy(e: Node2D) -> void:
 func stop_tracking_xp_orb(xp: Node2D) -> void:
 	spawned_xp.erase(xp)
 
-func spawn_experience_orb(pos: Vector2) -> void:
+func spawn_experience_orb(pos: Vector2, value: int) -> void:
 	var xp_orb = preload("res://prefabs/experience_orb.tscn").instantiate()
 	call_deferred("add_child", xp_orb)
 	# add_child(xp_orb)
-	xp_orb.initialize(pos, 5) # 10 as a basic "large XP test"
+	xp_orb.initialize(pos, value) # 10 as a basic "large XP test"
 	# xp_orb.global_position = pos
 	# xp_orb.set_value(15) # Basic XP test
 	spawned_xp.append(xp_orb)
 	# print("spawned xp")
 
 func start_game() -> void:
+	total_enemies_spawned = 0
 	player.reset()
 	level_up_UI.reset_weapons()
 	display_level_up()
