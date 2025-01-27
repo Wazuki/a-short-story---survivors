@@ -1,7 +1,7 @@
 [gd_scene load_steps=14 format=3 uid="uid://bivcmhjsdsyy2"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_py671"]
-[ext_resource type="PackedScene" uid="uid://bmlrxncyo4hrg" path="res://prefabs/spritesheet.tscn" id="2_px364"]
+[ext_resource type="SpriteFrames" uid="uid://bjaasfha8sw2h" path="res://sprites/frames/tank_sprite_frames.tres" id="2_a2ns6"]
 [ext_resource type="PackedScene" uid="uid://cs8qatetudify" path="res://prefabs/energy_sword.tscn" id="3_1yiyo"]
 [ext_resource type="AudioStream" uid="uid://h0ln3dnbqsfw" path="res://sounds/BLLTRico_Ricochet Metallic_04.wav" id="3_lihhf"]
 [ext_resource type="PackedScene" uid="uid://dtoe3hkqfi5gw" path="res://prefabs/spreadfire.tscn" id="4_lteaw"]
@@ -10,9 +10,6 @@
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lihhf"]
 size = Vector2(10, 15)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_rg687"]
-size = Vector2(12, 17)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i3pqv"]
 bg_color = Color(0.152941, 0.168627, 0.188235, 1)
@@ -27,6 +24,8 @@ corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ejt68"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_lihhf"]
 radius = 40.0
@@ -44,16 +43,6 @@ shape = SubResource("RectangleShape2D_lihhf")
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(3.5, 3.5)
 
-[node name="HurtBox" type="Area2D" parent="."]
-unique_name_in_owner = true
-collision_layer = 0
-collision_mask = 2
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
-position = Vector2(0, 0.5)
-shape = SubResource("RectangleShape2D_rg687")
-debug_color = Color(0.991963, 0, 0.258549, 0.42)
-
 [node name="HealthBar" type="ProgressBar" parent="."]
 unique_name_in_owner = true
 process_mode = 3
@@ -61,18 +50,32 @@ anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -12.0
-offset_top = -14.0
+offset_top = -24.0
 offset_right = 12.0
-offset_bottom = -10.0
+offset_bottom = -20.0
 grow_horizontal = 2
 theme_override_styles/background = SubResource("StyleBoxFlat_i3pqv")
 theme_override_styles/fill = SubResource("StyleBoxFlat_hqtel")
 value = 100.0
 show_percentage = false
 
-[node name="Spritesheet" parent="." instance=ExtResource("2_px364")]
+[node name="Spritesheet" type="AnimatedSprite2D" parent="."]
 unique_name_in_owner = true
-animation = &"player_idle"
+texture_filter = 1
+sprite_frames = ExtResource("2_a2ns6")
+animation = &"idle"
+autoplay = "idle"
+
+[node name="HurtBox" type="Area2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(-1, 0)
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
+position = Vector2(0, 0.5)
+shape = SubResource("CapsuleShape2D_ejt68")
+debug_color = Color(0.655827, 0.516913, 3.85046e-07, 0.42)
 
 [node name="PickupRadius" type="Area2D" parent="."]
 unique_name_in_owner = true
@@ -123,3 +126,5 @@ volume_db = -10.0
 unique_name_in_owner = true
 stream = ExtResource("5_g5n55")
 volume_db = 10.0
+
+[connection signal="animation_finished" from="Spritesheet" to="." method="_on_spritesheet_animation_finished"]
