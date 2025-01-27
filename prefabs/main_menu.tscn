@@ -1,0 +1,77 @@
+[gd_scene load_steps=3 format=3 uid="uid://cqph8d6325sto"]
+
+[ext_resource type="Theme" uid="uid://b1mqo7cbopwv1" path="res://maintheme.tres" id="1_06t4h"]
+[ext_resource type="Script" path="res://scripts/main_menu.gd" id="1_ypk8c"]
+
+[node name="MainMenu" type="CanvasLayer"]
+script = ExtResource("1_ypk8c")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="Control"]
+custom_minimum_size = Vector2(480, 800)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -240.0
+offset_top = -400.0
+offset_right = 240.0
+offset_bottom = 400.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch_mode = 0
+
+[node name="Panel" type="Panel" parent="Control/AspectRatioContainer"]
+custom_minimum_size = Vector2(480, 400)
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("1_06t4h")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/AspectRatioContainer/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="StartButton" type="Button" parent="Control/AspectRatioContainer/Panel/VBoxContainer"]
+unique_name_in_owner = true
+process_mode = 2
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 72
+text = "COMMENCE"
+
+[node name="OptionsButton" type="Button" parent="Control/AspectRatioContainer/Panel/VBoxContainer"]
+unique_name_in_owner = true
+process_mode = 2
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 72
+text = "PREFERENCES"
+
+[node name="QuitButton" type="Button" parent="Control/AspectRatioContainer/Panel/VBoxContainer"]
+unique_name_in_owner = true
+process_mode = 2
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 72
+text = "WITHDRAW"
+
+[connection signal="pressed" from="Control/AspectRatioContainer/Panel/VBoxContainer/StartButton" to="." method="_on_start_button_pressed"]
+[connection signal="pressed" from="Control/AspectRatioContainer/Panel/VBoxContainer/OptionsButton" to="." method="_on_options_button_pressed"]
+[connection signal="pressed" from="Control/AspectRatioContainer/Panel/VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]

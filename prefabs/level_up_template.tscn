@@ -1,0 +1,85 @@
+[gd_scene load_steps=5 format=3 uid="uid://bjuwjx5n7awgn"]
+
+[ext_resource type="Theme" uid="uid://b1mqo7cbopwv1" path="res://maintheme.tres" id="1_3iuef"]
+[ext_resource type="Script" path="res://scripts/level_up_template.gd" id="2_3cn8x"]
+[ext_resource type="Texture2D" uid="uid://bbkjllemm6t22" path="res://sprites/spreadfire_icon.tres" id="3_3uvxi"]
+[ext_resource type="FontFile" uid="uid://diy1ksnxs4bot" path="res://m5x7.ttf" id="3_rkwwb"]
+
+[node name="LevelUpTemplate" type="Panel"]
+custom_minimum_size = Vector2(350, 800)
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 6
+theme = ExtResource("1_3iuef")
+script = ExtResource("2_3cn8x")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="LevelUpName" type="RichTextLabel" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+texture_filter = 1
+clip_contents = false
+layout_mode = 2
+size_flags_vertical = 3
+theme = ExtResource("1_3iuef")
+theme_type_variation = &"HeaderLarge"
+theme_override_font_sizes/normal_font_size = 72
+bbcode_enabled = true
+text = "Spreadfire"
+scroll_active = false
+
+[node name="WeaponIcon" type="TextureRect" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+texture_filter = 1
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+texture = ExtResource("3_3uvxi")
+expand_mode = 3
+stretch_mode = 4
+
+[node name="LevelInformation" type="RichTextLabel" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+texture_filter = 1
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 4.5
+theme = ExtResource("1_3iuef")
+theme_override_font_sizes/normal_font_size = 48
+bbcode_enabled = true
+text = "Level 1 -> 2
+Damage 1 -> 2
+Projeciles 1 -> 2
+Speed 750"
+
+[node name="LevelUpButton" type="Button" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+process_mode = 2
+texture_filter = 1
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = ExtResource("1_3iuef")
+theme_override_fonts/font = ExtResource("3_rkwwb")
+theme_override_font_sizes/font_size = 48
+text = "ACQUIRE ARMAMENT"
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer/LevelUpButton" to="." method="_on_level_up_button_pressed"]

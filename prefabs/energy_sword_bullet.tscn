@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://dnfrt6fhx85bc"]
+
+[ext_resource type="Script" path="res://scripts/energy_sword_bullet.gd" id="1_3eofn"]
+[ext_resource type="PackedScene" uid="uid://bmlrxncyo4hrg" path="res://prefabs/spritesheet.tscn" id="2_ydo0h"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ylso8"]
+size = Vector2(10, 20)
+
+[node name="Pivot" type="Marker2D"]
+
+[node name="EnergySword" type="Area2D" parent="."]
+position = Vector2(0, -27)
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1_3eofn")
+
+[node name="Spritesheet" parent="EnergySword" instance=ExtResource("2_ydo0h")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EnergySword"]
+position = Vector2(0, 3)
+shape = SubResource("RectangleShape2D_ylso8")
+
+[connection signal="body_entered" from="EnergySword" to="EnergySword" method="_on_body_entered"]

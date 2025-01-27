@@ -1,0 +1,7 @@
+[gd_resource type="AtlasTexture" load_steps=2 format=3 uid="uid://bbkjllemm6t22"]
+
+[ext_resource type="Texture2D" uid="uid://iv7uou23q7dy" path="res://sprites/SciFi_DungeonTileset16x16_0x72Like.png" id="1_ssbnb"]
+
+[resource]
+atlas = ExtResource("1_ssbnb")
+region = Rect2(224, 48, 16, 16)

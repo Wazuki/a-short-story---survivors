@@ -1,0 +1,27 @@
+[gd_scene load_steps=5 format=3 uid="uid://di0ipr2avn3g4"]
+
+[ext_resource type="PackedScene" uid="uid://bmlrxncyo4hrg" path="res://prefabs/spritesheet.tscn" id="1_7k104"]
+[ext_resource type="Script" path="res://scripts/enemy.gd" id="1_secww"]
+[ext_resource type="AudioStream" uid="uid://cp212fsoorkcu" path="res://sounds/LIQImpt_Goo Splatter_09.wav" id="3_qi2p4"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_7k104"]
+radius = 8.0
+
+[node name="Enemy" type="CharacterBody2D"]
+collision_layer = 2
+collision_mask = 3
+script = ExtResource("1_secww")
+
+[node name="Spritesheet" parent="." instance=ExtResource("1_7k104")]
+unique_name_in_owner = true
+animation = &"slime_walk"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+unique_name_in_owner = true
+shape = SubResource("CircleShape2D_7k104")
+
+[node name="DeathSound" type="AudioStreamPlayer2D" parent="."]
+unique_name_in_owner = true
+stream = ExtResource("3_qi2p4")
+
+[connection signal="animation_finished" from="Spritesheet" to="." method="_on_spritesheet_animation_finished"]
