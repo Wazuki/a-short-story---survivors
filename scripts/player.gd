@@ -29,6 +29,7 @@ func _physics_process(delta: float) -> void:
 		move_and_slide() # Automatically moves character based on velocity. Applies delta automatically
 		
 		# If the player is moving, play the walk animation. Otherwise, play the idle animation. Flip the sprite based on direction.
+		
 		if velocity.length() > 0:
 			%Spritesheet.animation = "walk"
 			if velocity.x < 0:
