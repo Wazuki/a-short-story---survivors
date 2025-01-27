@@ -67,4 +67,5 @@ func set_value(v: int) -> void:
 # Once we touch the player, destroy self and give the player our XP
 func _on_body_entered(body: Node2D) -> void:
 	body.gain_experience(xp_value)
+	GameController.stop_tracking_xp_orb(self)
 	queue_free()

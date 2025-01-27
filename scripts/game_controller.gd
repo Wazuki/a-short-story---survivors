@@ -11,6 +11,7 @@ extends Node
 
 @onready var game_over_UI: PanelContainer = get_node("/root/GameScene/UI/GameOverUI")
 var enemies: Array[Node2D]
+var spawned_xp: Array[Node2D]
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -40,15 +41,18 @@ func spawn_enemy() -> void:
 	
 func stop_tracking_enemy(e: Node2D) -> void:
 	enemies.erase(e)
+	
+func stop_tracking_xp_orb(xp: Node2D) -> void:
+	spawned_xp.erase(xp)
 
 func spawn_experience_orb(pos: Vector2) -> void:
 	var xp_orb = preload("res://prefabs/experience_orb.tscn").instantiate()
 	call_deferred("add_child", xp_orb)
 	# add_child(xp_orb)
-	xp_orb.initialize(pos, 5) # 15 as a basic "large XP test"
+	xp_orb.initialize(pos, 5) # 10 as a basic "large XP test"
 	# xp_orb.global_position = pos
 	# xp_orb.set_value(15) # Basic XP test
-	
+	spawned_xp.append(xp_orb)
 	# print("spawned xp")
 
 func start_game() -> void:
@@ -82,7 +86,7 @@ func game_over() -> void:
 
 func restart_game() -> void:
 	# Hide the game over UI and return the player to the main menu.
-	print_debug("restart")
+	# print_debug("restart")
 	game_over_UI.visible = false
 	
 	# Destroy all enemies
@@ -90,7 +94,10 @@ func restart_game() -> void:
 		e.queue_free()
 	enemies.clear()
 	
-	# TODO - maybe destroy experience too lmao
+	# Detroy experience too
+	for xp in spawned_xp:
+		xp.queue_free()
+	spawned_xp.clear()
 	
 	get_node("/root/GameScene/UI/MainMenu").visible = true
 	
