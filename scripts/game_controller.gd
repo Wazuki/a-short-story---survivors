@@ -3,10 +3,12 @@ extends Node
 
 @onready var player = get_node("/root/GameScene/Player")
 @onready var level_up_UI = get_node("/root/GameScene/UI/LevelUpUI")
+@onready var character_select_UI = get_node("/root/GameScene/UI/CharacterSelectUI")
 
 @onready var energy_sword = get_node ("/root/GameScene/Player/Weapons/EnergySword")
 @onready var spreadfire = get_node("/root/GameScene/Player/Weapons/Spreadfire")
 @onready var slam = get_node("/root/GameScene/Player/Weapons/SlamWeaponController")
+@onready var light_blade = get_node("/root/GameScene/Player/Weapons/LightBladeController")
 
 @onready var mob_spawn_point: PathFollow2D = get_node("/root/GameScene/Player/MobSpawnPath/MobSpawnPoint")
 @onready var enemy_spawn_timer: Timer = get_node("/root/GameScene/EnemySpawnTimer")
@@ -15,6 +17,7 @@ extends Node
 
 var total_enemies_spawned: int = 0
 
+var weapons = []
 var enemies: Array[Node2D]
 var spawned_xp: Array[Node2D]
 
@@ -33,6 +36,15 @@ func _ready() -> void:
 	# print_debug(restart_game_button.name)
 	restart_game_button.pressed.connect(restart_game)
 	
+	# Add all weapons to the weapons array
+	weapons.append(energy_sword)
+	weapons.append(spreadfire)
+	weapons.append(slam)
+	weapons.append(light_blade)
+
+	# Initialize the character select UI to properly set the weapons in the Dict
+	character_select_UI.init()
+
 	pause_game()
 
 
@@ -45,6 +57,7 @@ func spawn_enemy() -> void:
 	new_enemy.global_position = mob_spawn_point.global_position 
 	add_child(new_enemy)
 
+	# Initialize the enemy as an elite or boss if the total enemies spawned is a multiple of 20 or 50
 	if total_enemies_spawned % 50 == 0:
 		new_enemy.initialize("boss")
 	elif total_enemies_spawned % 20 == 0:
@@ -70,11 +83,27 @@ func spawn_experience_orb(pos: Vector2, value: int) -> void:
 	spawned_xp.append(xp_orb)
 	# print("spawned xp")
 
+# Reset enemies and weapons, then let the player select a character.
 func start_game() -> void:
 	total_enemies_spawned = 0
-	player.reset()
-	level_up_UI.reset_weapons()
-	display_level_up()
+
+	for w in weapons:
+		w.reset()
+	
+	# display_level_up()
+	# Display the character select screen
+	character_select_UI.visible = true
+
+func select_character(character: Dictionary) -> void:
+	# Hide the select character UI and start the game after setting the player's stats
+	character_select_UI.visible = false
+	player.initialize(character)
+	character["weapon"].level_up() # Don't need to ask the array since we have a ref already.
+	unpause_game()
+	# print_debug("Selected " + character)
+
+
+
 
 func display_level_up() -> void:
 	level_up_UI.show_level_up_screen()

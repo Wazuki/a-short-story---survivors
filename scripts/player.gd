@@ -1,11 +1,13 @@
 extends CharacterBody2D
 
-const STARTING_HEALTH = 150
-const STARTING_SPEED = 300
+# const STARTING_HEALTH = 150
+# const STARTING_SPEED = 300
 const STARTING_TIL_NEXT_LEVEL = 5
 
 var health
 var speed
+var armor: float # Each point of armor reduces damage by 0.1
+
 var experience: float
 var level
 var xp_to_next_level
@@ -15,8 +17,29 @@ var xp_to_next_level
 
 signal _health_depleted
 
-func _ready() -> void:
-	reset()
+# func _ready() -> void:
+	# reset()
+
+func initialize(character: Dictionary) -> void:
+	health = character["health"]
+	speed = character["speed"]
+	armor = character["armor"]
+	%Spritesheet.sprite_frames = character["spritesheet"]
+
+	experience = 0
+	level = 1
+	xp_to_next_level = STARTING_TIL_NEXT_LEVEL
+	# Don't forget to reset the UI!
+	%HealthBar.max_value = health
+	%HealthBar.value = health
+	update_player_info_text()
+
+	%Spritesheet.animation = "idle"
+	%Spritesheet.play()
+
+
+	# weapon = character["weapon"]
+	# print_debug("Set character stats to " + str(character))
 
 func _physics_process(delta: float) -> void:
 	#GetVector() turns movement into 2D direction
@@ -42,11 +65,11 @@ func _physics_process(delta: float) -> void:
 		var overlapping_mobs = %HurtBox.get_overlapping_bodies()
 		
 		if not overlapping_mobs.is_empty():
-			var total_damage = 0
+			var total_damage = 0.0
+			
+			for m in overlapping_mobs: total_damage += clamp((m.damage - (armor / 10)), 0, m.damage) # Clamp the damage to 0 if it's negative
 
-			for m in overlapping_mobs: total_damage += m.damage
-
-			health -= total_damage * overlapping_mobs.size() * delta # Deal damage for each mob touching the player times delta so they don't explode
+			health -= total_damage * delta # Deal damage for each mob touching the player times delta so they don't explode
 			%HealthBar.value = health
 			# Firing weapons moved to each weapon function to make them independent of the player.
 			
@@ -106,20 +129,6 @@ func level_up() -> void:
 	# Display the Level Up UI from the Game Manager
 	GameController.level_up_UI.show_level_up_screen()
 
-func reset() -> void:
-	health = STARTING_HEALTH
-	speed = STARTING_SPEED
-	experience = 0
-	level = 1
-	xp_to_next_level = STARTING_TIL_NEXT_LEVEL
-	
-	# Don't forget to reset the UI!
-	%HealthBar.value = health
-	update_player_info_text()
-
-	%Spritesheet.animation = "idle"
-	%Spritesheet.play()
-	
 func update_player_info_text() -> void:
 	var text = "Level: " + str(level)
 	text += "\nXP: " + str(experience)

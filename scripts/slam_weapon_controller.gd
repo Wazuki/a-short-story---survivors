@@ -55,7 +55,8 @@ func spawn_next_slam() -> void:
 	# Rotate this pivot towards the target, then spawn new weapons
 	# look_at(GameController.player.get_closest_target())
 	if not targeting: 
-		look_at(get_global_mouse_position()) # TESTING MOUSE AIM
+		# look_at(get_global_mouse_position()) # TESTING MOUSE AIM
+		look_at(GameController.player.get_closest_target())
 		targeting = true
 
 	# look_at(get_viewport().get_mouse_position().rotated(rotation))

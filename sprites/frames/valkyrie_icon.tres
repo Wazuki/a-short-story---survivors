@@ -1,0 +1,7 @@
+[gd_resource type="AtlasTexture" load_steps=2 format=3 uid="uid://bguee08c3f17c"]
+
+[ext_resource type="Texture2D" uid="uid://bpx5xi8y3va4f" path="res://sprites/characters/valkyrie.png" id="1_wvp8v"]
+
+[resource]
+atlas = ExtResource("1_wvp8v")
+region = Rect2(18, 18, 22, 30)

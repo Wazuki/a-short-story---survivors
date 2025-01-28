@@ -7,7 +7,6 @@ var xp_value: int
 
 # Booleans
 var is_dead: bool = false
-var death_animation_over: bool = false
 var has_health_bar: bool = false
 
 var player
@@ -37,7 +36,7 @@ const BOSS_ENEMY_STATS = {
 	"xp_value": 30,
 	"scale": Vector2(2, 2)
 }
-
+# TODO - fix enemies leaving crumbs
 func _ready() -> void:
 	player = GameController.player
 	
@@ -86,10 +85,6 @@ func _physics_process(_delta: float) -> void:
 			$Spritesheet.flip_h = false
 
 		move_and_slide()
-		
-	elif death_animation_over:
-		GameController.stop_tracking_enemy(self)
-		queue_free()
 
 func take_damage(dam: float) -> void:
 	health -= dam
@@ -109,5 +104,7 @@ func take_damage(dam: float) -> void:
 		is_dead = true
 
 func _on_spritesheet_animation_finished() -> void:
-	if(is_dead):
-		death_animation_over = true
+	if is_dead:
+		GameController.stop_tracking_enemy(self)
+		# print_debug("Enemy died")
+		queue_free()

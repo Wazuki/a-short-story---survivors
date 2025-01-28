@@ -11,11 +11,6 @@ const LEVEL_UP_SPEED = 1.2
 const LEVEL_UP_LIFETIME = 1.2
 const LEVEL_UP_COOLDOWN = 0.95
 
-#Other Values
-const ICON_SCALE = Vector2(20, 19.893)
-const ICON_OFFSET = Vector2(273, 159)
-const ICON_ROTATION = PI / 2
-const SPRITESHEET_ID = "energy_sword"
 
 var icon: AtlasTexture = preload("res://sprites/frames/energy_sword_icon.tres")
 
@@ -63,20 +58,6 @@ func level_up() -> void:
 	
 	weapon.fire_weapon() # Design this way, the player starts with the cooldown instead of getting a "free shot".
 
-# Required information, in order:
-# name: String, sprite_sheet_ID: String, icon_rotation: float, icon_offset: Vector2, icon_scale: Vector2, info_text: String
-
-# Clean this up, don't need most of it now
-# func get_level_up_info() -> Dictionary:
-#	var info = {
-#		"name" : name,
-#		"spritesheet_ID" : SPRITESHEET_ID,
-#		"icon_rotation" : ICON_ROTATION,
-#		"icon_offset" : ICON_OFFSET,
-#		"icon_scale" : ICON_SCALE,
-#	}
-#	
-#	return info
 
 func get_lifetime() -> float:
 	return max_lifetime

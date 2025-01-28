@@ -1,0 +1,7 @@
+[gd_resource type="AtlasTexture" load_steps=2 format=3 uid="uid://blrx78f1corvf"]
+
+[ext_resource type="Texture2D" uid="uid://cx7x17rr3hc5b" path="res://sprites/effects/light sword sprites.png" id="1_4mays"]
+
+[resource]
+atlas = ExtResource("1_4mays")
+region = Rect2(21, 32, 35, 14)

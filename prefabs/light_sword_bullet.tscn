@@ -1,0 +1,141 @@
+[gd_scene load_steps=19 format=3 uid="uid://bo0obxyme762a"]
+
+[ext_resource type="Script" path="res://scripts/light_sword_bullet.gd" id="1_k7r86"]
+[ext_resource type="Texture2D" uid="uid://cx7x17rr3hc5b" path="res://sprites/effects/light sword sprites.png" id="1_midyq"]
+[ext_resource type="AudioStream" uid="uid://ckp0macab4w4t" path="res://sounds/light blade.wav" id="3_xec01"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g0pxj"]
+atlas = ExtResource("1_midyq")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_35yfm"]
+atlas = ExtResource("1_midyq")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wblkj"]
+atlas = ExtResource("1_midyq")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eovpf"]
+atlas = ExtResource("1_midyq")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_td0d3"]
+atlas = ExtResource("1_midyq")
+region = Rect2(256, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j7i8v"]
+atlas = ExtResource("1_midyq")
+region = Rect2(320, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kvje3"]
+atlas = ExtResource("1_midyq")
+region = Rect2(384, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3adpu"]
+atlas = ExtResource("1_midyq")
+region = Rect2(448, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t4sgk"]
+atlas = ExtResource("1_midyq")
+region = Rect2(512, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4ousq"]
+atlas = ExtResource("1_midyq")
+region = Rect2(576, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1brlr"]
+atlas = ExtResource("1_midyq")
+region = Rect2(640, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fbgn0"]
+atlas = ExtResource("1_midyq")
+region = Rect2(704, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fxc8c"]
+atlas = ExtResource("1_midyq")
+region = Rect2(768, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_e31jg"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g0pxj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_35yfm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wblkj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_eovpf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_td0d3")
+}],
+"loop": false,
+"name": &"slash1",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j7i8v")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kvje3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3adpu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t4sgk")
+}],
+"loop": false,
+"name": &"slash2",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4ousq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1brlr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fbgn0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fxc8c")
+}],
+"loop": false,
+"name": &"slash3",
+"speed": 12.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_u00uc"]
+height = 45.0
+
+[node name="LightSwordBullet" type="Area2D"]
+texture_filter = 1
+position = Vector2(20, 0)
+rotation = -1.5708
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1_k7r86")
+
+[node name="Spritesheet" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_e31jg")
+animation = &"slash1"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 5)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_u00uc")
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_xec01")
+autoplay = true
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="animation_finished" from="Spritesheet" to="." method="_on_spritesheet_animation_finished"]

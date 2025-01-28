@@ -1,10 +1,11 @@
-[gd_scene load_steps=14 format=3 uid="uid://bivcmhjsdsyy2"]
+[gd_scene load_steps=15 format=3 uid="uid://bivcmhjsdsyy2"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_py671"]
 [ext_resource type="SpriteFrames" uid="uid://bjaasfha8sw2h" path="res://sprites/frames/tank_sprite_frames.tres" id="2_a2ns6"]
 [ext_resource type="PackedScene" uid="uid://cs8qatetudify" path="res://prefabs/energy_sword.tscn" id="3_1yiyo"]
 [ext_resource type="AudioStream" uid="uid://h0ln3dnbqsfw" path="res://sounds/BLLTRico_Ricochet Metallic_04.wav" id="3_lihhf"]
-[ext_resource type="PackedScene" uid="uid://remf34e7bwbp" path="res://healthbar.tscn" id="3_ydbw3"]
+[ext_resource type="PackedScene" uid="uid://remf34e7bwbp" path="res://prefabs/healthbar.tscn" id="3_ydbw3"]
+[ext_resource type="PackedScene" uid="uid://b31dds1jg253h" path="res://prefabs/light_blade_controller.tscn" id="4_elqs4"]
 [ext_resource type="PackedScene" uid="uid://dtoe3hkqfi5gw" path="res://prefabs/spreadfire.tscn" id="4_lteaw"]
 [ext_resource type="AudioStream" uid="uid://b505215xfthyh" path="res://sounds/High-Tech Gadget Activate.wav" id="4_rg687"]
 [ext_resource type="AudioStream" uid="uid://db3xpb1qqhqnv" path="res://sounds/Holographic Interaction-32.wav" id="5_g5n55"]
@@ -66,6 +67,8 @@ shape = SubResource("CircleShape2D_lihhf")
 debug_color = Color(1, 0.339264, 0.759845, 0.419608)
 
 [node name="Weapons" type="Node2D" parent="."]
+
+[node name="LightBladeController" parent="Weapons" instance=ExtResource("4_elqs4")]
 
 [node name="EnergySword" parent="Weapons" instance=ExtResource("3_1yiyo")]
 

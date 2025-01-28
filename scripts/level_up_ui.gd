@@ -1,7 +1,5 @@
 extends Control
 
-var weapons =[]
-
 var level_up_container
 
 # Called when the node enters the scene tree for the first time.
@@ -10,19 +8,12 @@ func _ready() -> void:
 	add_child(level_up_container)
 	
 	visible = false
-	weapons.append(GameController.spreadfire)
-	weapons.append(GameController.energy_sword)
-	weapons.append(GameController.slam)
 	
-
-func reset_weapons() -> void:
-	for w in weapons:
-		w.reset()
 
 func show_level_up_screen() -> void:
 	GameController.pause_game()
 	
-	for w in weapons:
+	for w in GameController.weapons:
 		# Get the level up text and the relevant info to initialize the buttons etc
 		var level_up_text = w.get_level_up_text()
 		# var level_up_information = w.get_level_up_info()

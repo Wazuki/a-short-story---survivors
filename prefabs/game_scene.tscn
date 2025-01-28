@@ -1,7 +1,8 @@
-[gd_scene load_steps=9 format=4 uid="uid://c756hxrovtgc5"]
+[gd_scene load_steps=10 format=4 uid="uid://c756hxrovtgc5"]
 
 [ext_resource type="Texture2D" uid="uid://iv7uou23q7dy" path="res://sprites/SciFi_DungeonTileset16x16_0x72Like.png" id="1_mlf6e"]
 [ext_resource type="PackedScene" uid="uid://bivcmhjsdsyy2" path="res://prefabs/player.tscn" id="2_po0ka"]
+[ext_resource type="PackedScene" uid="uid://cfdtpyse3s0tr" path="res://prefabs/character_select_ui.tscn" id="5_navxo"]
 [ext_resource type="Theme" uid="uid://b1mqo7cbopwv1" path="res://maintheme.tres" id="6_e7dbq"]
 [ext_resource type="PackedScene" uid="uid://clb7lgpy4ix3o" path="res://prefabs/level_up_ui.tscn" id="6_kdryc"]
 [ext_resource type="PackedScene" uid="uid://cqph8d6325sto" path="res://prefabs/main_menu.tscn" id="7_6e45b"]
@@ -301,6 +302,9 @@ HP: 100"
 
 [node name="LevelUpUI" parent="UI" instance=ExtResource("6_kdryc")]
 unique_name_in_owner = true
+visible = false
+
+[node name="CharacterSelectUI" parent="UI" instance=ExtResource("5_navxo")]
 visible = false
 
 [node name="MainMenu" parent="UI" instance=ExtResource("7_6e45b")]

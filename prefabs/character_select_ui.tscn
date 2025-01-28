@@ -1,4 +1,12 @@
-[gd_scene format=3 uid="uid://cfdtpyse3s0tr"]
+[gd_scene load_steps=8 format=3 uid="uid://cfdtpyse3s0tr"]
+
+[ext_resource type="Theme" uid="uid://b1mqo7cbopwv1" path="res://maintheme.tres" id="1_3slv1"]
+[ext_resource type="Script" path="res://scripts/character_select_ui.gd" id="1_rvfjh"]
+[ext_resource type="Texture2D" uid="uid://bguee08c3f17c" path="res://sprites/frames/valkyrie_icon.tres" id="2_5ueb4"]
+[ext_resource type="FontFile" uid="uid://diy1ksnxs4bot" path="res://m5x7.ttf" id="3_6pbc1"]
+[ext_resource type="Texture2D" uid="uid://blrx78f1corvf" path="res://sprites/frames/light_sword_icon.tres" id="3_jad05"]
+[ext_resource type="Texture2D" uid="uid://b7y7phnc7opug" path="res://sprites/frames/tank_icon.tres" id="5_elqmm"]
+[ext_resource type="Texture2D" uid="uid://bdm0l4d00vqw7" path="res://sprites/frames/slam_icon.tres" id="7_4yh4v"]
 
 [node name="CharacterSelectUI" type="Control"]
 layout_mode = 3
@@ -7,6 +15,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_rvfjh")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -24,22 +33,176 @@ theme_override_constants/margin_bottom = 50
 layout_mode = 2
 columns = 4
 
-[node name="Panel" type="Panel" parent="MarginContainer/GridContainer"]
+[node name="ValkyriePanel" type="Panel" parent="MarginContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Panel2" type="Panel" parent="MarginContainer/GridContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/GridContainer/ValkyriePanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 50
+theme_override_constants/margin_bottom = 50
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/GridContainer/ValkyriePanel/MarginContainer"]
+layout_mode = 2
+
+[node name="CharacterName" type="RichTextLabel" parent="MarginContainer/GridContainer/ValkyriePanel/MarginContainer/VBoxContainer"]
+texture_filter = 1
+clip_contents = false
+layout_mode = 2
+size_flags_vertical = 3
+theme = ExtResource("1_3slv1")
+theme_type_variation = &"HeaderLarge"
+theme_override_font_sizes/normal_font_size = 72
+bbcode_enabled = true
+text = "[p align=center]Valkyrie"
+scroll_active = false
+
+[node name="CharacterIcon" type="TextureRect" parent="MarginContainer/GridContainer/ValkyriePanel/MarginContainer/VBoxContainer"]
+texture_filter = 1
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+texture = ExtResource("2_5ueb4")
+expand_mode = 3
+stretch_mode = 4
+
+[node name="CharacterInfo" type="RichTextLabel" parent="MarginContainer/GridContainer/ValkyriePanel/MarginContainer/VBoxContainer"]
+texture_filter = 1
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 4.5
+theme = ExtResource("1_3slv1")
+theme_override_font_sizes/normal_font_size = 54
+bbcode_enabled = true
+text = "[p align=center]
+An arranged marriage.
+A duel to the death.
+A blade of immense power.
+A new purpose."
+
+[node name="WeaponInfo" type="RichTextLabel" parent="MarginContainer/GridContainer/ValkyriePanel/MarginContainer/VBoxContainer"]
+texture_filter = 1
+layout_mode = 2
+size_flags_vertical = 3
+theme = ExtResource("1_3slv1")
+theme_override_font_sizes/normal_font_size = 48
+bbcode_enabled = true
+text = "[p align=center]
+Starting Weapon"
+
+[node name="StartingWeaponIcon" type="TextureRect" parent="MarginContainer/GridContainer/ValkyriePanel/MarginContainer/VBoxContainer"]
+texture_filter = 1
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+texture = ExtResource("3_jad05")
+expand_mode = 3
+stretch_mode = 4
+
+[node name="CharacterSelectButton" type="Button" parent="MarginContainer/GridContainer/ValkyriePanel/MarginContainer/VBoxContainer"]
+process_mode = 2
+texture_filter = 1
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = ExtResource("1_3slv1")
+theme_override_fonts/font = ExtResource("3_6pbc1")
+theme_override_font_sizes/font_size = 48
+text = "AUTHORIZE"
+
+[node name="TankPanel" type="Panel" parent="MarginContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Panel3" type="Panel" parent="MarginContainer/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/GridContainer/TankPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 50
+theme_override_constants/margin_bottom = 50
 
-[node name="Panel4" type="Panel" parent="MarginContainer/GridContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/GridContainer/TankPanel/MarginContainer"]
 layout_mode = 2
-size_flags_horizontal = 3
+
+[node name="CharacterName" type="RichTextLabel" parent="MarginContainer/GridContainer/TankPanel/MarginContainer/VBoxContainer"]
+texture_filter = 1
+clip_contents = false
+layout_mode = 2
 size_flags_vertical = 3
+theme = ExtResource("1_3slv1")
+theme_type_variation = &"HeaderLarge"
+theme_override_font_sizes/normal_font_size = 72
+bbcode_enabled = true
+text = "[p align=center]Tank"
+scroll_active = false
+
+[node name="CharacterIcon" type="TextureRect" parent="MarginContainer/GridContainer/TankPanel/MarginContainer/VBoxContainer"]
+texture_filter = 1
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+texture = ExtResource("5_elqmm")
+expand_mode = 3
+stretch_mode = 4
+
+[node name="CharacterInfo" type="RichTextLabel" parent="MarginContainer/GridContainer/TankPanel/MarginContainer/VBoxContainer"]
+texture_filter = 1
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 4.5
+theme = ExtResource("1_3slv1")
+theme_override_font_sizes/normal_font_size = 54
+bbcode_enabled = true
+text = "[p align=center]
+TBD"
+
+[node name="WeaponInfo" type="RichTextLabel" parent="MarginContainer/GridContainer/TankPanel/MarginContainer/VBoxContainer"]
+texture_filter = 1
+layout_mode = 2
+size_flags_vertical = 3
+theme = ExtResource("1_3slv1")
+theme_override_font_sizes/normal_font_size = 48
+bbcode_enabled = true
+text = "[p align=center]
+Starting Weapon"
+
+[node name="StartingWeaponIcon" type="TextureRect" parent="MarginContainer/GridContainer/TankPanel/MarginContainer/VBoxContainer"]
+texture_filter = 1
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+texture = ExtResource("7_4yh4v")
+expand_mode = 3
+stretch_mode = 4
+
+[node name="CharacterSelectButton" type="Button" parent="MarginContainer/GridContainer/TankPanel/MarginContainer/VBoxContainer"]
+process_mode = 2
+texture_filter = 1
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = ExtResource("1_3slv1")
+theme_override_fonts/font = ExtResource("3_6pbc1")
+theme_override_font_sizes/font_size = 48
+text = "AUTHORIZE"
+
+[connection signal="pressed" from="MarginContainer/GridContainer/ValkyriePanel/MarginContainer/VBoxContainer/CharacterSelectButton" to="." method="_on_character_select_button_pressed" binds= ["Valkyrie"]]
+[connection signal="pressed" from="MarginContainer/GridContainer/TankPanel/MarginContainer/VBoxContainer/CharacterSelectButton" to="." method="_on_character_select_button_pressed" binds= ["Tank"]]
