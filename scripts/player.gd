@@ -1,8 +1,8 @@
 extends CharacterBody2D
 
-const STARTING_HEALTH = 100
-const STARTING_SPEED = 450
-const STARTING_TIL_NEXT_LEVEL = 10
+const STARTING_HEALTH = 150
+const STARTING_SPEED = 300
+const STARTING_TIL_NEXT_LEVEL = 5
 
 var health
 var speed
@@ -71,6 +71,18 @@ func get_target() -> Vector2:
 		return enemies_in_range[0].global_position
 	return Vector2.ZERO # Return zero if no enemies within range.
 
+func get_closest_target() -> Vector2:
+	# Return the closest mob that overlaps the weapon range collider - TODO: adjustable range?
+	var enemies_in_range: Array[Node2D] = %WeaponRange.get_overlapping_bodies()
+	if not enemies_in_range.is_empty():
+		var closest_enemy = enemies_in_range[0]
+		for e in enemies_in_range:
+			if e.global_position.distance_to(global_position) < closest_enemy.global_position.distance_to(global_position):
+				closest_enemy = e
+		# print("Closest enemy is " + closest_enemy.name)
+		return closest_enemy.global_position
+	return Vector2.ZERO
+
 func gain_experience(xp: float) -> void:
 	# If the player gets enough XP, level up!
 	experience += xp
@@ -87,7 +99,7 @@ func level_up() -> void:
 	experience -= xp_to_next_level
 	level += 1
 	
-	xp_to_next_level = roundi(level * 7.5)
+	xp_to_next_level = roundi(level * 2.5) + STARTING_TIL_NEXT_LEVEL
 	
 	# update_player_info_text()
 	

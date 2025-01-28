@@ -1,0 +1,136 @@
+[gd_scene load_steps=20 format=3 uid="uid://dec2xuk5l87n3"]
+
+[ext_resource type="Script" path="res://scripts/slam_bullet.gd" id="1_kdetb"]
+[ext_resource type="Texture2D" uid="uid://cfh5j288p8pxm" path="res://sprites/effects/slam sprites.png" id="1_wcjeg"]
+[ext_resource type="AudioStream" uid="uid://dsq6numv2ydt1" path="res://sounds/slam.wav" id="3_vwxht"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3lu01"]
+atlas = ExtResource("1_wcjeg")
+region = Rect2(0, 320, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jk2ar"]
+atlas = ExtResource("1_wcjeg")
+region = Rect2(64, 320, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vj52h"]
+atlas = ExtResource("1_wcjeg")
+region = Rect2(128, 320, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c8sgh"]
+atlas = ExtResource("1_wcjeg")
+region = Rect2(192, 320, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7ugnq"]
+atlas = ExtResource("1_wcjeg")
+region = Rect2(256, 320, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2gomc"]
+atlas = ExtResource("1_wcjeg")
+region = Rect2(320, 320, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ghokd"]
+atlas = ExtResource("1_wcjeg")
+region = Rect2(384, 320, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_06hnf"]
+atlas = ExtResource("1_wcjeg")
+region = Rect2(448, 320, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c5ga2"]
+atlas = ExtResource("1_wcjeg")
+region = Rect2(512, 320, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xlo6a"]
+atlas = ExtResource("1_wcjeg")
+region = Rect2(576, 320, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6j62y"]
+atlas = ExtResource("1_wcjeg")
+region = Rect2(640, 320, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_stebf"]
+atlas = ExtResource("1_wcjeg")
+region = Rect2(704, 320, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u87nb"]
+atlas = ExtResource("1_wcjeg")
+region = Rect2(768, 320, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_psqnq"]
+atlas = ExtResource("1_wcjeg")
+region = Rect2(832, 320, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_wlqox"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3lu01")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jk2ar")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vj52h")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_c8sgh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7ugnq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2gomc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ghokd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_06hnf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_c5ga2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xlo6a")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6j62y")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_stebf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u87nb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_psqnq")
+}],
+"loop": false,
+"name": &"default",
+"speed": 32.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ock4d"]
+radius = 19.0
+
+[node name="SlamBullet" type="Area2D"]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1_kdetb")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+unique_name_in_owner = true
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_wlqox")
+autoplay = "default"
+frame_progress = 0.50056
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_ock4d")
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_vwxht")
+autoplay = true
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]

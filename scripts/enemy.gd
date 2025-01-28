@@ -47,18 +47,21 @@ func initialize(enemy_type: String) -> void:
 	# Set the stats based on the enemy type
 	match enemy_type:
 		"basic":
+			name = "Basic Enemy"
 			health = BASIC_ENEMY_STATS["health"]
 			speed = BASIC_ENEMY_STATS["speed"]
 			scale = BASIC_ENEMY_STATS["scale"]
 			damage = BASIC_ENEMY_STATS["damage"]
 			xp_value = BASIC_ENEMY_STATS["xp_value"]
 		"elite":
+			name = "Elite Enemy"
 			health = ELITE_ENEMY_STATS["health"]
 			speed = ELITE_ENEMY_STATS["speed"]
 			scale = ELITE_ENEMY_STATS["scale"]
 			damage = ELITE_ENEMY_STATS["damage"]
 			xp_value = ELITE_ENEMY_STATS["xp_value"]
 		"boss":
+			name = "Boss"
 			health = BOSS_ENEMY_STATS["health"]
 			speed = BOSS_ENEMY_STATS["speed"]
 			scale = BOSS_ENEMY_STATS["scale"]

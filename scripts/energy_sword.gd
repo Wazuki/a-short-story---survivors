@@ -1,6 +1,6 @@
 extends Marker2D
 
-const BASE_DAMAGE = 5.0
+const BASE_DAMAGE = 2.0
 const BASE_SPEED = PI
 const BASE_LIFETIME = 1.0
 const BASE_COOLDOWN = 1.5
@@ -17,7 +17,7 @@ const ICON_OFFSET = Vector2(273, 159)
 const ICON_ROTATION = PI / 2
 const SPRITESHEET_ID = "energy_sword"
 
-var icon: AtlasTexture = preload("res://sprites/energy_sword_icon.tres")
+var icon: AtlasTexture = preload("res://sprites/frames/energy_sword_icon.tres")
 
 var max_lifetime: float
 var first_level_up

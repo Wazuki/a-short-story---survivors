@@ -12,6 +12,7 @@ func _ready() -> void:
 	visible = false
 	weapons.append(GameController.spreadfire)
 	weapons.append(GameController.energy_sword)
+	weapons.append(GameController.slam)
 	
 
 func reset_weapons() -> void:

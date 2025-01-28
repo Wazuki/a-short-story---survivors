@@ -1,0 +1,7 @@
+[gd_resource type="AtlasTexture" load_steps=2 format=3 uid="uid://bdm0l4d00vqw7"]
+
+[ext_resource type="Texture2D" uid="uid://cfh5j288p8pxm" path="res://sprites/effects/slam sprites.png" id="1_l181d"]
+
+[resource]
+atlas = ExtResource("1_l181d")
+region = Rect2(322, 328, 61, 53)

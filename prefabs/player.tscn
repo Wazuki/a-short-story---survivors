@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://bivcmhjsdsyy2"]
+[gd_scene load_steps=14 format=3 uid="uid://bivcmhjsdsyy2"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_py671"]
 [ext_resource type="SpriteFrames" uid="uid://bjaasfha8sw2h" path="res://sprites/frames/tank_sprite_frames.tres" id="2_a2ns6"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://dtoe3hkqfi5gw" path="res://prefabs/spreadfire.tscn" id="4_lteaw"]
 [ext_resource type="AudioStream" uid="uid://b505215xfthyh" path="res://sounds/High-Tech Gadget Activate.wav" id="4_rg687"]
 [ext_resource type="AudioStream" uid="uid://db3xpb1qqhqnv" path="res://sounds/Holographic Interaction-32.wav" id="5_g5n55"]
+[ext_resource type="PackedScene" uid="uid://bdhnec2pb7ddj" path="res://prefabs/slam_weapon_controller.tscn" id="6_hllc1"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lihhf"]
 size = Vector2(10, 15)
@@ -21,6 +22,8 @@ radius = 40.0
 radius = 150.0
 
 [node name="Player" type="CharacterBody2D"]
+motion_mode = 1
+platform_on_leave = 2
 script = ExtResource("1_py671")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -65,6 +68,8 @@ debug_color = Color(1, 0.339264, 0.759845, 0.419608)
 [node name="Weapons" type="Node2D" parent="."]
 
 [node name="EnergySword" parent="Weapons" instance=ExtResource("3_1yiyo")]
+
+[node name="SlamWeaponController" parent="Weapons" instance=ExtResource("6_hllc1")]
 
 [node name="Spreadfire" parent="Weapons" instance=ExtResource("4_lteaw")]
 

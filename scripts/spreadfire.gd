@@ -13,12 +13,9 @@ const LEVEL_UP_PROJECTILES_MOD = 5
 const LEVEL_UP_COOLDOWN = 0.95
 
 #Other Values
-const ICON_SCALE = Vector2(25, 24.866)
-const ICON_OFFSET = Vector2(200, 150)
-const ICON_ROTATION = 0
-const SPRITESHEET_ID = "spreadfire_bullet"
 
-var icon: AtlasTexture = preload("res://sprites/spreadfire_icon.tres")
+
+var icon: AtlasTexture = preload("res://sprites/frames/spreadfire_icon.tres")
 # Variables other Weapons DON'T have
 var projectiles
 var first_level_up
@@ -35,7 +32,7 @@ func _ready() -> void:
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if weapon.ready_to_fire:
 		# Do all the things you'd do if you'd fire the weapon
 		
@@ -77,6 +74,8 @@ func spawn_bullet(target: Vector2, player: Node2D, angle: float):
 	
 	add_child(new_bullet)
 	new_bullet.position = Vector2.ZERO
+	new_bullet.reparent(get_node("/root/GameScene")) # Reparent the new bullet to GameScene so it won't move with the player.
+
 	
 	
 

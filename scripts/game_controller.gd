@@ -3,8 +3,10 @@ extends Node
 
 @onready var player = get_node("/root/GameScene/Player")
 @onready var level_up_UI = get_node("/root/GameScene/UI/LevelUpUI")
+
 @onready var energy_sword = get_node ("/root/GameScene/Player/Weapons/EnergySword")
 @onready var spreadfire = get_node("/root/GameScene/Player/Weapons/Spreadfire")
+@onready var slam = get_node("/root/GameScene/Player/Weapons/SlamWeaponController")
 
 @onready var mob_spawn_point: PathFollow2D = get_node("/root/GameScene/Player/MobSpawnPath/MobSpawnPoint")
 @onready var enemy_spawn_timer: Timer = get_node("/root/GameScene/EnemySpawnTimer")
@@ -114,4 +116,6 @@ func restart_game() -> void:
 	spawned_xp.clear()
 	
 	get_node("/root/GameScene/UI/MainMenu").visible = true
+
+	# TODO - reset the player's position too!
 	

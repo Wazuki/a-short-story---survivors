@@ -2,7 +2,7 @@
 
 [ext_resource type="Theme" uid="uid://b1mqo7cbopwv1" path="res://maintheme.tres" id="1_3iuef"]
 [ext_resource type="Script" path="res://scripts/level_up_template.gd" id="2_3cn8x"]
-[ext_resource type="Texture2D" uid="uid://bbkjllemm6t22" path="res://sprites/spreadfire_icon.tres" id="3_3uvxi"]
+[ext_resource type="Texture2D" uid="uid://bbkjllemm6t22" path="res://sprites/frames/spreadfire_icon.tres" id="3_3uvxi"]
 [ext_resource type="FontFile" uid="uid://diy1ksnxs4bot" path="res://m5x7.ttf" id="3_rkwwb"]
 
 [node name="LevelUpTemplate" type="Panel"]

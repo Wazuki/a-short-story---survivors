@@ -57,4 +57,4 @@ func get_speed() -> float:
 
 
 func _on_weapon_timer_timeout() -> void:
-	ready_to_fire = true # Replace with function body.
+	ready_to_fire = true
