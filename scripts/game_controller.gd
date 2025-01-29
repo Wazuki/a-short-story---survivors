@@ -46,7 +46,6 @@ func _ready() -> void:
 
 	# Initialize the character select UI to properly set the weapons in the Dict
 	character_select_UI.init()
-
 	pause_game()
 
 
