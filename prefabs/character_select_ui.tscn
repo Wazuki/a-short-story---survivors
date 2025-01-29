@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://cfdtpyse3s0tr"]
+[gd_scene load_steps=11 format=3 uid="uid://cfdtpyse3s0tr"]
 
 [ext_resource type="Theme" uid="uid://b1mqo7cbopwv1" path="res://maintheme.tres" id="1_3slv1"]
 [ext_resource type="Script" path="res://scripts/character_select_ui.gd" id="1_rvfjh"]
@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://bdm0l4d00vqw7" path="res://sprites/frames/slam_icon.tres" id="7_4yh4v"]
 [ext_resource type="Texture2D" uid="uid://cgmc1hwqj75fv" path="res://sprites/frames/huntress_icon.tres" id="8_pixs3"]
 [ext_resource type="Texture2D" uid="uid://dla2ldgy6t6yf" path="res://sprites/frames/arrow_icon.tres" id="9_5ecpe"]
+[ext_resource type="Texture2D" uid="uid://4hrw8rwj7ynw" path="res://sprites/frames/technician_icon.tres" id="10_0dq4y"]
 
 [node name="CharacterSelectUI" type="Control"]
 layout_mode = 3
@@ -257,7 +258,9 @@ theme = ExtResource("1_3slv1")
 theme_override_font_sizes/normal_font_size = 54
 bbcode_enabled = true
 text = "[p align=center]
-TBD"
+TBD
+A bow of both worlds.
+"
 
 [node name="WeaponInfo" type="RichTextLabel" parent="MarginContainer/GridContainer/HuntressPanel/MarginContainer/VBoxContainer"]
 texture_filter = 1
@@ -290,6 +293,94 @@ theme_override_fonts/font = ExtResource("3_6pbc1")
 theme_override_font_sizes/font_size = 48
 text = "AUTHORIZE"
 
+[node name="TechnicianPanel" type="Panel" parent="MarginContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/GridContainer/TechnicianPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 50
+theme_override_constants/margin_bottom = 50
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/GridContainer/TechnicianPanel/MarginContainer"]
+layout_mode = 2
+
+[node name="CharacterName" type="RichTextLabel" parent="MarginContainer/GridContainer/TechnicianPanel/MarginContainer/VBoxContainer"]
+texture_filter = 1
+clip_contents = false
+layout_mode = 2
+size_flags_vertical = 3
+theme = ExtResource("1_3slv1")
+theme_type_variation = &"HeaderLarge"
+theme_override_font_sizes/normal_font_size = 72
+bbcode_enabled = true
+text = "[p align=center]Technician"
+scroll_active = false
+
+[node name="CharacterIcon" type="TextureRect" parent="MarginContainer/GridContainer/TechnicianPanel/MarginContainer/VBoxContainer"]
+texture_filter = 1
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+texture = ExtResource("10_0dq4y")
+expand_mode = 3
+stretch_mode = 4
+
+[node name="CharacterInfo" type="RichTextLabel" parent="MarginContainer/GridContainer/TechnicianPanel/MarginContainer/VBoxContainer"]
+texture_filter = 1
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 4.5
+theme = ExtResource("1_3slv1")
+theme_override_font_sizes/normal_font_size = 54
+bbcode_enabled = true
+text = "[p align=center]
+A transhumanist cult. 
+A dark secret discovered. 
+A mass slaughter.
+A seach for redemption."
+
+[node name="WeaponInfo" type="RichTextLabel" parent="MarginContainer/GridContainer/TechnicianPanel/MarginContainer/VBoxContainer"]
+texture_filter = 1
+layout_mode = 2
+size_flags_vertical = 3
+theme = ExtResource("1_3slv1")
+theme_override_font_sizes/normal_font_size = 48
+bbcode_enabled = true
+text = "[p align=center]
+Starting Weapon"
+
+[node name="StartingWeaponIcon" type="TextureRect" parent="MarginContainer/GridContainer/TechnicianPanel/MarginContainer/VBoxContainer"]
+texture_filter = 1
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+expand_mode = 3
+stretch_mode = 5
+
+[node name="CharacterSelectButton" type="Button" parent="MarginContainer/GridContainer/TechnicianPanel/MarginContainer/VBoxContainer"]
+process_mode = 2
+texture_filter = 1
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = ExtResource("1_3slv1")
+theme_override_fonts/font = ExtResource("3_6pbc1")
+theme_override_font_sizes/font_size = 48
+disabled = true
+text = "FORBIDDEN"
+
 [connection signal="pressed" from="MarginContainer/GridContainer/ValkyriePanel/MarginContainer/VBoxContainer/CharacterSelectButton" to="." method="_on_character_select_button_pressed" binds= ["Valkyrie"]]
 [connection signal="pressed" from="MarginContainer/GridContainer/TankPanel/MarginContainer/VBoxContainer/CharacterSelectButton" to="." method="_on_character_select_button_pressed" binds= ["Tank"]]
 [connection signal="pressed" from="MarginContainer/GridContainer/HuntressPanel/MarginContainer/VBoxContainer/CharacterSelectButton" to="." method="_on_character_select_button_pressed" binds= ["Huntress"]]
+[connection signal="pressed" from="MarginContainer/GridContainer/TechnicianPanel/MarginContainer/VBoxContainer/CharacterSelectButton" to="." method="_on_character_select_button_pressed" binds= ["Technician"]]

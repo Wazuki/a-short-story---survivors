@@ -4,7 +4,7 @@ extends Marker2D
 const BASE_DAMAGE = 2.0
 const BASE_SPEED = 500.0
 const BASE_PIERCE = 1
-const BASE_COOLDOWN = 1.0
+const BASE_COOLDOWN = 1.75
 const BASE_RANGE = 750.0
 
 #Level up stats
