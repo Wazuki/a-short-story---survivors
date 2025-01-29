@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=4 uid="uid://c756hxrovtgc5"]
+[gd_scene load_steps=11 format=4 uid="uid://c756hxrovtgc5"]
 
 [ext_resource type="Texture2D" uid="uid://iv7uou23q7dy" path="res://sprites/SciFi_DungeonTileset16x16_0x72Like.png" id="1_mlf6e"]
 [ext_resource type="PackedScene" uid="uid://bivcmhjsdsyy2" path="res://prefabs/player.tscn" id="2_po0ka"]
@@ -6,6 +6,7 @@
 [ext_resource type="Theme" uid="uid://b1mqo7cbopwv1" path="res://maintheme.tres" id="6_e7dbq"]
 [ext_resource type="PackedScene" uid="uid://clb7lgpy4ix3o" path="res://prefabs/level_up_ui.tscn" id="6_kdryc"]
 [ext_resource type="PackedScene" uid="uid://cqph8d6325sto" path="res://prefabs/main_menu.tscn" id="7_6e45b"]
+[ext_resource type="AudioStream" uid="uid://dax4rfyg1yk1a" path="res://sounds/music/Sketchbook 2024-12-21.ogg" id="7_7bn7d"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_po0ka"]
 texture = ExtResource("1_mlf6e")
@@ -370,5 +371,13 @@ size_flags_vertical = 3
 size_flags_stretch_ratio = 0.5
 theme_override_font_sizes/font_size = 80
 text = "DISAVOW"
+
+[node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
+process_mode = 3
+stream = ExtResource("7_7bn7d")
+volume_db = -5.0
+autoplay = true
+bus = &"Music"
+parameters/looping = true
 
 [connection signal="timeout" from="EnemySpawnTimer" to="." method="_on_enemy_spawn_timer_timeout"]

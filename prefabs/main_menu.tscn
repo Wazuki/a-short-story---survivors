@@ -6,7 +6,7 @@
 [node name="MainMenu" type="CanvasLayer"]
 script = ExtResource("1_ypk8c")
 
-[node name="Control" type="Control" parent="."]
+[node name="MainMenu" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -14,7 +14,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="AspectRatioContainer" type="AspectRatioContainer" parent="Control"]
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="MainMenu"]
 custom_minimum_size = Vector2(480, 800)
 layout_mode = 1
 anchors_preset = 8
@@ -30,13 +30,13 @@ grow_horizontal = 2
 grow_vertical = 2
 stretch_mode = 0
 
-[node name="Panel" type="Panel" parent="Control/AspectRatioContainer"]
+[node name="Panel" type="Panel" parent="MainMenu/AspectRatioContainer"]
 custom_minimum_size = Vector2(480, 400)
 layout_mode = 2
 size_flags_horizontal = 4
 theme = ExtResource("1_06t4h")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Control/AspectRatioContainer/Panel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MainMenu/AspectRatioContainer/Panel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -45,7 +45,7 @@ grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
 
-[node name="StartButton" type="Button" parent="Control/AspectRatioContainer/Panel/VBoxContainer"]
+[node name="StartButton" type="Button" parent="MainMenu/AspectRatioContainer/Panel/VBoxContainer"]
 unique_name_in_owner = true
 process_mode = 2
 layout_mode = 2
@@ -54,7 +54,7 @@ size_flags_vertical = 4
 theme_override_font_sizes/font_size = 72
 text = "COMMENCE"
 
-[node name="OptionsButton" type="Button" parent="Control/AspectRatioContainer/Panel/VBoxContainer"]
+[node name="OptionsButton" type="Button" parent="MainMenu/AspectRatioContainer/Panel/VBoxContainer"]
 unique_name_in_owner = true
 process_mode = 2
 layout_mode = 2
@@ -63,7 +63,7 @@ size_flags_vertical = 4
 theme_override_font_sizes/font_size = 72
 text = "PREFERENCES"
 
-[node name="QuitButton" type="Button" parent="Control/AspectRatioContainer/Panel/VBoxContainer"]
+[node name="QuitButton" type="Button" parent="MainMenu/AspectRatioContainer/Panel/VBoxContainer"]
 unique_name_in_owner = true
 process_mode = 2
 layout_mode = 2
@@ -72,6 +72,128 @@ size_flags_vertical = 4
 theme_override_font_sizes/font_size = 72
 text = "WITHDRAW"
 
-[connection signal="pressed" from="Control/AspectRatioContainer/Panel/VBoxContainer/StartButton" to="." method="_on_start_button_pressed"]
-[connection signal="pressed" from="Control/AspectRatioContainer/Panel/VBoxContainer/OptionsButton" to="." method="_on_options_button_pressed"]
-[connection signal="pressed" from="Control/AspectRatioContainer/Panel/VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]
+[node name="OptionsMenu" type="Control" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="OptionsMenu"]
+custom_minimum_size = Vector2(480, 800)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -240.0
+offset_top = -400.0
+offset_right = 240.0
+offset_bottom = 400.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch_mode = 0
+
+[node name="Panel" type="Panel" parent="OptionsMenu/AspectRatioContainer"]
+custom_minimum_size = Vector2(400, 400)
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("1_06t4h")
+
+[node name="MarginContainer" type="MarginContainer" parent="OptionsMenu/AspectRatioContainer/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="OptionsMenu/AspectRatioContainer/Panel/MarginContainer"]
+layout_mode = 2
+
+[node name="Spacer" type="Control" parent="OptionsMenu/AspectRatioContainer/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="OptionsMenu/AspectRatioContainer/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SoundLabel" type="RichTextLabel" parent="OptionsMenu/AspectRatioContainer/Panel/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+bbcode_enabled = true
+text = "[p align=center]SOUND"
+fit_content = true
+autowrap_mode = 2
+
+[node name="SoundSlider" type="HSlider" parent="OptionsMenu/AspectRatioContainer/Panel/MarginContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+process_mode = 3
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+max_value = 1.0
+step = 0.05
+
+[node name="Spacer2" type="Control" parent="OptionsMenu/AspectRatioContainer/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="OptionsMenu/AspectRatioContainer/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="MusicLabel" type="RichTextLabel" parent="OptionsMenu/AspectRatioContainer/Panel/MarginContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+bbcode_enabled = true
+text = "[p align=center]MUSIC"
+fit_content = true
+
+[node name="MusicSlider" type="HSlider" parent="OptionsMenu/AspectRatioContainer/Panel/MarginContainer/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+process_mode = 3
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+max_value = 1.0
+step = 0.05
+
+[node name="Spacer3" type="Control" parent="OptionsMenu/AspectRatioContainer/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="OptionsMenu/AspectRatioContainer/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="CloseOptionsWindowButton" type="Button" parent="OptionsMenu/AspectRatioContainer/Panel/MarginContainer/VBoxContainer/MarginContainer"]
+process_mode = 2
+layout_mode = 2
+theme_override_font_sizes/font_size = 72
+text = "RETREAT"
+
+[connection signal="pressed" from="MainMenu/AspectRatioContainer/Panel/VBoxContainer/StartButton" to="." method="_on_start_button_pressed"]
+[connection signal="pressed" from="MainMenu/AspectRatioContainer/Panel/VBoxContainer/OptionsButton" to="." method="_on_options_button_pressed"]
+[connection signal="pressed" from="MainMenu/AspectRatioContainer/Panel/VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]
+[connection signal="drag_ended" from="OptionsMenu/AspectRatioContainer/Panel/MarginContainer/VBoxContainer/HBoxContainer/SoundSlider" to="." method="_on_sound_slider_drag_ended"]
+[connection signal="drag_ended" from="OptionsMenu/AspectRatioContainer/Panel/MarginContainer/VBoxContainer/HBoxContainer2/MusicSlider" to="." method="_on_music_slider_drag_ended"]
+[connection signal="pressed" from="OptionsMenu/AspectRatioContainer/Panel/MarginContainer/VBoxContainer/MarginContainer/CloseOptionsWindowButton" to="." method="_on_close_options_window_button_pressed"]
