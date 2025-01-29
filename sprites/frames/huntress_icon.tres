@@ -1,0 +1,7 @@
+[gd_resource type="AtlasTexture" load_steps=2 format=3 uid="uid://cgmc1hwqj75fv"]
+
+[ext_resource type="Texture2D" uid="uid://c4upkvh2y1awx" path="res://sprites/characters/huntress.png" id="1_8k0sn"]
+
+[resource]
+atlas = ExtResource("1_8k0sn")
+region = Rect2(18, 18, 22, 30)

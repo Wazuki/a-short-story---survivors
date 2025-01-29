@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c4upkvh2y1awx"
-path="res://.godot/imported/Character 1 (4).png-f41d783e6b98352b3943b7e75ef1a9cd.ctex"
+path="res://.godot/imported/huntress.png-a1d145b4503ae66694225c71aec9a921.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/characters/Character 1 (4).png"
-dest_files=["res://.godot/imported/Character 1 (4).png-f41d783e6b98352b3943b7e75ef1a9cd.ctex"]
+source_file="res://sprites/characters/huntress.png"
+dest_files=["res://.godot/imported/huntress.png-a1d145b4503ae66694225c71aec9a921.ctex"]
 
 [params]
 

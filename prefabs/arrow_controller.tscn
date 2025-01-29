@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bxbdgbhy2c1jt"]
+
+[ext_resource type="Script" path="res://scripts/arrow_controller.gd" id="1_5huhd"]
+
+[node name="ArrowController" type="Marker2D"]
+script = ExtResource("1_5huhd")

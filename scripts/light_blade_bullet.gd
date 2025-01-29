@@ -28,3 +28,4 @@ func _on_spritesheet_animation_finished() -> void:
 func _on_body_entered(body:Node2D) -> void:
 	if body != null && not body.is_dead: # If we're using masks property, it should ONLY be an enemy!
 		body.take_damage(damage)
+		# TODO - Collision only works once. Need to fix. Refresh collider?

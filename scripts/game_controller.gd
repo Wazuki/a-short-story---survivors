@@ -9,6 +9,7 @@ extends Node
 @onready var spreadfire = get_node("/root/GameScene/Player/Weapons/Spreadfire")
 @onready var slam = get_node("/root/GameScene/Player/Weapons/SlamWeaponController")
 @onready var light_blade = get_node("/root/GameScene/Player/Weapons/LightBladeController")
+@onready var arrow = get_node("/root/GameScene/Player/Weapons/ArrowController")
 
 @onready var mob_spawn_point: PathFollow2D = get_node("/root/GameScene/Player/MobSpawnPath/MobSpawnPoint")
 @onready var enemy_spawn_timer: Timer = get_node("/root/GameScene/EnemySpawnTimer")
@@ -41,6 +42,7 @@ func _ready() -> void:
 	weapons.append(spreadfire)
 	weapons.append(slam)
 	weapons.append(light_blade)
+	weapons.append(arrow)
 
 	# Initialize the character select UI to properly set the weapons in the Dict
 	character_select_UI.init()

@@ -47,7 +47,7 @@ func spawn_new_light_sword() -> void:
 	# Look towards the closest target, then spawn the slashes
 	look_at(GameController.player.get_closest_target())
 
-	var new_sword = preload("res://prefabs/light_sword_bullet.tscn").instantiate()
+	var new_sword = preload("res://prefabs/light_blade_bullet.tscn").instantiate()
 	new_sword.set_stats(weapon.damage, slashes)
 	add_child(new_sword)
 	# new_sword.position.x += weapon.level # Slowly add the weapon's level to the x position to offset hte ever-increasing scale.

@@ -87,6 +87,7 @@ func _physics_process(delta: float) -> void:
 		%Spritesheet.animation = "death"
 		%Spritesheet.play()
 
+# TODO - Weapon-managed ranges with variable ranges.
 func get_target() -> Vector2:
 	# Return the first mob that overlaps the weapon range collider - TODO: adjustable range?
 	var enemies_in_range: Array[Node2D] = %WeaponRange.get_overlapping_bodies()
@@ -104,6 +105,17 @@ func get_closest_target() -> Vector2:
 				closest_enemy = e
 		# print("Closest enemy is " + closest_enemy.name)
 		return closest_enemy.global_position
+	return Vector2.ZERO
+
+func get_highest_hp_target() -> Vector2:
+	# Returns the highest HP enemy in range.
+	var enemies_in_range: Array[Node2D] = %WeaponRange.get_overlapping_bodies()
+	if not enemies_in_range.is_empty():
+		var highest_hp_enemy = enemies_in_range[0]
+		for e in enemies_in_range:
+			if e.health > highest_hp_enemy.health:
+				highest_hp_enemy = e
+		return highest_hp_enemy.global_position
 	return Vector2.ZERO
 
 func gain_experience(xp: float) -> void:
