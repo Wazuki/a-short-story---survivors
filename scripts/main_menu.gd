@@ -38,3 +38,11 @@ func _on_music_slider_drag_ended(_value_changed:bool) -> void:
 func _on_close_options_window_button_pressed() -> void:
 	%OptionsMenu.visible = false
 
+
+
+func _on_pause_button_toggled(toggled_on:bool) -> void:
+	if toggled_on and GameController.game_started:
+		GameController.pause_game()
+	elif GameController.game_started:
+		GameController.unpause_game()
+	# 	%PauseButton.pressed = false

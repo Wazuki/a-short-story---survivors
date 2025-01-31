@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=12 format=3 uid="uid://b1mqo7cbopwv1"]
+[gd_resource type="Theme" load_steps=18 format=3 uid="uid://b1mqo7cbopwv1"]
 
 [ext_resource type="Texture2D" uid="uid://cavptpu5tkmgt" path="res://sprites/Pixel Buttom.png" id="1_4jpai"]
 [ext_resource type="Texture2D" uid="uid://b4rn55rrmo00" path="res://sprites/UI.png" id="1_7o5h2"]
@@ -77,6 +77,27 @@ texture_margin_right = 13.5131
 texture_margin_bottom = 14.0
 region_rect = Rect2(193.023, 193.436, 61.9614, 61.5584)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_7aw0l"]
+atlas = ExtResource("1_4jpai")
+region = Rect2(96, 192, 32, 32)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_c13wm"]
+texture = SubResource("AtlasTexture_7aw0l")
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0b22i"]
+atlas = ExtResource("1_4jpai")
+region = Rect2(96, 192, 32, 32)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_trbvv"]
+texture = SubResource("AtlasTexture_0b22i")
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_720gx"]
+atlas = ExtResource("1_4jpai")
+region = Rect2(128, 192, 32, 32)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hmrbx"]
+texture = SubResource("AtlasTexture_720gx")
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fs5tr"]
 content_margin_left = 4.0
 content_margin_top = 4.0
@@ -133,6 +154,10 @@ Button/styles/pressed = SubResource("StyleBoxFlat_hxsja")
 HeaderLarge/base_type = &"RichTextLabel"
 HeaderLarge/font_sizes/font_size = 72
 Panel/styles/panel = SubResource("StyleBoxTexture_cr5tn")
+PauseButton/base_type = &"Button"
+PauseButton/styles/hover = SubResource("StyleBoxTexture_c13wm")
+PauseButton/styles/normal = SubResource("StyleBoxTexture_trbvv")
+PauseButton/styles/pressed = SubResource("StyleBoxTexture_hmrbx")
 RichTextLabel/colors/default_color = Color(1, 1, 1, 1)
 RichTextLabel/colors/font_outline_color = Color(0, 0, 0, 1)
 RichTextLabel/colors/font_selected_color = Color(0, 0, 0, 0)

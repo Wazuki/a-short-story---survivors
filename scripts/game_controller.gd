@@ -4,6 +4,7 @@ extends Node
 @onready var player = get_node("/root/GameScene/Player")
 @onready var level_up_UI = get_node("/root/GameScene/UI/LevelUpUI")
 @onready var character_select_UI = get_node("/root/GameScene/UI/CharacterSelectUI")
+@onready var tilemap: TileMapLayer = get_node("/root/GameScene/Level")
 
 @onready var energy_sword = get_node ("/root/GameScene/Player/Weapons/EnergySword")
 @onready var spreadfire = get_node("/root/GameScene/Player/Weapons/Spreadfire")
@@ -17,7 +18,7 @@ extends Node
 @onready var game_over_UI: PanelContainer = get_node("/root/GameScene/UI/GameOverUI")
 
 var total_enemies_spawned: int = 0
-
+var game_started: bool = false
 var weapons = []
 var enemies: Array[Node2D]
 var spawned_xp: Array[Node2D]
@@ -53,7 +54,13 @@ func spawn_enemy() -> void:
 	total_enemies_spawned += 1
 
 	# Spawn a basic enemy. Every 20 enemies, spawn an elite. Every 50, spawn a boss.
+
+	# Randomly find a tile on the tilemap to spawn enemy (so we don't spawn outside the map)
 	mob_spawn_point.progress_ratio = randf()
+	while(is_point_on_tilemap(tilemap.to_local(mob_spawn_point.global_position))): # We want the global pos converted to a local pos relative ot the tilemap
+		mob_spawn_point.progress_ratio = randf()
+
+
 	var new_enemy = preload("res://prefabs/enemy.tscn").instantiate()
 	new_enemy.global_position = mob_spawn_point.global_position 
 	add_child(new_enemy)
@@ -67,7 +74,15 @@ func spawn_enemy() -> void:
 		new_enemy.initialize("basic")
 
 	enemies.append(new_enemy)
+
+func is_point_on_tilemap(pos: Vector2) -> bool:
 	
+	var map_pos = tilemap.local_to_map(pos)
+	var cell = tilemap.get_cell_tile_data(map_pos)
+	# print_debug("Cell: " + str(cell))
+	return cell == null # If the cell is null we're off the map - return true, go back to the loop, and try again.
+	# return false # We want this to return false in the end because the loop will run until we find a cell that is ON the map. True continues the loop!
+
 func stop_tracking_enemy(e: Node2D) -> void:
 	enemies.erase(e)
 	
@@ -101,6 +116,7 @@ func select_character(character: Dictionary) -> void:
 	player.initialize(character)
 	character["weapon"].level_up() # Don't need to ask the array since we have a ref already.
 	unpause_game()
+	game_started = true
 	# print_debug("Selected " + character)
 
 
@@ -128,6 +144,7 @@ func round_to_dec(num: float, digit: int) -> float:
 func game_over() -> void:
 	#Pause the game, destroy all enemies, then show the game over UI 
 	pause_game()
+	game_started = false
 	game_over_UI.visible = true
 
 func restart_game() -> void:
