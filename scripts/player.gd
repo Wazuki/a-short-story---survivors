@@ -11,14 +11,18 @@ var armor: float # Each point of armor reduces damage by 0.1
 var experience: float
 var level
 var xp_to_next_level
+var level_up_text = "Level Up!"
+var level_up_text_reset_pos
+
+var total_level_ups = 0
 # var enemy_damage_rate = 5.0
 
 @onready var player_info_text : RichTextLabel = get_node("/root/GameScene/UI/PlayerInfoContainer/Panel/MarginContainer/PlayerInfoText")
 
 signal _health_depleted
 
-# func _ready() -> void:
-	# reset()
+func _ready() -> void:
+	level_up_text_reset_pos = %LevelUpText.position
 
 func initialize(character: Dictionary) -> void:
 	health = character["health"]
@@ -46,8 +50,14 @@ func _physics_process(delta: float) -> void:
 
  	# If the player is alive, move them based on input. This is also where we will fire weapons, gain XP, etc.
 	if health > 0:
-		var direction = Input.get_vector("move_left", "move_right", "move_up", "move_down")
-		velocity = direction * speed
+		if GameController.touch_input_enabled && Input.is_action_pressed("touch"):
+			# honk honk
+			# var direction = global_position.direction_to(InputEventScreenTouch.position)
+			var direction = global_position.direction_to(get_global_mouse_position())
+			velocity = direction * speed
+		else:
+			var direction = Input.get_vector("move_left", "move_right", "move_up", "move_down")
+			velocity = direction * speed
 		
 		move_and_slide() # Automatically moves character based on velocity. Applies delta automatically
 		
@@ -121,17 +131,58 @@ func get_highest_hp_target() -> Vector2:
 func gain_experience(xp: float) -> void:
 	# If the player gets enough XP, level up!
 	experience += xp
+	tween_xp_bar()
+	update_player_info_text()
 	# print_debug("We gained " + str(xp) + "xp!")
-	if experience >= xp_to_next_level:
+	for i in range(total_level_ups):
+		# Reset the XP immediately so we don't get a double level up bug
+		# experience -= xp_to_next_level
+		if not %LevelUpSound.playing: %LevelUpSound.play()
 		# print_debug("Level up!")
-		level_up()
-		
+		show_level_up_text()
+		# level_up()
+	total_level_ups = 0		
 	update_player_info_text()
 
+# TODO - this whole t hing could really use a rewrite tbh or just changing it
+func tween_xp_bar() -> void:
+	# Tween the XP bar to show the player how much XP they gained
+	%XPBar.visible = true
+	var tween = %XPBar.create_tween()
+	# Tween the XP bar to show the player how much XP they gained based on the ratio of XP to next level
+	tween.tween_property(%XPBar, "value", experience / xp_to_next_level,  clampf(1.0 - (experience / xp_to_next_level), 0.25, 1.0))
+
+	#TODO - Adjust the tween so it properly shows on multiple level ups
+	while experience >= xp_to_next_level:
+		experience -= xp_to_next_level
+		total_level_ups += 1
+		tween.tween_property(%XPBar, "value", 0.0, 0.5)
+		tween.tween_property(%XPBar, "value", experience, 1.0)
+	tween.tween_callback(%XPBar.hide)
+	tween.tween_callback(tween.kill)
+
+
+func show_level_up_text() -> void:
+	%LevelUpText.visible = true
+	var tween = %LevelUpText.create_tween()
+
+	# Tween the text up and fade it out, then call the level_up function
+	tween.set_parallel()
+	tween.tween_property(%LevelUpText, "position", %LevelUpText.position + Vector2(0, -30), 1.0)
+	tween.tween_property(%LevelUpText, "modulate:a", 0, 1.0)
+	tween.set_parallel(false)
+	tween.tween_callback(level_up)
+	tween.tween_callback(tween.kill)
+
 func level_up() -> void:
-	# Show the level up UI with the avaiable options, the weapons, level them, and reset the XP.
-	if not %LevelUpSound.playing: %LevelUpSound.play()
-	experience -= xp_to_next_level
+	# Reset the level up text so we don't forget
+	# print_debug("Level up!")
+	%LevelUpText.visible = false
+	%LevelUpText.modulate = Color(1, 1, 1, 1)
+	%LevelUpText.position = level_up_text_reset_pos
+
+	# Show the level up UI with the avaiable options, the weapons, level them
+	# experience -= xp_to_next_level
 	level += 1
 	
 	xp_to_next_level = roundi(level * 2.5) + STARTING_TIL_NEXT_LEVEL
@@ -153,6 +204,6 @@ func _on_spritesheet_animation_finished() -> void:
 	# Tell the UI we're dead
 	# print_debug("Our animation is " + %Spritesheet.animation)
 	if %Spritesheet.animation == "death":
-		print("Player died!")
+		# print("Player died!")
 		emit_signal("_health_depleted")
 		%Spritesheet.stop()

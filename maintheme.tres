@@ -1,8 +1,11 @@
-[gd_resource type="Theme" load_steps=18 format=3 uid="uid://b1mqo7cbopwv1"]
+[gd_resource type="Theme" load_steps=32 format=3 uid="uid://b1mqo7cbopwv1"]
 
 [ext_resource type="Texture2D" uid="uid://cavptpu5tkmgt" path="res://sprites/Pixel Buttom.png" id="1_4jpai"]
 [ext_resource type="Texture2D" uid="uid://b4rn55rrmo00" path="res://sprites/UI.png" id="1_7o5h2"]
 [ext_resource type="FontFile" uid="uid://diy1ksnxs4bot" path="res://m5x7.ttf" id="2_cr5tn"]
+[ext_resource type="Texture2D" uid="uid://c3ctbsjrf4dn2" path="res://sprites/UI/button_check/check_disable.png" id="4_wc4kf"]
+[ext_resource type="Texture2D" uid="uid://dasevn60koodv" path="res://sprites/UI/button_check/check_off.png" id="5_pdlq4"]
+[ext_resource type="Texture2D" uid="uid://d7ypb6yl5x8q" path="res://sprites/UI/button_check/check_on.png" id="6_ykewp"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8q4af"]
 content_margin_left = 4.0
@@ -68,6 +71,28 @@ corner_radius_top_right = 3
 corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 corner_detail = 5
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_da3vc"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8mamq"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cj355"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_v3rp1"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_08a4l"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_sbr4i"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_6v5rv"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3jqg5"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4edjb"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_q46nf"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_movop"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_cr5tn"]
 texture = ExtResource("1_7o5h2")
@@ -151,6 +176,21 @@ Button/styles/focus = SubResource("StyleBoxFlat_hankf")
 Button/styles/hover = SubResource("StyleBoxFlat_fgu1d")
 Button/styles/normal = SubResource("StyleBoxTexture_2tj81")
 Button/styles/pressed = SubResource("StyleBoxFlat_hxsja")
+CheckButton/icons/checked = ExtResource("6_ykewp")
+CheckButton/icons/checked_disabled = ExtResource("4_wc4kf")
+CheckButton/icons/unchecked = ExtResource("5_pdlq4")
+CheckButton/icons/unchecked_disabled = ExtResource("4_wc4kf")
+CheckButton/styles/disabled = SubResource("StyleBoxEmpty_da3vc")
+CheckButton/styles/disabled_mirrored = SubResource("StyleBoxEmpty_8mamq")
+CheckButton/styles/focus = SubResource("StyleBoxEmpty_cj355")
+CheckButton/styles/hover = SubResource("StyleBoxEmpty_v3rp1")
+CheckButton/styles/hover_mirrored = SubResource("StyleBoxEmpty_08a4l")
+CheckButton/styles/hover_pressed = SubResource("StyleBoxEmpty_sbr4i")
+CheckButton/styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_6v5rv")
+CheckButton/styles/normal = SubResource("StyleBoxEmpty_3jqg5")
+CheckButton/styles/normal_mirrored = SubResource("StyleBoxEmpty_4edjb")
+CheckButton/styles/pressed = SubResource("StyleBoxEmpty_q46nf")
+CheckButton/styles/pressed_mirrored = SubResource("StyleBoxEmpty_movop")
 HeaderLarge/base_type = &"RichTextLabel"
 HeaderLarge/font_sizes/font_size = 72
 Panel/styles/panel = SubResource("StyleBoxTexture_cr5tn")

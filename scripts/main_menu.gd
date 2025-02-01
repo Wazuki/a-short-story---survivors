@@ -46,3 +46,15 @@ func _on_pause_button_toggled(toggled_on:bool) -> void:
 	elif GameController.game_started:
 		GameController.unpause_game()
 	# 	%PauseButton.pressed = false
+
+
+func _on_reset_stats_button_pressed() -> void:
+	GameController.reset_game()
+
+
+func _on_touch_input_button_toggled(toggled_on:bool) -> void:
+	GameController.touch_input_enabled = toggled_on
+	# print_debug("Touch input enabled: " + str(toggled_on))
+
+func set_touch_input_button_state(state: bool) -> void:
+	%TouchInputButton.set_pressed(state)

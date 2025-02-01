@@ -129,6 +129,7 @@ sprite_frames = SubResource("SpriteFrames_e31jg")
 animation = &"slash1"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+unique_name_in_owner = true
 position = Vector2(0, 5)
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_u00uc")

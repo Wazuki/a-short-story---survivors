@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://c3oxmsxpdc8q6"]
+
+[ext_resource type="Script" path="res://scripts/waldos.gd" id="1_6uobc"]
+[ext_resource type="SpriteFrames" uid="uid://i48t47cwcjbo" path="res://sprites/frames/waldos_frames.tres" id="1_mopce"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_u1eqt"]
+radius = 40.0
+
+[node name="Waldos" type="Area2D"]
+texture_filter = 1
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1_6uobc")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = ExtResource("1_mopce")
+autoplay = "default"
+frame_progress = 0.811936
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+unique_name_in_owner = true
+shape = SubResource("CircleShape2D_u1eqt")
