@@ -1,29 +1,18 @@
-[gd_resource type="Theme" load_steps=39 format=3 uid="uid://b1mqo7cbopwv1"]
+[gd_resource type="Theme" load_steps=32 format=3 uid="uid://b1mqo7cbopwv1"]
 
 [ext_resource type="Texture2D" uid="uid://cavptpu5tkmgt" path="res://sprites/Pixel Buttom.png" id="1_4jpai"]
 [ext_resource type="FontFile" uid="uid://diy1ksnxs4bot" path="res://m5x7.ttf" id="2_cr5tn"]
-[ext_resource type="Texture2D" uid="uid://cydoh88udtl02" path="res://sprites/wenrexa/Button 2/Button Disabled.png" id="2_tacfe"]
-[ext_resource type="Texture2D" uid="uid://css151a7xq40y" path="res://sprites/wenrexa/Button 2/Button Hover.png" id="3_054s8"]
-[ext_resource type="Texture2D" uid="uid://bqauqfo5bbdk7" path="res://sprites/wenrexa/Button 2/Button Normal.png" id="4_mmff3"]
 [ext_resource type="Texture2D" uid="uid://c3ctbsjrf4dn2" path="res://sprites/UI/button_check/check_disable.png" id="4_wc4kf"]
-[ext_resource type="Texture2D" uid="uid://hdn5als2uawb" path="res://sprites/wenrexa/Button 2/Button Active.png" id="5_hm0x0"]
 [ext_resource type="Texture2D" uid="uid://dasevn60koodv" path="res://sprites/UI/button_check/check_off.png" id="5_pdlq4"]
 [ext_resource type="Texture2D" uid="uid://d7ypb6yl5x8q" path="res://sprites/UI/button_check/check_on.png" id="6_ykewp"]
-[ext_resource type="Texture2D" uid="uid://dbuhlj8a36pgn" path="res://sprites/wenrexa/SliderBar 1/Slider 1.png" id="10_8u6dj"]
-[ext_resource type="Texture2D" uid="uid://c7svk1qge88ln" path="res://sprites/wenrexa/SliderBar 1/Bar 1.png" id="11_n4b60"]
-[ext_resource type="Texture2D" uid="uid://qyvpfmwc28em" path="res://sprites/wenrexa/Card X8/Card X100.png" id="11_voy1g"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_jhnvi"]
-texture = ExtResource("2_tacfe")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_6f8sb"]
-texture = ExtResource("3_054s8")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_eolji"]
-texture = ExtResource("4_mmff3")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_y40vo"]
-texture = ExtResource("5_hm0x0")
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_da3vc"]
 
@@ -48,13 +37,10 @@ texture = ExtResource("5_hm0x0")
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_movop"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_l07ct"]
-texture = ExtResource("11_n4b60")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_akbeq"]
-texture = ExtResource("11_n4b60")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_8sot2"]
-texture = ExtResource("11_voy1g")
 texture_margin_left = 299.555
 texture_margin_top = 183.598
 texture_margin_right = 215.808
@@ -148,10 +134,10 @@ CheckButton/styles/normal = SubResource("StyleBoxEmpty_3jqg5")
 CheckButton/styles/normal_mirrored = SubResource("StyleBoxEmpty_4edjb")
 CheckButton/styles/pressed = SubResource("StyleBoxEmpty_q46nf")
 CheckButton/styles/pressed_mirrored = SubResource("StyleBoxEmpty_movop")
-HSlider/icons/grabber = ExtResource("10_8u6dj")
+HSlider/icons/grabber = null
 HSlider/icons/grabber_disabled = null
-HSlider/icons/grabber_highlight = ExtResource("10_8u6dj")
-HSlider/icons/tick = ExtResource("11_n4b60")
+HSlider/icons/grabber_highlight = null
+HSlider/icons/tick = null
 HSlider/styles/grabber_area = SubResource("StyleBoxTexture_l07ct")
 HSlider/styles/grabber_area_highlight = SubResource("StyleBoxTexture_akbeq")
 HeaderLarge/base_type = &"RichTextLabel"
