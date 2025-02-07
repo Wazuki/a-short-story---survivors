@@ -2,6 +2,8 @@ extends Panel
 
 var level_up_option
 
+func _ready() -> void:
+	pass
 
 func set_level_up_information(option: Node2D, level_up_text: String) -> void:
 	level_up_option = option
