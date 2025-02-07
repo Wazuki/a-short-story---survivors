@@ -21,6 +21,16 @@ var slashes: int = 1
 var weapon_scale: Vector2
 var weapon
 
+# Upgrade Plan
+# Level 1: 2 swipe combo
+# Level 2: ~10% damage increase, attack speed increase
+# Level 3: Increased size?
+# Level 4: ~10% damage increase
+# Level 5: Third slash with windup? deals extra damage
+# Level 6: Reduce cooldown between slashes or extend reach on last slam?
+# Level 7: Last slash gets extra effect (knockback? crit chance? buff?)
+# TODO: Come back here
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	name = "Light Sword"
