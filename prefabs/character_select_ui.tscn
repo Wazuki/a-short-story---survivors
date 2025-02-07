@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://cfdtpyse3s0tr"]
+[gd_scene load_steps=13 format=3 uid="uid://cfdtpyse3s0tr"]
 
 [ext_resource type="Theme" uid="uid://b1mqo7cbopwv1" path="res://maintheme.tres" id="1_3slv1"]
 [ext_resource type="Script" path="res://scripts/character_select_ui.gd" id="1_rvfjh"]
@@ -10,6 +10,8 @@
 [ext_resource type="Texture2D" uid="uid://cgmc1hwqj75fv" path="res://sprites/frames/huntress_icon.tres" id="8_pixs3"]
 [ext_resource type="Texture2D" uid="uid://dla2ldgy6t6yf" path="res://sprites/frames/arrow_icon.tres" id="9_5ecpe"]
 [ext_resource type="Texture2D" uid="uid://4hrw8rwj7ynw" path="res://sprites/frames/technician_icon.tres" id="10_0dq4y"]
+[ext_resource type="Texture2D" uid="uid://pyw41ngccl4o" path="res://sprites/frames/waldos_icon.tres" id="11_h4b3e"]
+[ext_resource type="Texture2D" uid="uid://dm325khokbkrt" path="res://sprites/UI/padlock.png" id="12_qhiti"]
 
 [node name="CharacterSelectUI" type="Control"]
 layout_mode = 3
@@ -61,9 +63,7 @@ texture_filter = 1
 clip_contents = false
 layout_mode = 2
 size_flags_vertical = 3
-theme = ExtResource("1_3slv1")
-theme_type_variation = &"HeaderLarge"
-theme_override_font_sizes/normal_font_size = 72
+theme_type_variation = &"CharHeader"
 bbcode_enabled = true
 text = "[p align=center]Valkyrie"
 scroll_active = false
@@ -83,8 +83,6 @@ texture_filter = 1
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 4.5
-theme = ExtResource("1_3slv1")
-theme_override_font_sizes/normal_font_size = 54
 bbcode_enabled = true
 text = "[p align=center]
 An arranged marriage.
@@ -96,8 +94,6 @@ A new purpose."
 texture_filter = 1
 layout_mode = 2
 size_flags_vertical = 3
-theme = ExtResource("1_3slv1")
-theme_override_font_sizes/normal_font_size = 48
 bbcode_enabled = true
 text = "[p align=center]
 Starting Weapon"
@@ -118,7 +114,6 @@ texture_filter = 1
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-theme = ExtResource("1_3slv1")
 theme_override_fonts/font = ExtResource("3_6pbc1")
 theme_override_font_sizes/font_size = 48
 text = "AUTHORIZE"
@@ -128,7 +123,9 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/GridContainer/TankPanel"]
+[node name="TankCharacterPanel" type="MarginContainer" parent="MarginContainer/GridContainer/TankPanel"]
+unique_name_in_owner = true
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -140,22 +137,20 @@ theme_override_constants/margin_top = 50
 theme_override_constants/margin_right = 50
 theme_override_constants/margin_bottom = 50
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/GridContainer/TankPanel/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/GridContainer/TankPanel/TankCharacterPanel"]
 layout_mode = 2
 
-[node name="CharacterName" type="RichTextLabel" parent="MarginContainer/GridContainer/TankPanel/MarginContainer/VBoxContainer"]
+[node name="CharacterName" type="RichTextLabel" parent="MarginContainer/GridContainer/TankPanel/TankCharacterPanel/VBoxContainer"]
 texture_filter = 1
 clip_contents = false
 layout_mode = 2
 size_flags_vertical = 3
-theme = ExtResource("1_3slv1")
 theme_type_variation = &"HeaderLarge"
-theme_override_font_sizes/normal_font_size = 72
 bbcode_enabled = true
 text = "[p align=center]Tank"
 scroll_active = false
 
-[node name="CharacterIcon" type="TextureRect" parent="MarginContainer/GridContainer/TankPanel/MarginContainer/VBoxContainer"]
+[node name="CharacterIcon" type="TextureRect" parent="MarginContainer/GridContainer/TankPanel/TankCharacterPanel/VBoxContainer"]
 texture_filter = 1
 layout_mode = 2
 size_flags_horizontal = 4
@@ -165,28 +160,24 @@ texture = ExtResource("5_elqmm")
 expand_mode = 3
 stretch_mode = 4
 
-[node name="CharacterInfo" type="RichTextLabel" parent="MarginContainer/GridContainer/TankPanel/MarginContainer/VBoxContainer"]
+[node name="CharacterInfo" type="RichTextLabel" parent="MarginContainer/GridContainer/TankPanel/TankCharacterPanel/VBoxContainer"]
 texture_filter = 1
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 4.5
-theme = ExtResource("1_3slv1")
-theme_override_font_sizes/normal_font_size = 54
 bbcode_enabled = true
 text = "[p align=center]
 TBD"
 
-[node name="WeaponInfo" type="RichTextLabel" parent="MarginContainer/GridContainer/TankPanel/MarginContainer/VBoxContainer"]
+[node name="WeaponInfo" type="RichTextLabel" parent="MarginContainer/GridContainer/TankPanel/TankCharacterPanel/VBoxContainer"]
 texture_filter = 1
 layout_mode = 2
 size_flags_vertical = 3
-theme = ExtResource("1_3slv1")
-theme_override_font_sizes/normal_font_size = 48
 bbcode_enabled = true
 text = "[p align=center]
 Starting Weapon"
 
-[node name="StartingWeaponIcon" type="TextureRect" parent="MarginContainer/GridContainer/TankPanel/MarginContainer/VBoxContainer"]
+[node name="StartingWeaponIcon" type="TextureRect" parent="MarginContainer/GridContainer/TankPanel/TankCharacterPanel/VBoxContainer"]
 texture_filter = 1
 layout_mode = 2
 size_flags_horizontal = 4
@@ -196,23 +187,106 @@ texture = ExtResource("7_4yh4v")
 expand_mode = 3
 stretch_mode = 4
 
-[node name="CharacterSelectButton" type="Button" parent="MarginContainer/GridContainer/TankPanel/MarginContainer/VBoxContainer"]
+[node name="CharacterSelectButton" type="Button" parent="MarginContainer/GridContainer/TankPanel/TankCharacterPanel/VBoxContainer"]
 process_mode = 2
 texture_filter = 1
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-theme = ExtResource("1_3slv1")
 theme_override_fonts/font = ExtResource("3_6pbc1")
 theme_override_font_sizes/font_size = 48
 text = "AUTHORIZE"
+
+[node name="LockPanel_Tank" type="Panel" parent="MarginContainer/GridContainer/TankPanel"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/GridContainer/TankPanel/LockPanel_Tank"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/GridContainer/TankPanel/LockPanel_Tank/MarginContainer"]
+layout_mode = 2
+
+[node name="Spacer" type="Control" parent="MarginContainer/GridContainer/TankPanel/LockPanel_Tank/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.25
+
+[node name="CharLockedHeader" type="RichTextLabel" parent="MarginContainer/GridContainer/TankPanel/LockPanel_Tank/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+theme_type_variation = &"LockedCharHeader"
+theme_override_colors/default_color = Color(1, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.473976, 0.473976, 0.473976, 1)
+bbcode_enabled = true
+text = "[p align=center]UNAUTHORIZED 
+ACCESS 
+DETECTED"
+
+[node name="Spacer2" type="Control" parent="MarginContainer/GridContainer/TankPanel/LockPanel_Tank/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.25
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/GridContainer/TankPanel/LockPanel_Tank/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+texture = ExtResource("12_qhiti")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="Spacer3" type="Control" parent="MarginContainer/GridContainer/TankPanel/LockPanel_Tank/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.25
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="MarginContainer/GridContainer/TankPanel/LockPanel_Tank/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.35
+theme_type_variation = &"LockedCharHeader"
+bbcode_enabled = true
+text = "[p align=center]UNLOCK REQUIREMENTS"
+
+[node name="Spacer4" type="Control" parent="MarginContainer/GridContainer/TankPanel/LockPanel_Tank/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.25
+
+[node name="RequirementsText_Tank" type="RichTextLabel" parent="MarginContainer/GridContainer/TankPanel/LockPanel_Tank/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+theme_type_variation = &"LockedCharHeader"
+bbcode_enabled = true
+text = "[p align=center]SLAY 0/100 FOES"
+
+[node name="Spacer5" type="Control" parent="MarginContainer/GridContainer/TankPanel/LockPanel_Tank/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.25
 
 [node name="HuntressPanel" type="Panel" parent="MarginContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/GridContainer/HuntressPanel"]
+[node name="HuntressCharacterPanel" type="MarginContainer" parent="MarginContainer/GridContainer/HuntressPanel"]
+unique_name_in_owner = true
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -224,22 +298,21 @@ theme_override_constants/margin_top = 50
 theme_override_constants/margin_right = 50
 theme_override_constants/margin_bottom = 50
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/GridContainer/HuntressPanel/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/GridContainer/HuntressPanel/HuntressCharacterPanel"]
 layout_mode = 2
 
-[node name="CharacterName" type="RichTextLabel" parent="MarginContainer/GridContainer/HuntressPanel/MarginContainer/VBoxContainer"]
+[node name="CharacterName" type="RichTextLabel" parent="MarginContainer/GridContainer/HuntressPanel/HuntressCharacterPanel/VBoxContainer"]
 texture_filter = 1
 clip_contents = false
 layout_mode = 2
 size_flags_vertical = 3
 theme = ExtResource("1_3slv1")
 theme_type_variation = &"HeaderLarge"
-theme_override_font_sizes/normal_font_size = 72
 bbcode_enabled = true
 text = "[p align=center]Huntress"
 scroll_active = false
 
-[node name="CharacterIcon" type="TextureRect" parent="MarginContainer/GridContainer/HuntressPanel/MarginContainer/VBoxContainer"]
+[node name="CharacterIcon" type="TextureRect" parent="MarginContainer/GridContainer/HuntressPanel/HuntressCharacterPanel/VBoxContainer"]
 texture_filter = 1
 layout_mode = 2
 size_flags_horizontal = 4
@@ -249,30 +322,28 @@ texture = ExtResource("8_pixs3")
 expand_mode = 3
 stretch_mode = 4
 
-[node name="CharacterInfo" type="RichTextLabel" parent="MarginContainer/GridContainer/HuntressPanel/MarginContainer/VBoxContainer"]
+[node name="CharacterInfo" type="RichTextLabel" parent="MarginContainer/GridContainer/HuntressPanel/HuntressCharacterPanel/VBoxContainer"]
 texture_filter = 1
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 4.5
 theme = ExtResource("1_3slv1")
-theme_override_font_sizes/normal_font_size = 54
 bbcode_enabled = true
 text = "[p align=center]
 TBD
 A bow of both worlds.
 "
 
-[node name="WeaponInfo" type="RichTextLabel" parent="MarginContainer/GridContainer/HuntressPanel/MarginContainer/VBoxContainer"]
+[node name="WeaponInfo" type="RichTextLabel" parent="MarginContainer/GridContainer/HuntressPanel/HuntressCharacterPanel/VBoxContainer"]
 texture_filter = 1
 layout_mode = 2
 size_flags_vertical = 3
 theme = ExtResource("1_3slv1")
-theme_override_font_sizes/normal_font_size = 48
 bbcode_enabled = true
 text = "[p align=center]
 Starting Weapon"
 
-[node name="StartingWeaponIcon" type="TextureRect" parent="MarginContainer/GridContainer/HuntressPanel/MarginContainer/VBoxContainer"]
+[node name="StartingWeaponIcon" type="TextureRect" parent="MarginContainer/GridContainer/HuntressPanel/HuntressCharacterPanel/VBoxContainer"]
 texture_filter = 1
 layout_mode = 2
 size_flags_horizontal = 4
@@ -282,23 +353,106 @@ texture = ExtResource("9_5ecpe")
 expand_mode = 3
 stretch_mode = 5
 
-[node name="CharacterSelectButton" type="Button" parent="MarginContainer/GridContainer/HuntressPanel/MarginContainer/VBoxContainer"]
+[node name="CharacterSelectButton" type="Button" parent="MarginContainer/GridContainer/HuntressPanel/HuntressCharacterPanel/VBoxContainer"]
 process_mode = 2
 texture_filter = 1
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-theme = ExtResource("1_3slv1")
 theme_override_fonts/font = ExtResource("3_6pbc1")
 theme_override_font_sizes/font_size = 48
 text = "AUTHORIZE"
+
+[node name="LockPanel_Huntress" type="Panel" parent="MarginContainer/GridContainer/HuntressPanel"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/GridContainer/HuntressPanel/LockPanel_Huntress"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/GridContainer/HuntressPanel/LockPanel_Huntress/MarginContainer"]
+layout_mode = 2
+
+[node name="Spacer" type="Control" parent="MarginContainer/GridContainer/HuntressPanel/LockPanel_Huntress/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.25
+
+[node name="CharLockedHeader" type="RichTextLabel" parent="MarginContainer/GridContainer/HuntressPanel/LockPanel_Huntress/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+theme_type_variation = &"LockedCharHeader"
+theme_override_colors/default_color = Color(1, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.473976, 0.473976, 0.473976, 1)
+bbcode_enabled = true
+text = "[p align=center]UNAUTHORIZED 
+ACCESS 
+DETECTED"
+
+[node name="Spacer2" type="Control" parent="MarginContainer/GridContainer/HuntressPanel/LockPanel_Huntress/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.25
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/GridContainer/HuntressPanel/LockPanel_Huntress/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+texture = ExtResource("12_qhiti")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="Spacer3" type="Control" parent="MarginContainer/GridContainer/HuntressPanel/LockPanel_Huntress/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.25
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="MarginContainer/GridContainer/HuntressPanel/LockPanel_Huntress/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.35
+theme_type_variation = &"LockedCharHeader"
+bbcode_enabled = true
+text = "[p align=center]UNLOCK REQUIREMENTS"
+
+[node name="Spacer4" type="Control" parent="MarginContainer/GridContainer/HuntressPanel/LockPanel_Huntress/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.25
+
+[node name="RequirementsText_Huntress" type="RichTextLabel" parent="MarginContainer/GridContainer/HuntressPanel/LockPanel_Huntress/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+theme_type_variation = &"LockedCharHeader"
+bbcode_enabled = true
+text = "[p align=center]SLAY 0/100 FOES"
+
+[node name="Spacer5" type="Control" parent="MarginContainer/GridContainer/HuntressPanel/LockPanel_Huntress/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.25
 
 [node name="TechnicianPanel" type="Panel" parent="MarginContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/GridContainer/TechnicianPanel"]
+[node name="TechnicianCharacterPanel" type="MarginContainer" parent="MarginContainer/GridContainer/TechnicianPanel"]
+unique_name_in_owner = true
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -310,22 +464,21 @@ theme_override_constants/margin_top = 50
 theme_override_constants/margin_right = 50
 theme_override_constants/margin_bottom = 50
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/GridContainer/TechnicianPanel/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/GridContainer/TechnicianPanel/TechnicianCharacterPanel"]
 layout_mode = 2
 
-[node name="CharacterName" type="RichTextLabel" parent="MarginContainer/GridContainer/TechnicianPanel/MarginContainer/VBoxContainer"]
+[node name="CharacterName" type="RichTextLabel" parent="MarginContainer/GridContainer/TechnicianPanel/TechnicianCharacterPanel/VBoxContainer"]
 texture_filter = 1
 clip_contents = false
 layout_mode = 2
 size_flags_vertical = 3
 theme = ExtResource("1_3slv1")
 theme_type_variation = &"HeaderLarge"
-theme_override_font_sizes/normal_font_size = 72
 bbcode_enabled = true
 text = "[p align=center]Technician"
 scroll_active = false
 
-[node name="CharacterIcon" type="TextureRect" parent="MarginContainer/GridContainer/TechnicianPanel/MarginContainer/VBoxContainer"]
+[node name="CharacterIcon" type="TextureRect" parent="MarginContainer/GridContainer/TechnicianPanel/TechnicianCharacterPanel/VBoxContainer"]
 texture_filter = 1
 layout_mode = 2
 size_flags_horizontal = 4
@@ -335,13 +488,12 @@ texture = ExtResource("10_0dq4y")
 expand_mode = 3
 stretch_mode = 4
 
-[node name="CharacterInfo" type="RichTextLabel" parent="MarginContainer/GridContainer/TechnicianPanel/MarginContainer/VBoxContainer"]
+[node name="CharacterInfo" type="RichTextLabel" parent="MarginContainer/GridContainer/TechnicianPanel/TechnicianCharacterPanel/VBoxContainer"]
 texture_filter = 1
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 4.5
 theme = ExtResource("1_3slv1")
-theme_override_font_sizes/normal_font_size = 54
 bbcode_enabled = true
 text = "[p align=center]
 A transhumanist cult. 
@@ -349,38 +501,118 @@ A dark secret discovered.
 A mass slaughter.
 A seach for redemption."
 
-[node name="WeaponInfo" type="RichTextLabel" parent="MarginContainer/GridContainer/TechnicianPanel/MarginContainer/VBoxContainer"]
+[node name="WeaponInfo" type="RichTextLabel" parent="MarginContainer/GridContainer/TechnicianPanel/TechnicianCharacterPanel/VBoxContainer"]
 texture_filter = 1
 layout_mode = 2
 size_flags_vertical = 3
 theme = ExtResource("1_3slv1")
-theme_override_font_sizes/normal_font_size = 48
 bbcode_enabled = true
 text = "[p align=center]
 Starting Weapon"
 
-[node name="StartingWeaponIcon" type="TextureRect" parent="MarginContainer/GridContainer/TechnicianPanel/MarginContainer/VBoxContainer"]
+[node name="StartingWeaponIcon" type="TextureRect" parent="MarginContainer/GridContainer/TechnicianPanel/TechnicianCharacterPanel/VBoxContainer"]
 texture_filter = 1
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 3
 size_flags_stretch_ratio = 2.0
+texture = ExtResource("11_h4b3e")
 expand_mode = 3
 stretch_mode = 5
 
-[node name="CharacterSelectButton" type="Button" parent="MarginContainer/GridContainer/TechnicianPanel/MarginContainer/VBoxContainer"]
+[node name="CharacterSelectButton" type="Button" parent="MarginContainer/GridContainer/TechnicianPanel/TechnicianCharacterPanel/VBoxContainer"]
 process_mode = 2
 texture_filter = 1
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-theme = ExtResource("1_3slv1")
 theme_override_fonts/font = ExtResource("3_6pbc1")
 theme_override_font_sizes/font_size = 48
-disabled = true
-text = "FORBIDDEN"
+text = "AUTHORIZE"
+
+[node name="LockPanel_Technician" type="Panel" parent="MarginContainer/GridContainer/TechnicianPanel"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/GridContainer/TechnicianPanel/LockPanel_Technician"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/GridContainer/TechnicianPanel/LockPanel_Technician/MarginContainer"]
+layout_mode = 2
+
+[node name="Spacer" type="Control" parent="MarginContainer/GridContainer/TechnicianPanel/LockPanel_Technician/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.25
+
+[node name="CharLockedHeader" type="RichTextLabel" parent="MarginContainer/GridContainer/TechnicianPanel/LockPanel_Technician/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+theme_type_variation = &"LockedCharHeader"
+theme_override_colors/default_color = Color(1, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.473976, 0.473976, 0.473976, 1)
+bbcode_enabled = true
+text = "[p align=center]UNAUTHORIZED 
+ACCESS 
+DETECTED"
+
+[node name="Spacer2" type="Control" parent="MarginContainer/GridContainer/TechnicianPanel/LockPanel_Technician/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.25
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/GridContainer/TechnicianPanel/LockPanel_Technician/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+texture = ExtResource("12_qhiti")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="Spacer3" type="Control" parent="MarginContainer/GridContainer/TechnicianPanel/LockPanel_Technician/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.25
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="MarginContainer/GridContainer/TechnicianPanel/LockPanel_Technician/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.35
+theme_type_variation = &"LockedCharHeader"
+bbcode_enabled = true
+text = "[p align=center]UNLOCK REQUIREMENTS"
+
+[node name="Spacer4" type="Control" parent="MarginContainer/GridContainer/TechnicianPanel/LockPanel_Technician/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.25
+
+[node name="RequirementsText_Technician" type="RichTextLabel" parent="MarginContainer/GridContainer/TechnicianPanel/LockPanel_Technician/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+theme_type_variation = &"LockedCharHeader"
+bbcode_enabled = true
+text = "[p align=center]SLAY 0/100 FOES"
+
+[node name="Spacer5" type="Control" parent="MarginContainer/GridContainer/TechnicianPanel/LockPanel_Technician/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.25
 
 [connection signal="pressed" from="MarginContainer/GridContainer/ValkyriePanel/MarginContainer/VBoxContainer/CharacterSelectButton" to="." method="_on_character_select_button_pressed" binds= ["Valkyrie"]]
-[connection signal="pressed" from="MarginContainer/GridContainer/TankPanel/MarginContainer/VBoxContainer/CharacterSelectButton" to="." method="_on_character_select_button_pressed" binds= ["Tank"]]
-[connection signal="pressed" from="MarginContainer/GridContainer/HuntressPanel/MarginContainer/VBoxContainer/CharacterSelectButton" to="." method="_on_character_select_button_pressed" binds= ["Huntress"]]
-[connection signal="pressed" from="MarginContainer/GridContainer/TechnicianPanel/MarginContainer/VBoxContainer/CharacterSelectButton" to="." method="_on_character_select_button_pressed" binds= ["Technician"]]
+[connection signal="pressed" from="MarginContainer/GridContainer/TankPanel/TankCharacterPanel/VBoxContainer/CharacterSelectButton" to="." method="_on_character_select_button_pressed" binds= ["Tank"]]
+[connection signal="pressed" from="MarginContainer/GridContainer/HuntressPanel/HuntressCharacterPanel/VBoxContainer/CharacterSelectButton" to="." method="_on_character_select_button_pressed" binds= ["Huntress"]]
+[connection signal="pressed" from="MarginContainer/GridContainer/TechnicianPanel/TechnicianCharacterPanel/VBoxContainer/CharacterSelectButton" to="." method="_on_character_select_button_pressed" binds= ["Technician"]]

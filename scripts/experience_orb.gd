@@ -57,11 +57,11 @@ func set_value(v: int) -> void:
 	
 	#Set the XP to different sprites based on how much XP they have
 	if xp_value >= HUGE_XP_THREADHOLD:
-		print_debug("Huge XP")
+		# print_debug("Huge XP")
 		%Spritesheet.frame = 2
 		scale = Vector2.ONE * 2
 	elif xp_value >= LARGE_XP_THRESHOLD:
-		print_debug("Large XP")
+		# print_debug("Large XP")
 		%Spritesheet.frame = 1
 		scale = Vector2.ONE * 1.5
 	else: %Spritesheet.frame = 0
@@ -71,4 +71,7 @@ func _on_body_entered(body: Node2D) -> void:
 	if body == GameController.player:
 		body.gain_experience(xp_value)
 		GameController.stop_tracking_xp_orb(self)
+		GameController.total_xp_gained += xp_value
+		# print_debug("Total XP Gained: " + str(GameController.total_xp_gained))
 		queue_free()
+	else: move_on_spawn = false

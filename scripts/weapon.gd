@@ -47,7 +47,7 @@ func set_stats(base_damage: float, base_speed: float, base_cooldown: float):
 	damage = base_damage
 	speed = base_speed
 	cooldown = base_cooldown
-	
+
 
 func get_damage() -> float:
 	return damage

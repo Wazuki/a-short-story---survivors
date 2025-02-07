@@ -15,8 +15,8 @@ func _on_start_button_pressed() -> void:
 	visible = false
 	GameController.start_game()
 
-# TODO
 func _on_options_button_pressed() -> void:
+	%MainMenu.visible = false
 	%OptionsMenu.visible = true
 
 
@@ -37,6 +37,7 @@ func _on_music_slider_drag_ended(_value_changed:bool) -> void:
 
 func _on_close_options_window_button_pressed() -> void:
 	%OptionsMenu.visible = false
+	%MainMenu.visible = true
 
 
 
@@ -46,3 +47,15 @@ func _on_pause_button_toggled(toggled_on:bool) -> void:
 	elif GameController.game_started:
 		GameController.unpause_game()
 	# 	%PauseButton.pressed = false
+
+
+func _on_reset_stats_button_pressed() -> void:
+	GameController.reset_game()
+
+
+func _on_touch_input_button_toggled(toggled_on:bool) -> void:
+	GameController.touch_input_enabled = toggled_on
+	# print_debug("Touch input enabled: " + str(toggled_on))
+
+func set_touch_input_button_state(state: bool) -> void:
+	%TouchInputButton.set_pressed(state)

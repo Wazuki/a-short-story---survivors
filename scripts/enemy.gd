@@ -88,6 +88,8 @@ func _physics_process(_delta: float) -> void:
 
 func take_damage(dam: float) -> void:
 	health -= dam
+	GameController.total_damage_done += dam
+	
 	if has_health_bar: $HealthBar.value = health
 
 	if health <= 0 && not is_dead:
@@ -106,5 +108,6 @@ func take_damage(dam: float) -> void:
 func _on_spritesheet_animation_finished() -> void:
 	if is_dead:
 		GameController.stop_tracking_enemy(self)
+		GameController.total_enemies_killed += 1
 		# print_debug("Enemy died")
 		queue_free()

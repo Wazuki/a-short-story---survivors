@@ -18,6 +18,12 @@ func _on_spritesheet_animation_finished() -> void:
 	# Using less than or equal to because we don't want to overflow the array. Could also do slash_count -1
 	# print("Slash count: " + str(slash_count))
 	if slash_count < max_slashes - 1:
+		# Disable collision, then reenable it after a brief delay to enable the next slash to hit
+		%CollisionShape2D.disabled = true
+		var timer = get_tree().create_timer(0.01)
+		await(timer.timeout)
+		%CollisionShape2D.disabled = false
+		# timer.queue_free()
 		slash_count += 1
 		$Spritesheet.play(slash_animations[slash_count])
 		$AudioStreamPlayer2D.play()

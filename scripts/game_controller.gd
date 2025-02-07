@@ -11,6 +11,7 @@ extends Node
 @onready var slam = get_node("/root/GameScene/Player/Weapons/SlamWeaponController")
 @onready var light_blade = get_node("/root/GameScene/Player/Weapons/LightBladeController")
 @onready var arrow = get_node("/root/GameScene/Player/Weapons/ArrowController")
+@onready var waldos = get_node("/root/GameScene/Player/Weapons/Waldos")
 
 @onready var mob_spawn_point: PathFollow2D = get_node("/root/GameScene/Player/MobSpawnPath/MobSpawnPoint")
 @onready var enemy_spawn_timer: Timer = get_node("/root/GameScene/EnemySpawnTimer")
@@ -22,6 +23,13 @@ var game_started: bool = false
 var weapons = []
 var enemies: Array[Node2D]
 var spawned_xp: Array[Node2D]
+
+# Variables to save/load to track player stats
+var total_enemies_killed: int = 0
+var total_xp_gained: int = 0
+var total_damage_done: float = 0.0
+
+var touch_input_enabled: bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -39,12 +47,14 @@ func _ready() -> void:
 	restart_game_button.pressed.connect(restart_game)
 	
 	# Add all weapons to the weapons array
-	weapons.append(energy_sword)
-	weapons.append(spreadfire)
+	# weapons.append(energy_sword)
+	# weapons.append(spreadfire)
 	weapons.append(slam)
 	weapons.append(light_blade)
 	weapons.append(arrow)
+	weapons.append(waldos)
 
+	load_game()
 	# Initialize the character select UI to properly set the weapons in the Dict
 	character_select_UI.init()
 	pause_game()
@@ -115,11 +125,10 @@ func select_character(character: Dictionary) -> void:
 	character_select_UI.visible = false
 	player.initialize(character)
 	character["weapon"].level_up() # Don't need to ask the array since we have a ref already.
+	character["weapon"].visible = true # Make sure the weapon is visiible (required for some weapons)
 	unpause_game()
 	game_started = true
 	# print_debug("Selected " + character)
-
-
 
 
 func display_level_up() -> void:
@@ -132,6 +141,8 @@ func unpause_game() -> void:
 	get_tree().paused = false
 
 func quit_game() -> void:
+	# Save the game and quit
+	save_game()
 	get_tree().quit() # TODO - Save data. Confirm quit?
 
 
@@ -143,6 +154,7 @@ func round_to_dec(num: float, digit: int) -> float:
 	
 func game_over() -> void:
 	#Pause the game, destroy all enemies, then show the game over UI 
+	save_game()
 	pause_game()
 	game_started = false
 	game_over_UI.visible = true
@@ -166,3 +178,48 @@ func restart_game() -> void:
 
 	# TODO - reset the player's position too!
 	
+# Write the player's data to a file
+func save_game() -> void:
+	var save_data = ConfigFile.new()
+	# Save the player's preferences too!
+	save_data.set_value("Settings", "touch_input_enabled", touch_input_enabled)
+	save_data.set_value("Settings", "sound_volume", db_to_linear(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("Master"))))
+	save_data.set_value("Settings", "music_volume", db_to_linear(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("Music"))))
+	
+	# Save the player's stats
+	save_data.set_value("SaveData","enemies killed", total_enemies_killed)
+	save_data.set_value("SaveData","xp gained", total_xp_gained)
+	save_data.set_value("SaveData","damage done", total_damage_done)
+	save_data.save("user://save_game.cfg")
+	print_debug("Game saved!")
+
+	character_select_UI.check_unlock_requiremets()
+
+# Load the player's data from a file
+func load_game() -> void:
+	var save_data = ConfigFile.new()
+	var error = save_data.load("user://save_game.cfg")
+	if error != OK: return
+
+	# Load the player's preferences
+	touch_input_enabled = save_data.get_value("Settings", "touch_input_enabled", false)
+	$"/root/GameScene/UI/MainMenu".set_touch_input_button_state(touch_input_enabled)
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), linear_to_db(save_data.get_value("Settings", "sound_volume", 0.5)))
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Music"), linear_to_db(save_data.get_value("Settings", "music_volume", 0.5)))
+
+	total_enemies_killed = save_data.get_value("SaveData","enemies killed")
+	total_xp_gained = save_data.get_value("SaveData","xp gained")
+	total_damage_done = save_data.get_value("SaveData","damage done")
+	# print_debug("Game loaded!")
+	# print_debug("Enemies killed: " + str(total_enemies_killed))
+	# print_debug("XP gained: " + str(total_xp_gained))
+	# print_debug("Damage done: " + str(total_damage_done))
+
+func reset_game() -> void:
+	# Reset the player's stats and save the game
+	total_enemies_killed = 0
+	total_xp_gained = 0
+	total_damage_done = 0.0
+	save_game()
+	character_select_UI.check_unlock_requiremets()
+	print_debug("Game reset!")
