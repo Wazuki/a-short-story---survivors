@@ -1,6 +1,5 @@
-[gd_scene load_steps=5 format=3 uid="uid://bjuwjx5n7awgn"]
+[gd_scene load_steps=4 format=3 uid="uid://bjuwjx5n7awgn"]
 
-[ext_resource type="Theme" uid="uid://b1mqo7cbopwv1" path="res://maintheme.tres" id="1_3iuef"]
 [ext_resource type="Script" path="res://scripts/level_up_template.gd" id="2_3cn8x"]
 [ext_resource type="Texture2D" uid="uid://bbkjllemm6t22" path="res://sprites/frames/spreadfire_icon.tres" id="3_3uvxi"]
 [ext_resource type="FontFile" uid="uid://diy1ksnxs4bot" path="res://m5x7.ttf" id="3_rkwwb"]
@@ -11,10 +10,13 @@ anchors_preset = 13
 anchor_left = 0.5
 anchor_right = 0.5
 anchor_bottom = 1.0
+offset_left = -175.0
+offset_top = 1.0
+offset_right = 175.0
+offset_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 6
-theme = ExtResource("1_3iuef")
 script = ExtResource("2_3cn8x")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
@@ -38,11 +40,9 @@ texture_filter = 1
 clip_contents = false
 layout_mode = 2
 size_flags_vertical = 3
-theme = ExtResource("1_3iuef")
-theme_type_variation = &"HeaderLarge"
-theme_override_font_sizes/normal_font_size = 72
+theme_type_variation = &"CharHeader"
 bbcode_enabled = true
-text = "Spreadfire"
+text = "[p align=center]Spreadfire"
 scroll_active = false
 
 [node name="WeaponIcon" type="TextureRect" parent="MarginContainer/VBoxContainer"]
@@ -62,8 +62,6 @@ texture_filter = 1
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 4.5
-theme = ExtResource("1_3iuef")
-theme_override_font_sizes/normal_font_size = 48
 bbcode_enabled = true
 text = "Level 1 -> 2
 Damage 1 -> 2
@@ -77,9 +75,8 @@ texture_filter = 1
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-theme = ExtResource("1_3iuef")
 theme_override_fonts/font = ExtResource("3_rkwwb")
-theme_override_font_sizes/font_size = 48
+theme_override_font_sizes/font_size = 36
 text = "ACQUIRE ARMAMENT"
 
 [connection signal="pressed" from="MarginContainer/VBoxContainer/LevelUpButton" to="." method="_on_level_up_button_pressed"]

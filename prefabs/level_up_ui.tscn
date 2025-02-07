@@ -1,6 +1,5 @@
-[gd_scene load_steps=4 format=3 uid="uid://clb7lgpy4ix3o"]
+[gd_scene load_steps=3 format=3 uid="uid://clb7lgpy4ix3o"]
 
-[ext_resource type="Theme" uid="uid://b1mqo7cbopwv1" path="res://maintheme.tres" id="1_d5l7i"]
 [ext_resource type="Script" path="res://scripts/level_up_ui.gd" id="2_0x4o0"]
 [ext_resource type="PackedScene" uid="uid://bqtbeeisrsdix" path="res://prefabs/level_up_container.tscn" id="3_fr2nm"]
 
@@ -12,7 +11,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("1_d5l7i")
 script = ExtResource("2_0x4o0")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]

@@ -56,6 +56,7 @@ func init() -> void:
 	tank_stats.get_or_add("unlock_reqs", {
 		GameController.total_xp_gained: TANK_UNLOCK_VAL,
 	})
+	tank_stats.get_or_add("CharPanel", %TankCharacterPanel)
 	tank_stats.get_or_add("LockPanel", %LockPanel_Tank)
 	tank_stats.get_or_add("ReqText", %RequirementsText_Tank)
 	tank_stats.get_or_add("unlock_text_val", "ACQUIRE %s/" + str(tank_stats.unlock_reqs.values()[0]) + " KNOWLEDGE")
@@ -63,6 +64,7 @@ func init() -> void:
 	huntress_stats.get_or_add("unlock_reqs", {
 		GameController.total_enemies_killed: HUNTRESS_UNLOCK_VAL,
 	})
+	huntress_stats.get_or_add("CharPanel", %HuntressCharacterPanel)
 	huntress_stats.get_or_add("LockPanel", %LockPanel_Huntress)
 	huntress_stats.get_or_add("ReqText", %RequirementsText_Huntress)
 	huntress_stats.get_or_add("unlock_text_val", "ELIMINATE %s/" + str(huntress_stats.unlock_reqs.values()[0]) + " FOES")
@@ -70,6 +72,7 @@ func init() -> void:
 	technician_stats.get_or_add("unlock_reqs", {
 		GameController.total_damage_done: TECHNICIAN_UNLOCK_VAL,
 	})
+	technician_stats.get_or_add("CharPanel", %TechnicianCharacterPanel)
 	technician_stats.get_or_add("LockPanel", %LockPanel_Technician)
 	technician_stats.get_or_add("ReqText", %RequirementsText_Technician)
 	technician_stats.get_or_add("unlock_text_val", "ADMINISTER %s/" + str(technician_stats.unlock_reqs.values()[0]) + " WOUNDS")
@@ -95,6 +98,7 @@ func check_unlock_requiremets() -> void:
 			if unlock_var >= unlock_threshold:
 				# Unlock character
 				characters[c]["LockPanel"].visible = false
+				characters[c]["CharPanel"].visible = true
 			else: 
 				var unlock_text:String = "[p align=center]"
 				unlock_text += characters[c]["unlock_text_val"]

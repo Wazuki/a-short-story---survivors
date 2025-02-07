@@ -34,8 +34,8 @@ enabled=PackedStringArray("res://addons/SignalVisualizer/plugin.cfg", "res://add
 
 [gui]
 
-theme/custom="res://maintheme.tres"
-theme/custom_font="res://m5x7.ttf"
+theme/custom="res://theme by azagaya/sci-fi-theme.tres"
+theme/custom_font="res://theme by azagaya/Pixel Square 10.ttf"
 
 [input]
 
