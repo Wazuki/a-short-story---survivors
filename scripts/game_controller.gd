@@ -17,6 +17,7 @@ extends Node
 @onready var enemy_spawn_timer: Timer = get_node("/root/GameScene/EnemySpawnTimer")
 
 @onready var game_over_UI: PanelContainer = get_node("/root/GameScene/UI/GameOverUI")
+@onready var pause_button: Button = get_node("/root/GameScene/UI/PauseButton")
 
 var total_enemies_spawned: int = 0
 var game_started: bool = false
@@ -136,9 +137,11 @@ func display_level_up() -> void:
 
 func pause_game() -> void:
 	get_tree().paused = true
+	pause_button.visible = false
 
 func unpause_game() -> void:
 	get_tree().paused = false
+	pause_button.visible = true
 
 func quit_game() -> void:
 	# Save the game and quit
@@ -174,7 +177,7 @@ func restart_game() -> void:
 		xp.queue_free()
 	spawned_xp.clear()
 	
-	get_node("/root/GameScene/UI/MainMenu").visible = true
+	get_node("/root/GameScene/UI/MainMenu/MainMenu").visible = true
 
 	# TODO - reset the player's position too!
 	

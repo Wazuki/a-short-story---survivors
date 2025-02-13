@@ -2,7 +2,7 @@
 
 [ext_resource type="Theme" uid="uid://c0re1bitbft18" path="res://theme by azagaya/sci-fi-theme.tres" id="1_lfrqp"]
 [ext_resource type="Script" path="res://scripts/level_up_template.gd" id="2_3cn8x"]
-[ext_resource type="Texture2D" uid="uid://bbkjllemm6t22" path="res://sprites/frames/spreadfire_icon.tres" id="3_3uvxi"]
+[ext_resource type="Texture2D" uid="uid://blrx78f1corvf" path="res://sprites/frames/light_sword_icon.tres" id="3_apl21"]
 [ext_resource type="FontFile" uid="uid://diy1ksnxs4bot" path="res://m5x7.ttf" id="3_rkwwb"]
 
 [node name="LevelUpTemplate" type="Panel"]
@@ -54,8 +54,8 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 3
 size_flags_stretch_ratio = 2.0
-texture = ExtResource("3_3uvxi")
-expand_mode = 3
+texture = ExtResource("3_apl21")
+expand_mode = 2
 stretch_mode = 5
 
 [node name="LevelInformation" type="RichTextLabel" parent="MarginContainer/VBoxContainer"]
