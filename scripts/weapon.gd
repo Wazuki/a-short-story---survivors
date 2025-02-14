@@ -5,6 +5,9 @@ var damage: float
 var speed: float
 var cooldown: float
 
+var crit_chance: float
+var crit_mod: float
+
 var cooldown_timer: Timer
 var ready_to_fire: bool
 
@@ -16,6 +19,9 @@ func _ready() -> void:
 	add_child(cooldown_timer)
 	# cooldown_timer.wait_time = cooldown
 	
+	crit_chance = 0
+	crit_mod = 0
+
 	ready_to_fire = false
 
 func level_up(damage_level_up: float, speed_level_up: float, cooldown_level_up: float) -> void:
@@ -28,6 +34,7 @@ func level_up(damage_level_up: float, speed_level_up: float, cooldown_level_up: 
 	cooldown_timer.wait_time = cooldown
 	
 	ready_to_fire = true
+	print_debug("Warning! This function should no longer be called!")
 	
 #func start_timer() -> void:
 #	timer.start()
@@ -58,3 +65,11 @@ func get_speed() -> float:
 
 func _on_weapon_timer_timeout() -> void:
 	ready_to_fire = true
+
+func damage_calc() -> float:
+	if crit_chance == 0:
+		return damage
+	elif (randf() <= crit_chance):
+		print("Crit with " + get_parent().name)
+		return damage * crit_mod
+	else: return damage

@@ -13,13 +13,22 @@ const LEVEL_UP_SPEED = 1.025
 const LEVEL_UP_PIERCE_MOD = 2
 const LEVEL_UP_COOLDOWN = 0.98
 
-#Other Values
-
+# Other Values
+# Level 1: Base: a single, piercing projectile with moderate damage.
+# Level 2: Increase projectile speed and a small damage bonus.
+# Level 3: Add a slight homing or tracking feature (or improve targeting efficiency).
+# Level 4: Enhance piercing (e.g., an arrow can hit one additional enemy).
+# Level 5: New Mechanic: Introduce a chance for a double shot (or a secondary arrow fires automatically).
+# Level 6: Improve the tracking further, maybe add a visual cue for critical hits.
+# Level 7: Signature Overhaul: The arrow becomes “charged” after a brief pause, delivering a burst of damage or even splitting into multiple projectiles on impact.
 
 var icon: AtlasTexture = preload("res://sprites/frames/arrow_icon.tres")
 # Variables other Weapons DON'T have
 var pierce
 var first_level_up
+var double_shot: bool
+var double_shot_chance: float
+
 # var ready_to_fire
 
 var weapon
@@ -55,12 +64,18 @@ func reset() -> void:
 func fire_weapon() -> void:
 	# new fire algo - set angle every time, removed needless if. If bullets aren't angling look here first!
 	if weapon.ready_to_fire and GameController.player.get_highest_hp_target() != Vector2.ZERO: # Check to see if player actually has target
-		spawn_arrow(GameController.player.get_highest_hp_target(), GameController.player)
+		spawn_arrow(GameController.player.get_highest_hp_target())
+		if double_shot and (randf() < double_shot_chance):
+			# Add a small delay before firing the second arrow
+			await get_tree().create_timer(0.25).timeout
+			spawn_arrow(GameController.player.get_closest_target(), Vector2(0.5, 0.5)) # Double-shot arrows should be a little smaller
+
 		weapon.fire_weapon()
 
-func spawn_arrow(target: Vector2, player: Node2D) -> void:
+func spawn_arrow(target: Vector2, arrow_size: Vector2 = Vector2.ONE) -> void:
 	var new_arrow = preload("res://prefabs/arrow_bullet.tscn").instantiate()
 	new_arrow.initialize(weapon.damage, weapon.speed, BASE_RANGE, pierce) # TODO - Range increase with level?
+	new_arrow.scale = arrow_size
 
 	# Set the arrow's global position to the player's position + offset
 	look_at(target) # Rotate the pivot, not the arrow.
@@ -68,8 +83,14 @@ func spawn_arrow(target: Vector2, player: Node2D) -> void:
 	new_arrow.reparent(get_node("/root/GameScene")) # Reparent the new bullet to GameScene so it won't move with the player.
 
 
-	
-	
+# Other Values
+# Level 1: Base: a single, piercing projectile with moderate damage.
+# Level 2: Increase projectile speed and a small damage bonus.
+# Level 3: Add a slight homing or tracking feature (or improve targeting efficiency).
+# Level 4: Enhance piercing (e.g., an arrow can hit one additional enemy).
+# Level 5: New Mechanic: Introduce a chance for a double shot (or a secondary arrow fires automatically).
+# Level 6: Improve the tracking further, maybe add a visual cue for critical hits.
+# Level 7: Signature Overhaul: The arrow becomes “charged” after a brief pause, delivering a burst of damage or even splitting into multiple projectiles on impact.
 
 func level_up() -> void:
 	# Call the weapon's level up function, then finalize any others that aren't in weapon (projectiles, lifetime, etc)
@@ -77,23 +98,81 @@ func level_up() -> void:
 		first_level_up = false
 		weapon.fire_weapon()
 		return
-	
-	weapon.level_up(LEVEL_UP_DAMAGE, LEVEL_UP_SPEED, LEVEL_UP_COOLDOWN)
-	pierce = (pierce + 1) if (weapon.level % LEVEL_UP_PIERCE_MOD) == 0 else pierce
-	
-	weapon.fire_weapon() # Design this way, the player starts with the cooldown instead of getting a "free shot".
+	else:
+		weapon.level += 1
+		match weapon.level:
+			2:
+				# Level 2: Increase projectile speed and a small damage bonus.
+				weapon.damage += 10
+				weapon.speed += 250.0
+			3:
+				# Level 3: Add a slight homing or tracking feature (or improve targeting efficiency).
+				weapon.cooldown = 0.25
+				# TODO - tracking implementation?
+			4:
+				# Level 4: Enhance piercing (e.g., an arrow can hit one additional enemy).
+				pierce = 2		
 
+			5:
+				# Level 5: New Mechanic: Introduce a chance for a double shot (or a secondary arrow fires automatically).
+				double_shot = true
+				double_shot_chance = 0.25
+			6:
+				# Level 6: Improve the tracking further, maybe add a visual cue for critical hits.
+				weapon.crit_chance = 0.25
+				weapon.crit_mod = 1.5
+			7:
+				# Level 7: Signature Overhaul: The arrow becomes “charged” after a brief pause, delivering a burst of damage or even splitting into multiple projectiles on impact.
+				# Make sure to remove it from the level up pool when we get to this point!
+				# TODO - implement me
+				pass
 
-func get_level_up_text() -> String:
-	# Need to watch order of operations especially with modulus and concatenating strings!
-	var new_pierce = pierce + 1 if (weapon.level + 1) % LEVEL_UP_PIERCE_MOD == 0 else pierce
-	var level_up_string: String
-	if first_level_up: level_up_string = "Level 1\nDamage " + str(weapon.damage) + "\nPieceing " + str(pierce) + "\nSpeed " + str(weapon.speed) + "\nCooldown " + str(weapon.cooldown)+ "s";
-	else: 
-		level_up_string = "Level " + str(weapon.level) + " -> " + str(weapon.level + 1) + "\n"
-		level_up_string += "Damage " + str(GameController.round_to_dec(weapon.damage, 2)) + " -> " + str(GameController.round_to_dec(weapon.damage * LEVEL_UP_DAMAGE, 2)) + "\n"
-		level_up_string += "Piercing " + str(pierce) + " -> " + str(new_pierce) + "\n"
-		level_up_string += "Speed " + str(GameController.round_to_dec(weapon.speed, 2)) + " -> " + str(GameController.round_to_dec(weapon.speed * LEVEL_UP_SPEED, 2)) + "\n"
-		level_up_string += "Cooldown " + str(GameController.round_to_dec(weapon.cooldown, 2)) + "s -> " + str(GameController.round_to_dec((weapon.cooldown * LEVEL_UP_COOLDOWN),2)) + "s";
+		weapon.fire_weapon()
 		
-	return level_up_string
+func get_level_up_text() -> String:
+	if first_level_up: return "A single piercing projectile with moderate damage."
+	else:
+		match weapon.level + 1:
+			2:
+				return "Increased projectile speed and gain small damage bonus."
+			3:
+				return "Improved cooldown and add tracking feature (TODO)"
+			4:
+				return "Improved piercing"	
+
+			5:
+				return "Chance for double shot"
+			6:
+				return "Chance for critical hit"
+			7:
+				return "Signature: Arrow becomes changed after a brief pause OR split arrows?"
+	return "Error! If you got here notify someone who isn't me."
+
+
+# Old level_up function
+#func level_up() -> void:
+	# Call the weapon's level up function, then finalize any others that aren't in weapon (projectiles, lifetime, etc)
+	#if first_level_up:
+	#	first_level_up = false
+	#	weapon.fire_weapon()
+	#	return
+	
+	#weapon.level_up(LEVEL_UP_DAMAGE, LEVEL_UP_SPEED, LEVEL_UP_COOLDOWN)
+	#pierce = (pierce + 1) if (weapon.level % LEVEL_UP_PIERCE_MOD) == 0 else pierce
+	
+	#weapon.fire_weapon() # Design this way, the player starts with the cooldown instead of getting a "free shot".
+
+# Old get_level_up_text
+#func get_level_up_text() -> String:
+	# Need to watch order of operations especially with modulus and concatenating strings!
+	#var new_pierce = pierce + 1 if (weapon.level + 1) % LEVEL_UP_PIERCE_MOD == 0 else pierce
+	#var level_up_string: String
+	#if first_level_up: level_up_string = "Level 1\nDamage " + str(weapon.damage) + "\nPieceing " + str(pierce) + "\nSpeed " + str(weapon.speed) + "\nCooldown " + str(weapon.cooldown)+ "s";
+	#else: 
+	#	level_up_string = "Level " + str(weapon.level) + " -> " + str(weapon.level + 1) + "\n"
+	#	level_up_string += "Damage " + str(GameController.round_to_dec(weapon.damage, 2)) + " -> " + str(GameController.round_to_dec(weapon.damage * LEVEL_UP_DAMAGE, 2)) + "\n"
+	#	level_up_string += "Piercing " + str(pierce) + " -> " + str(new_pierce) + "\n"
+	#	level_up_string += "Speed " + str(GameController.round_to_dec(weapon.speed, 2)) + " -> " + str(GameController.round_to_dec(weapon.speed * LEVEL_UP_SPEED, 2)) + "\n"
+	#	level_up_string += "Cooldown " + str(GameController.round_to_dec(weapon.cooldown, 2)) + "s -> " + str(GameController.round_to_dec((weapon.cooldown * LEVEL_UP_COOLDOWN),2)) + "s";
+		
+	#return level_up_string
