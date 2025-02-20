@@ -1,8 +1,7 @@
-[gd_scene load_steps=18 format=3 uid="uid://vq6b006w6gq2"]
+[gd_scene load_steps=17 format=3 uid="uid://vq6b006w6gq2"]
 
 [ext_resource type="Texture2D" uid="uid://b8jbfk5blexdc" path="res://sprites/effects/arrow sprites.png" id="1_u2b3l"]
 [ext_resource type="Script" path="res://scripts/arrow_bullet.gd" id="1_vpwkj"]
-[ext_resource type="AudioStream" uid="uid://dsqpnnd7iftnp" path="res://sounds/arrow.ogg" id="3_embet"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_e7s2f"]
 atlas = ExtResource("1_u2b3l")
@@ -112,10 +111,6 @@ frame_progress = 0.268365
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_7c23j")
-
-[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource("3_embet")
-autoplay = true
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="body_exited" from="." to="." method="_on_body_exited"]

@@ -70,6 +70,6 @@ func damage_calc() -> float:
 	if crit_chance == 0:
 		return damage
 	elif (randf() <= crit_chance):
-		print("Crit with " + get_parent().name)
+		# print("Crit with " + get_parent().name)
 		return damage * crit_mod
 	else: return damage

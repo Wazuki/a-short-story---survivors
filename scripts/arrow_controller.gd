@@ -23,11 +23,13 @@ const LEVEL_UP_COOLDOWN = 0.98
 # Level 7: Signature Overhaul: The arrow becomes “charged” after a brief pause, delivering a burst of damage or even splitting into multiple projectiles on impact.
 
 var icon: AtlasTexture = preload("res://sprites/frames/arrow_icon.tres")
+const SMALL_ARROW_SIZE: Vector2 = Vector2(0.5, 0.5)
 # Variables other Weapons DON'T have
 var pierce
 var first_level_up
-var double_shot: bool
+var double_shot: bool = false
 var double_shot_chance: float
+var overhaul_split_enabled: bool = false
 
 # var ready_to_fire
 
@@ -58,6 +60,9 @@ func reset() -> void:
 	weapon.reset_timer()
 	pierce = BASE_PIERCE
 	first_level_up = true
+	double_shot = false
+	double_shot_chance = 0
+	overhaul_split_enabled = false
 	
 
 # Fire the weapon, using the a V2 target
@@ -68,7 +73,7 @@ func fire_weapon() -> void:
 		if double_shot and (randf() < double_shot_chance):
 			# Add a small delay before firing the second arrow
 			await get_tree().create_timer(0.25).timeout
-			spawn_arrow(GameController.player.get_closest_target(), Vector2(0.5, 0.5)) # Double-shot arrows should be a little smaller
+			spawn_arrow(GameController.player.get_closest_target(), SMALL_ARROW_SIZE) # Double-shot arrows should be a little smaller
 
 		weapon.fire_weapon()
 
@@ -77,11 +82,30 @@ func spawn_arrow(target: Vector2, arrow_size: Vector2 = Vector2.ONE) -> void:
 	new_arrow.initialize(weapon.damage, weapon.speed, BASE_RANGE, pierce) # TODO - Range increase with level?
 	new_arrow.scale = arrow_size
 
+	# Enable splitting if level 7 has been reached (enabling the overhaul)
+	if overhaul_split_enabled && arrow_size == Vector2.ONE: new_arrow.splittable = true
+
 	# Set the arrow's global position to the player's position + offset
 	look_at(target) # Rotate the pivot, not the arrow.
 	add_child(new_arrow) # Add the arrow to the scene
 	new_arrow.reparent(get_node("/root/GameScene")) # Reparent the new bullet to GameScene so it won't move with the player.
+	%ArrowSounds.play()
 
+func spawn_split_arrows(spawn_pos: Vector2) -> void:
+	# Spawn 8 split arrows when killing a target.
+	for a in 8:
+		var new_arrow = preload("res://prefabs/arrow_bullet.tscn").instantiate()
+		new_arrow.initialize(weapon.damage / 2, weapon.speed, BASE_RANGE, pierce)
+		new_arrow.scale = SMALL_ARROW_SIZE
+
+		# Add the arrows to the scene, then angle them based on the current count.__find_method_line_number_in_script
+		call_deferred("add_child", new_arrow)
+		new_arrow.call_deferred("reparent", get_node("/root/GameScene"))
+		# new_arrow.reparent(get_node("/root/GameScene"))
+		new_arrow.call_deferred("set_global_position", spawn_pos)
+		new_arrow.call_deferred("set_rotation_degrees", a * 45)
+		#new_arrow.global_position = spawn_pos
+		#new_arrow.global_rotation_degrees = a * 45 # 45 degrees to make an 8-way attack
 
 # Other Values
 # Level 1: Base: a single, piercing projectile with moderate damage.
@@ -122,10 +146,10 @@ func level_up() -> void:
 				weapon.crit_chance = 0.25
 				weapon.crit_mod = 1.5
 			7:
-				# Level 7: Signature Overhaul: The arrow becomes “charged” after a brief pause, delivering a burst of damage or even splitting into multiple projectiles on impact.
-				# Make sure to remove it from the level up pool when we get to this point!
-				# TODO - implement me
-				pass
+				# Level 7: Split the arrow when killing an enemy.
+				# Level up UI handles checking if the weapon is a levle up option. Duh.
+				overhaul_split_enabled = true
+				
 
 		weapon.fire_weapon()
 		
@@ -136,16 +160,15 @@ func get_level_up_text() -> String:
 			2:
 				return "Increased projectile speed and gain small damage bonus."
 			3:
-				return "Improved cooldown and add tracking feature (TODO)"
+				return "Improved cooldown"
 			4:
 				return "Improved piercing"	
-
 			5:
 				return "Chance for double shot"
 			6:
 				return "Chance for critical hit"
 			7:
-				return "Signature: Arrow becomes changed after a brief pause OR split arrows?"
+				return "Signature: Arrows split on kill"
 	return "Error! If you got here notify someone who isn't me."
 
 

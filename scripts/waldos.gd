@@ -32,6 +32,9 @@ func reset() -> void:
 	scale = Vector2(BASE_SCALE, BASE_SCALE)
 	first_level_up = true
 
+	# make sure we hide the waldos since they're special when they reset.
+	visible = false
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta: float) -> void:
 	rotation += BASE_SPEED * delta

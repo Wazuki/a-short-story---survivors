@@ -116,7 +116,7 @@ func start_game() -> void:
 
 	for w in weapons:
 		w.reset()
-	
+		
 	# display_level_up()
 	# Display the character select screen
 	character_select_UI.visible = true

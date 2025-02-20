@@ -1,5 +1,7 @@
 extends Control
 
+const MAX_WEAPON_LEVEL = 7
+
 var level_up_container
 
 # Called when the node enters the scene tree for the first time.
@@ -14,6 +16,9 @@ func show_level_up_screen() -> void:
 	GameController.pause_game()
 	
 	for w in GameController.weapons:
+		# Skip showing hte weapon as an option if it's at max level
+		if w.weapon.level >= MAX_WEAPON_LEVEL: continue # Need to get the level from the actual weapon node
+
 		# Get the level up text and the relevant info to initialize the buttons etc
 		var level_up_text = w.get_level_up_text()
 		# var level_up_information = w.get_level_up_info()

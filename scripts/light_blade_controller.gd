@@ -1,9 +1,9 @@
 extends Marker2D
 
-const BASE_DAMAGE = 4.0
-const BASE_SPEED = 1.0
-const BASE_COOLDOWN = 1.5
-const BASE_SLASHES = 1
+const BASE_DAMAGE = 25
+# const BASE_SPEED = 1.0
+const BASE_COOLDOWN = 2.5
+const BASE_SLASHES = 2
 const BASE_SCALE = Vector2.ONE
 
 #Level up stats
@@ -15,11 +15,107 @@ const LEVEL_UP_SCALE = 1.03
 const MAX_SLASHES = 3
 
 var icon: AtlasTexture = preload("res://sprites/frames/light_sword_icon.tres")
+@onready var spritesheet: AnimatedSprite2D = get_child(0).get_child(0)
 
 var first_level_up
-var slashes: int = 1
+var slashes: int = 2
+var overhaul_enabled: bool = false
 var weapon_scale: Vector2
 var weapon
+var current_slash: int = 0
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	name = "Light Sword"
+	weapon = preload("res://prefabs/weapon.tscn").instantiate()
+	add_child(weapon)
+	# reset()
+	spritesheet.connect("animation_finished", %LightBlade.damage_enemies_in_slash)
+	spritesheet.connect("animation_finished", slash)
+
+func reset() -> void:
+	weapon.set_stats(BASE_DAMAGE, 1.0, BASE_COOLDOWN)
+	weapon.reset_timer()
+	slashes = BASE_SLASHES
+	weapon_scale = BASE_SCALE
+	overhaul_enabled = false
+
+	first_level_up = true
+	# %LightBlade.connect_spritesheet_signal(slash)
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _physics_process(_delta: float) -> void:
+	if weapon.ready_to_fire:
+		# Spawn swords!
+		# spawn_new_light_sword()
+		slash()
+
+func slash() -> void:
+	# Slash once, then, once the animation ends, slash again until reaching the final slash.
+	# TODO - 3 slashes are happening instead of 2? fix me
+	if current_slash < slashes:
+		current_slash += 1
+		look_at(GameController.player.get_closest_target())
+		%LightBlade.damage = weapon.damage
+		%LightBlade.play_slash_animation(current_slash)
+		# %LightBlade.damage_enemies_in_slash()
+		print_debug("Slash " + str(current_slash))
+
+		if current_slash == 3: %BigSlash.play()
+		else: %Slash.play()
+	else:
+		# Reset the timer and the slash count.
+		weapon.fire_weapon()
+		current_slash = 0
+		print_debug("Resetting slash")
+
+
+# Handles timing and spawning swords whenever the Weapon timer expires, called on physics process
+#func spawn_new_light_sword() -> void:
+	# Look towards the closest target, then spawn the slashes
+#	look_at(GameController.player.get_closest_target())
+
+#	var new_sword = preload("res://prefabs/light_blade_bullet.tscn").instantiate()
+#	new_sword.set_stats(weapon.damage, slashes)
+#	add_child(new_sword)
+	# new_sword.position.x += weapon.level # Slowly add the weapon's level to the x position to offset hte ever-increasing scale.
+#	new_sword.scale = weapon_scale
+#	weapon.fire_weapon()
+	
+
+func level_up() -> void:
+	# Call the weapon's level up function, then finalize any others that aren't in weapon (projectiles, lifetime, etc)
+	if first_level_up:
+		first_level_up = false
+		weapon.fire_weapon()
+		return
+	else:
+		weapon.level += 1
+		match weapon.level:
+			2:
+				# Level 2: ~10% damage increase, attack speed increase
+				weapon.damage *= 1.1
+				weapon.cooldown *= 0.9
+			3:
+				# Level 3: Increased size?
+				weapon_scale *= 1.1
+			4:
+				# Level 4: ~10% damage increase
+				weapon.damage *= 1.1
+
+			5:
+				# Level 5: Third slash with windup? deals extra damage
+				slashes = 3
+			6:
+				# Level 6: Reduce cooldown between slashes or extend reach on last slam?
+				weapon.cooldown *= 9
+			7:
+				# Level 7: Last slash gets extra effect (knockback? crit chance? buff?)
+				# Level up UI handles checking if the weapon is a levle up option. Duh.
+				overhaul_enabled = true
+				
+
+		weapon.fire_weapon()
 
 # Upgrade Plan
 # Level 1: 2 swipe combo
@@ -29,69 +125,55 @@ var weapon
 # Level 5: Third slash with windup? deals extra damage
 # Level 6: Reduce cooldown between slashes or extend reach on last slam?
 # Level 7: Last slash gets extra effect (knockback? crit chance? buff?)
-# TODO: Come back here
-
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	name = "Light Sword"
-	weapon = preload("res://prefabs/weapon.tscn").instantiate()
-	add_child(weapon)
-	# reset()
-
-func reset() -> void:
-	weapon.set_stats(BASE_DAMAGE, BASE_SPEED, BASE_COOLDOWN)
-	weapon.reset_timer()
-	slashes = BASE_SLASHES
-	weapon_scale = BASE_SCALE
-
-	first_level_up = true
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _physics_process(_delta: float) -> void:
-	if weapon.ready_to_fire:
-		# Spawn swords!
-		spawn_new_light_sword()
-
-# Handles timing and spawning swords whenever the Weapon timer expires, called on physics process
-func spawn_new_light_sword() -> void:
-	# Look towards the closest target, then spawn the slashes
-	look_at(GameController.player.get_closest_target())
-
-	var new_sword = preload("res://prefabs/light_blade_bullet.tscn").instantiate()
-	new_sword.set_stats(weapon.damage, slashes)
-	add_child(new_sword)
-	# new_sword.position.x += weapon.level # Slowly add the weapon's level to the x position to offset hte ever-increasing scale.
-	new_sword.scale = weapon_scale
-	weapon.fire_weapon()
-	
-
-func level_up() -> void:
-	# Call the weapon's level up function, then finalize any others that aren't in weapon (projectiles, lifetime, etc)
-	if first_level_up:
-		first_level_up = false
-		weapon.fire_weapon()
-		return
-	
-	weapon.level_up(LEVEL_UP_DAMAGE, LEVEL_UP_SPEED, LEVEL_UP_COOLDOWN)
-	slashes = slashes + 1 if (weapon.level % LEVEL_UP_SLASHES_MOD) == 0 else slashes
-	slashes = clamp(slashes, 1, MAX_SLASHES)
-
-	weapon_scale *= LEVEL_UP_SCALE
-	
-	weapon.fire_weapon() # Design this way, the player starts with the cooldown instead of getting a "free shot".
-
 
 func get_level_up_text() -> String:
-	# Need to watch order of operations especially with modulus and concatenating strings!
-	var new_slashes: int = slashes + 1 if ((weapon.level +1) % LEVEL_UP_SLASHES_MOD) == 0 else slashes
-	new_slashes = clamp(new_slashes, 1, MAX_SLASHES)
+	if first_level_up: return "Two quick sword slashes."
+	else:
+		match weapon.level + 1:
+			2:
+				return "Increased damage and attack speed."
+			3:
+				return "Increased size."
+			4:
+				return "Increased damage and attack speed."	
+			5:
+				return "Third slash that deals bonus damage."
+			6:
+				return "Increase size of third slash."
+			7:
+				return "Signature: TODO" # TODO
+	return "Error! If you got here notify someone who isn't me."
+
+
+
+
+#func level_up() -> void:
+	# Call the weapon's level up function, then finalize any others that aren't in weapon (projectiles, lifetime, etc)
+#	if first_level_up:
+#		first_level_up = false
+#		weapon.fire_weapon()
+#		return
 	
-	var level_up_string: String
-	if first_level_up: level_up_string = "Level 1\nDamage " + str(weapon.damage) + "\nSlashes " + str(slashes)+ "\nCooldown " + str(weapon.cooldown) + "s";
-	else: 
-		level_up_string = "Level " + str(weapon.level) + " -> " + str(weapon.level + 1) + "\n"
-		level_up_string += "Damage " + str(GameController.round_to_dec(weapon.damage, 2)) + " -> " + str(GameController.round_to_dec(weapon.damage * LEVEL_UP_DAMAGE, 2)) + "\n"
-		level_up_string += "Slashes " + str(slashes) + " -> " + str(new_slashes) + "\n"
-		level_up_string += "Cooldown " + str(GameController.round_to_dec(weapon.cooldown, 2)) + "s -> " + str(GameController.round_to_dec((weapon.cooldown * LEVEL_UP_COOLDOWN),2)) + "s";
+#	weapon.level_up(LEVEL_UP_DAMAGE, LEVEL_UP_SPEED, LEVEL_UP_COOLDOWN)
+#	slashes = slashes + 1 if (weapon.level % LEVEL_UP_SLASHES_MOD) == 0 else slashes
+#	slashes = clamp(slashes, 1, MAX_SLASHES)
+
+#	weapon_scale *= LEVEL_UP_SCALE
+	
+#	weapon.fire_weapon() # Design this way, the player starts with the cooldown instead of getting a "free shot".
+
+
+#func get_level_up_text() -> String:
+	# Need to watch order of operations especially with modulus and concatenating strings!
+#	var new_slashes: int = slashes + 1 if ((weapon.level +1) % LEVEL_UP_SLASHES_MOD) == 0 else slashes
+#	new_slashes = clamp(new_slashes, 1, MAX_SLASHES)
+	
+#	var level_up_string: String
+#	if first_level_up: level_up_string = "Level 1\nDamage " + str(weapon.damage) + "\nSlashes " + str(slashes)+ "\nCooldown " + str(weapon.cooldown) + "s";
+#	else: 
+#		level_up_string = "Level " + str(weapon.level) + " -> " + str(weapon.level + 1) + "\n"
+#		level_up_string += "Damage " + str(GameController.round_to_dec(weapon.damage, 2)) + " -> " + str(GameController.round_to_dec(weapon.damage * LEVEL_UP_DAMAGE, 2)) + "\n"
+#		level_up_string += "Slashes " + str(slashes) + " -> " + str(new_slashes) + "\n"
+#		level_up_string += "Cooldown " + str(GameController.round_to_dec(weapon.cooldown, 2)) + "s -> " + str(GameController.round_to_dec((weapon.cooldown * LEVEL_UP_COOLDOWN),2)) + "s";
 		
-	return level_up_string
+#	return level_up_string
