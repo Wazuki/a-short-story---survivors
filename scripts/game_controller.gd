@@ -75,14 +75,15 @@ func spawn_enemy() -> void:
 	var new_enemy = preload("res://prefabs/enemy.tscn").instantiate()
 	new_enemy.global_position = mob_spawn_point.global_position 
 	add_child(new_enemy)
-
+	new_enemy.initialize() # Below functions moved to the enemy script!
+	
 	# Initialize the enemy as an elite or boss if the total enemies spawned is a multiple of 20 or 50
-	if total_enemies_spawned % 50 == 0:
-		new_enemy.initialize("boss")
-	elif total_enemies_spawned % 20 == 0:
-		new_enemy.initialize("elite")
-	else:
-		new_enemy.initialize("basic")
+	#if total_enemies_spawned % 50 == 0:
+	#	new_enemy.initialize(new_enemy.EnemyType.BOSS)
+	#elif total_enemies_spawned % 20 == 0:
+	#	new_enemy.initialize(new_enemy.EnemyType.ELITE)
+	#else:
+	#	new_enemy.initialize(new_enemy.EnemyType.BASIC)
 
 	enemies.append(new_enemy)
 

@@ -59,6 +59,9 @@ region = Rect2(768, 0, 64, 64)
 animations = [{
 "frames": [{
 "duration": 1.0,
+"texture": null
+}, {
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_g0pxj")
 }, {
 "duration": 1.0,
@@ -82,6 +85,9 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": null
+}, {
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_j7i8v")
 }, {
 "duration": 1.0,
@@ -101,6 +107,9 @@ animations = [{
 "speed": 12.0
 }, {
 "frames": [{
+"duration": 1.0,
+"texture": null
+}, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_4ousq")
 }, {
@@ -122,6 +131,7 @@ animations = [{
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_u00uc"]
+radius = 12.0
 height = 45.0
 
 [node name="LightBladeBullet" type="Area2D"]
@@ -136,11 +146,10 @@ script = ExtResource("1_xaeed")
 unique_name_in_owner = true
 sprite_frames = SubResource("SpriteFrames_e31jg")
 animation = &"slash1"
-frame = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 unique_name_in_owner = true
-position = Vector2(0, 5)
+position = Vector2(-7.23998e-06, 2)
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_u00uc")
 

@@ -1,18 +1,19 @@
 extends Marker2D
 
-const BASE_DAMAGE = 25
+const BASE_DAMAGE = 5
 # const BASE_SPEED = 1.0
-const BASE_COOLDOWN = 2.5
+const BASE_COOLDOWN = 1.0
 const BASE_SLASHES = 2
 const BASE_SCALE = Vector2.ONE
+const FINAL_SLASH_DAMAGE_MOD = 1.5
 
-#Level up stats
-const LEVEL_UP_DAMAGE = 1.2
-const LEVEL_UP_SPEED = 1.2
-const LEVEL_UP_SLASHES_MOD = 5
-const LEVEL_UP_COOLDOWN = 0.99
-const LEVEL_UP_SCALE = 1.03
-const MAX_SLASHES = 3
+# Level up stats
+# const LEVEL_UP_DAMAGE = 1.2
+# const LEVEL_UP_SPEED = 1.2
+# const LEVEL_UP_SLASHES_MOD = 5
+# const LEVEL_UP_COOLDOWN = 0.99
+# const LEVEL_UP_SCALE = 1.03
+# const MAX_SLASHES = 3
 
 var icon: AtlasTexture = preload("res://sprites/frames/light_sword_icon.tres")
 @onready var spritesheet: AnimatedSprite2D = get_child(0).get_child(0)
@@ -21,8 +22,10 @@ var first_level_up
 var slashes: int = 2
 var overhaul_enabled: bool = false
 var weapon_scale: Vector2
+var final_slash_scale: Vector2
 var weapon
 var current_slash: int = 0
+var currently_slashing: bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -30,45 +33,66 @@ func _ready() -> void:
 	weapon = preload("res://prefabs/weapon.tscn").instantiate()
 	add_child(weapon)
 	# reset()
-	spritesheet.connect("animation_finished", %LightBlade.damage_enemies_in_slash)
-	spritesheet.connect("animation_finished", slash)
+	# spritesheet.connect("animation_finished", %LightBlade.damage_enemies_in_slash)
+	spritesheet.connect("animation_finished", end_slash)
 
 func reset() -> void:
 	weapon.set_stats(BASE_DAMAGE, 1.0, BASE_COOLDOWN)
 	weapon.reset_timer()
 	slashes = BASE_SLASHES
+	current_slash = 0
+	currently_slashing = false
 	weapon_scale = BASE_SCALE
+	final_slash_scale = BASE_SCALE
 	overhaul_enabled = false
-
+	
 	first_level_up = true
 	# %LightBlade.connect_spritesheet_signal(slash)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(_delta: float) -> void:
-	if weapon.ready_to_fire:
+	if weapon.ready_to_fire && not currently_slashing:
 		# Spawn swords!
 		# spawn_new_light_sword()
 		slash()
 
 func slash() -> void:
 	# Slash once, then, once the animation ends, slash again until reaching the final slash.
-	# TODO - 3 slashes are happening instead of 2? fix me
+	# TODO - Playing first animation twice!
 	if current_slash < slashes:
+		## Pause for a frame or so to prevent engine weirdness with animation doubling? Testing function
+		# await get_tree().create_timer(get_process_delta_time()).timeout
 		current_slash += 1
+		currently_slashing = true
 		look_at(GameController.player.get_closest_target())
-		%LightBlade.damage = weapon.damage
+
+		# Set the damage based on the current slash and play the correct sound
+		if current_slash == 3: 
+			%BigSlash.play()
+			%LightBlade.damage = weapon.damage * FINAL_SLASH_DAMAGE_MOD
+			%LightBlade.scale = final_slash_scale
+			if overhaul_enabled: %LightBlade.cause_knockback = true # In theory, this will only ever be called at level 7 so no need to change it otherwise since it'llb e false from previous calls
+		else: 
+			%Slash.play()
+			%LightBlade.damage = weapon.damage
+			%LightBlade.scale = weapon_scale
+			%LightBlade.cause_knockback = false
+
 		%LightBlade.play_slash_animation(current_slash)
 		# %LightBlade.damage_enemies_in_slash()
-		print_debug("Slash " + str(current_slash))
+		# print_debug("Slash " + str(current_slash))
 
-		if current_slash == 3: %BigSlash.play()
-		else: %Slash.play()
+
 	else:
 		# Reset the timer and the slash count.
+		%LightBlade.reset_animation()
 		weapon.fire_weapon()
 		current_slash = 0
-		print_debug("Resetting slash")
+		# print_debug("Resetting slash")
 
+func end_slash() -> void: 
+	currently_slashing = false
+	%LightBlade.reset_damaged_enemies()
 
 # Handles timing and spawning swords whenever the Weapon timer expires, called on physics process
 #func spawn_new_light_sword() -> void:
@@ -99,18 +123,20 @@ func level_up() -> void:
 			3:
 				# Level 3: Increased size?
 				weapon_scale *= 1.1
+				final_slash_scale *= 1.1
 			4:
 				# Level 4: ~10% damage increase
 				weapon.damage *= 1.1
 
 			5:
-				# Level 5: Third slash with windup? deals extra damage
+				# Level 5: Third slash deals extra damage
 				slashes = 3
 			6:
 				# Level 6: Reduce cooldown between slashes or extend reach on last slam?
 				weapon.cooldown *= 9
+				final_slash_scale *= 1.5
 			7:
-				# Level 7: Last slash gets extra effect (knockback? crit chance? buff?)
+				# Level 7: Last slash gets extra effect: knockback
 				# Level up UI handles checking if the weapon is a levle up option. Duh.
 				overhaul_enabled = true
 				
@@ -141,7 +167,7 @@ func get_level_up_text() -> String:
 			6:
 				return "Increase size of third slash."
 			7:
-				return "Signature: TODO" # TODO
+				return "Signature: Cause knockback with third slash."
 	return "Error! If you got here notify someone who isn't me."
 
 

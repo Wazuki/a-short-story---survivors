@@ -1,12 +1,23 @@
-[gd_scene load_steps=6 format=3 uid="uid://di0ipr2avn3g4"]
+[gd_scene load_steps=11 format=3 uid="uid://di0ipr2avn3g4"]
 
 [ext_resource type="Script" path="res://scripts/enemy.gd" id="1_secww"]
 [ext_resource type="PackedScene" uid="uid://remf34e7bwbp" path="res://prefabs/healthbar.tscn" id="2_7xfje"]
-[ext_resource type="SpriteFrames" uid="uid://c5hesxioqtbmd" path="res://sprites/frames/basic_enemy.tres" id="2_jm746"]
+[ext_resource type="SpriteFrames" uid="uid://c5hesxioqtbmd" path="res://sprites/frames/ranged_enemy.tres" id="2_jm746"]
 [ext_resource type="AudioStream" uid="uid://cp212fsoorkcu" path="res://sounds/LIQImpt_Goo Splatter_09.wav" id="3_qi2p4"]
+[ext_resource type="AudioStream" uid="uid://cpa54i274qfh7" path="res://sounds/ranged enemy/sci-fi_weapon_blaster_laser_boom_small_01.wav" id="5_h68a8"]
+[ext_resource type="AudioStream" uid="uid://cecnc2bgd4mfk" path="res://sounds/ranged enemy/sci-fi_weapon_blaster_laser_boom_small_02.wav" id="6_7sip6"]
+[ext_resource type="AudioStream" uid="uid://dbnoxtq3ysjbb" path="res://sounds/ranged enemy/sci-fi_weapon_blaster_laser_boom_small_03.wav" id="7_iprc3"]
+[ext_resource type="AudioStream" uid="uid://dlijmd2ioepir" path="res://sounds/ranged enemy/sci-fi_weapon_blaster_laser_boom_small_04.wav" id="8_yv3we"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_bw8w4"]
 height = 28.0
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_h6a0t"]
+streams_count = 4
+stream_0/stream = ExtResource("5_h68a8")
+stream_1/stream = ExtResource("6_7sip6")
+stream_2/stream = ExtResource("7_iprc3")
+stream_3/stream = ExtResource("8_yv3we")
 
 [node name="Enemy" type="CharacterBody2D"]
 y_sort_enabled = true
@@ -33,8 +44,23 @@ unique_name_in_owner = true
 position = Vector2(-1, 1)
 shape = SubResource("CapsuleShape2D_bw8w4")
 
+[node name="AvoidanceArea" type="Area2D" parent="."]
+unique_name_in_owner = true
+
+[node name="AvoidanceAreaCollider" type="CollisionShape2D" parent="AvoidanceArea"]
+position = Vector2(-1, 1)
+shape = SubResource("CapsuleShape2D_bw8w4")
+
 [node name="DeathSound" type="AudioStreamPlayer2D" parent="."]
 unique_name_in_owner = true
 stream = ExtResource("3_qi2p4")
 
+[node name="ShootSound" type="AudioStreamPlayer2D" parent="."]
+unique_name_in_owner = true
+stream = SubResource("AudioStreamRandomizer_h6a0t")
+
+[node name="ShootTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+
 [connection signal="animation_finished" from="Spritesheet" to="." method="_on_spritesheet_animation_finished"]
+[connection signal="timeout" from="ShootTimer" to="." method="_on_shoot_timer_timeout"]

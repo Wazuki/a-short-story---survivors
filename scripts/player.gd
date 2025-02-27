@@ -46,6 +46,7 @@ func initialize(character: Dictionary) -> void:
 	# print_debug("Set character stats to " + str(character))
 
 func _physics_process(delta: float) -> void:
+	if Input.is_action_just_released("give_xp"): gain_experience(10)
 	#GetVector() turns movement into 2D direction
 
  	# If the player is alive, move them based on input. This is also where we will fire weapons, gain XP, etc.
@@ -79,8 +80,8 @@ func _physics_process(delta: float) -> void:
 			
 			for m in overlapping_mobs: total_damage += clamp((m.damage - (armor / 10)), 0, m.damage) # Clamp the damage to 0 if it's negative
 
-			health -= total_damage * delta # Deal damage for each mob touching the player times delta so they don't explode
-			%HealthBar.value = health
+			#health -= total_damage * delta # Deal damage for each mob touching the player times delta so they don't explode
+			take_damage(total_damage * delta)
 			# Firing weapons moved to each weapon function to make them independent of the player.
 			
 		var xp_to_absorb = %PickupRadius.get_overlapping_areas()
@@ -96,6 +97,10 @@ func _physics_process(delta: float) -> void:
 		# emit_signal("_health_depleted")
 		%Spritesheet.animation = "death"
 		%Spritesheet.play()
+
+func take_damage(damage: float) -> void:
+	health -= damage
+	%HealthBar.value = health
 
 # TODO - Weapon-managed ranges with variable ranges.
 func get_target() -> Vector2:
