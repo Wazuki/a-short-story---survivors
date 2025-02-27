@@ -22,8 +22,8 @@ extends Node
 var total_enemies_spawned: int = 0
 var game_started: bool = false
 var weapons = []
-var enemies: Array[Node2D]
-var spawned_xp: Array[Node2D]
+# var enemies: Array[Node2D]
+# var spawned_xp: Array[Node2D]
 
 # Variables to save/load to track player stats
 var total_enemies_killed: int = 0
@@ -85,7 +85,7 @@ func spawn_enemy() -> void:
 	#else:
 	#	new_enemy.initialize(new_enemy.EnemyType.BASIC)
 
-	enemies.append(new_enemy)
+	# enemies.append(new_enemy)
 
 func is_point_on_tilemap(pos: Vector2) -> bool:
 	
@@ -95,12 +95,6 @@ func is_point_on_tilemap(pos: Vector2) -> bool:
 	return cell == null # If the cell is null we're off the map - return true, go back to the loop, and try again.
 	# return false # We want this to return false in the end because the loop will run until we find a cell that is ON the map. True continues the loop!
 
-func stop_tracking_enemy(e: Node2D) -> void:
-	enemies.erase(e)
-	
-func stop_tracking_xp_orb(xp: Node2D) -> void:
-	spawned_xp.erase(xp)
-
 func spawn_experience_orb(pos: Vector2, value: int) -> void:
 	var xp_orb = preload("res://prefabs/experience_orb.tscn").instantiate()
 	call_deferred("add_child", xp_orb)
@@ -108,8 +102,14 @@ func spawn_experience_orb(pos: Vector2, value: int) -> void:
 	xp_orb.initialize(pos, value) # 10 as a basic "large XP test"
 	# xp_orb.global_position = pos
 	# xp_orb.set_value(15) # Basic XP test
-	spawned_xp.append(xp_orb)
+	# spawned_xp.append(xp_orb)
 	# print("spawned xp")
+
+func spawn_health_pickup(pos: Vector2) -> void:
+	var health_pickup = preload("res://prefabs/health_pickup.tscn").instantiate()
+	call_deferred("add_child", health_pickup)
+	health_pickup.initialize(pos)
+	# print("spawned health")
 
 # Reset enemies and weapons, then let the player select a character.
 func start_game() -> void:
@@ -153,6 +153,7 @@ func quit_game() -> void:
 func _on_enemy_spawn_timer_timeout() -> void:
 	spawn_enemy()
 
+# TODO - remove me after balancing pass on Slam and Waldos
 func round_to_dec(num: float, digit: int) -> float:
 	return round(num * pow(10.0, digit) / pow(10.0, digit))
 	
@@ -169,14 +170,12 @@ func restart_game() -> void:
 	game_over_UI.visible = false
 	
 	# Destroy all enemies
-	for e in enemies:
+	for e in get_tree().get_nodes_in_group("Enemies"):
 		e.queue_free()
-	enemies.clear()
-	
-	# Detroy experience too
-	for xp in spawned_xp:
-		xp.queue_free()
-	spawned_xp.clear()
+
+	# Don't forget to destroy any pickups (health/XP)
+	for p in get_tree().get_nodes_in_group("Pickups"):
+		p.queue_free()
 	
 	get_node("/root/GameScene/UI/MainMenu/MainMenu").visible = true
 

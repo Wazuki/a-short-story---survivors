@@ -4,7 +4,8 @@ var speed: float = 100.0
 var health: float = 3
 var damage: float = 1.0
 var xp_value: int
-var range:float
+var health_drop_chance: float = 0.0
+var enemy_range:float
 
 var knockback_velocity: Vector2
 # var knockback_target: Vector2
@@ -35,12 +36,23 @@ const BASIC_ENEMY_STATS = {
 	"scale": Vector2(0.5, 0.5)
 }
 
+const RANGED_ENEMY_STATS = {
+	"health": 25,
+	"speed": 50.0,
+	"damage": 12.0,
+	"range": 150.00,
+	"xp_value": 8,	
+	"scale": Vector2(0.75, 0.75),
+	"health_drop_chance": 0.1
+}
+
 const ELITE_ENEMY_STATS = {
 	"health": 40,
 	"speed": 75.0,
 	"damage": 2.5,
 	"xp_value": 15,
-	"scale": Vector2.ONE
+	"scale": Vector2.ONE,
+	"health_drop_chance": 0.2
 }
 
 const BOSS_ENEMY_STATS = {
@@ -48,17 +60,11 @@ const BOSS_ENEMY_STATS = {
 	"speed": 100.0,
 	"damage": 5.0,
 	"xp_value": 30,
-	"scale": Vector2(2, 2)
+	"scale": Vector2(2, 2),
+	"health_drop_chance": 0.5
 }
 
-const RANGED_ENEMY_STATS = {
-	"health": 25,
-	"speed": 50.0,
-	"damage": 12.0,
-	"range": 150.00,
-	"xp_value": 8,	
-	"scale": Vector2(0.75, 0.75)
-}
+
 
 
 func _ready() -> void:
@@ -98,7 +104,8 @@ func initialize() -> void:
 			speed = RANGED_ENEMY_STATS["speed"]
 			scale = RANGED_ENEMY_STATS["scale"]
 			damage = RANGED_ENEMY_STATS["damage"]
-			range = RANGED_ENEMY_STATS["range"]
+			enemy_range = RANGED_ENEMY_STATS["range"]
+			health_drop_chance = RANGED_ENEMY_STATS["health_drop_chance"]
 			xp_value = RANGED_ENEMY_STATS["xp_value"]
 			%Spritesheet.sprite_frames = ranged_enemy_spritesheet
 		EnemyType.ELITE:
@@ -107,6 +114,7 @@ func initialize() -> void:
 			speed = ELITE_ENEMY_STATS["speed"]
 			scale = ELITE_ENEMY_STATS["scale"]
 			damage = ELITE_ENEMY_STATS["damage"]
+			health_drop_chance = ELITE_ENEMY_STATS["health_drop_chance"]
 			xp_value = ELITE_ENEMY_STATS["xp_value"]
 		EnemyType.BOSS:
 			name = "Boss"
@@ -114,6 +122,7 @@ func initialize() -> void:
 			speed = BOSS_ENEMY_STATS["speed"]
 			scale = BOSS_ENEMY_STATS["scale"]
 			damage = BOSS_ENEMY_STATS["damage"]
+			health_drop_chance = BOSS_ENEMY_STATS["health_drop_chance"]
 			xp_value = BOSS_ENEMY_STATS["xp_value"]
 			# Only bosses have health bars.
 			has_health_bar = true
@@ -131,6 +140,7 @@ func _physics_process(delta: float) -> void:
 		# print_debug("kb velocity: " + str(knockback_velocity))
 		velocity = knockback_velocity
 		#move_and_slide()
+
 		move_and_collide(velocity * delta)
 		#var collision = move_and_collide(velocity * delta)
 		#if collision:
@@ -142,7 +152,8 @@ func _physics_process(delta: float) -> void:
 	elif not is_dead && enemy_type != EnemyType.RANGED:
 		var direction = global_position.direction_to(player.global_position)
 		velocity = direction * speed # Character body automatically applies delta
-		move_and_slide()
+
+		move()
 		# TODO - maybe revisit this later?
 		# Avoid collision with knocked back enemies
 		#for body in %AvoidanceArea.get_overlapping_bodies():
@@ -154,31 +165,37 @@ func _physics_process(delta: float) -> void:
 	elif not is_dead && enemy_type == EnemyType.RANGED:
 		# Ranged movement
 		var direction = global_position.direction_to(player.global_position)
+
 		if not is_shooting:
-			if  global_position.distance_to(player.global_position) < range / 3:
+			if  global_position.distance_to(player.global_position) < enemy_range / 3:
 				# Move away from the player, they're too close
 				direction *= -1
 				velocity = direction * speed
-			elif not is_shooting: # We should only move when we are not shooting and the player is not in our face
+			elif not is_shooting and global_position.distance_to(player.global_position) >= enemy_range: # We should only move when we are not shooting and the player is not in our face
 				velocity = direction * speed
-		else: velocity = Vector2.ZERO
+		else: 
+			velocity = Vector2.ZERO
 
-		move_and_slide()
+
 		# Check if the player is within range. If so, shoot at them.
 		# Make sure the enemy will get to at least half range before shooting the player.
-		if global_position.distance_to(player.global_position) <= range and can_shoot  and global_position.distance_to(player.global_position) > range / 2:
+		if global_position.distance_to(player.global_position) <= enemy_range and can_shoot  and global_position.distance_to(player.global_position) > enemy_range / 2:
 			# Shoot a projectile at the player.
 			is_shooting = true
 			can_shoot = false
+
+			# Flip the sprite to face the player when shooting.
+			if player.global_position.x < global_position.x:
+				$Spritesheet.flip_h = true
+			else:
+				$Spritesheet.flip_h = false
+
 			%Spritesheet.animation = "attack"
 			%Spritesheet.play()
 			# Will fire a projectile at the player at the end of the animation
+		else: move()
 			
-	# Flip the sprite based on direction
-	if velocity.x < 0:
-		$Spritesheet.flip_h = true
-	elif velocity.x > 0:
-		$Spritesheet.flip_h = false
+
 
 
 #	elif not is_dead and knocked_back:
@@ -192,6 +209,22 @@ func _physics_process(delta: float) -> void:
 #			knockback_velocity = Vector2.ZERO
 #			knockback_target = Vector2.ZERO
 
+func move() -> void:
+	if is_shooting: return
+
+	# Flip the sprite based on direction
+	if velocity.x < 0:
+		$Spritesheet.flip_h = true
+	elif velocity.x > 0:
+		$Spritesheet.flip_h = false
+	
+	if velocity == Vector2.ZERO: %Spritesheet.animation = "idle"
+	else: %Spritesheet.animation = "walk"
+	%Spritesheet.play()
+
+	move_and_slide()
+	
+
 
 func take_damage(dam: float) -> void:
 	health -= dam
@@ -203,6 +236,8 @@ func take_damage(dam: float) -> void:
 		# Spawn an explosion of some kind? use call_deferred if you do
 		# Spawn an experience orb
 		GameController.spawn_experience_orb(global_position, xp_value)
+		if randf() < health_drop_chance: GameController.spawn_health_pickup(global_position)
+
 		# %CollisionShape2D.disabled = true
 		%CollisionShape2D.set_deferred("disabled", true)
 		# print_debug("We died at " + str(global_position.x) + "," + str(global_position.y))
@@ -219,7 +254,7 @@ func apply_knockback(source: Vector2, strength: float) -> void:
 
 func _on_spritesheet_animation_finished() -> void:
 	if is_dead:
-		GameController.stop_tracking_enemy(self)
+		# GameController.stop_tracking_enemy(self)
 		GameController.total_enemies_killed += 1
 		# print_debug("Enemy died")
 		queue_free()

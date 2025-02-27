@@ -4,6 +4,7 @@ extends CharacterBody2D
 # const STARTING_SPEED = 300
 const STARTING_TIL_NEXT_LEVEL = 5
 
+var max_health
 var health
 var speed
 var armor: float # Each point of armor reduces damage by 0.1
@@ -26,6 +27,7 @@ func _ready() -> void:
 
 func initialize(character: Dictionary) -> void:
 	health = character["health"]
+	max_health = health
 	speed = character["speed"]
 	armor = character["armor"]
 	%Spritesheet.sprite_frames = character["spritesheet"]
@@ -100,6 +102,11 @@ func _physics_process(delta: float) -> void:
 
 func take_damage(damage: float) -> void:
 	health -= damage
+	%HealthBar.value = health
+
+# Heal the player by a percentage of max health, clamped by max health
+func heal_damage(heal: float) -> void:
+	health = clamp(health + (heal * max_health), 0, max_health)
 	%HealthBar.value = health
 
 # TODO - Weapon-managed ranges with variable ranges.

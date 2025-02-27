@@ -32,6 +32,11 @@ window/stretch/aspect="expand"
 
 enabled=PackedStringArray("res://addons/SignalVisualizer/plugin.cfg", "res://addons/goutte.animated_shape_2d/plugin.cfg", "res://addons/quest_system/plugin.cfg", "res://addons/spin_button/plugin.cfg")
 
+[global_group]
+
+Pickups="Anything that can be picked up by the player"
+Enemies="Enemies that have spawned"
+
 [gui]
 
 theme/custom="res://theme by azagaya/sci-fi-theme.tres"

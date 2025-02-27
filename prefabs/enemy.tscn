@@ -19,7 +19,7 @@ stream_1/stream = ExtResource("6_7sip6")
 stream_2/stream = ExtResource("7_iprc3")
 stream_3/stream = ExtResource("8_yv3we")
 
-[node name="Enemy" type="CharacterBody2D"]
+[node name="Enemy" type="CharacterBody2D" groups=["Enemies"]]
 y_sort_enabled = true
 collision_layer = 2
 collision_mask = 3
