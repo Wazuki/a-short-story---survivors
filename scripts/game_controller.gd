@@ -176,6 +176,10 @@ func restart_game() -> void:
 	# Don't forget to destroy any pickups (health/XP)
 	for p in get_tree().get_nodes_in_group("Pickups"):
 		p.queue_free()
+
+	# Destroy all projectiles
+	for p in get_tree().get_nodes_in_group("Projectiles"):
+		p.queue_free()
 	
 	get_node("/root/GameScene/UI/MainMenu/MainMenu").visible = true
 

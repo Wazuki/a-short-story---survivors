@@ -89,7 +89,8 @@ func _physics_process(delta: float) -> void:
 		var xp_to_absorb = %PickupRadius.get_overlapping_areas()
 		# print_debug("There are " + str(xp_to_absorb.size()) + " xp in range!")
 		for xp in xp_to_absorb:
-			xp.absorbing = true # Call the Absorb function on the XP so they fly towards the player
+			# This should be illegal lmao
+			if "absorbing" in xp: xp.absorbing = true # Call the Absorb function on the XP so they fly towards the player
 			if not %XPPickupSound.playing: %XPPickupSound.play() # Play the XP sound but only if it's not currently playing to rpevent spam
 
 		update_player_info_text()

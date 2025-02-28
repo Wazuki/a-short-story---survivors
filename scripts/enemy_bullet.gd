@@ -11,7 +11,7 @@ var velocity: Vector2
 func _physics_process(delta: float) -> void:
 	# Move towards the target pos
 	global_position += velocity * speed * delta
-	rotate(ROTATION_SPEED * delta)
+	rotation += ROTATION_SPEED * delta
 
 	# If the bullet goes off screen, destroy it
 	if global_position.x < 0 or global_position.x > get_viewport_rect().size.x or global_position.y < 0 or global_position.y > get_viewport_rect().size.y:

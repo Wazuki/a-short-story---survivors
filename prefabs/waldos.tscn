@@ -20,3 +20,18 @@ frame_progress = 0.811936
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 unique_name_in_owner = true
 shape = SubResource("CircleShape2D_u1eqt")
+
+[node name="InnerRing" type="Area2D" parent="."]
+unique_name_in_owner = true
+visible = false
+collision_layer = 0
+collision_mask = 2
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="InnerRing"]
+sprite_frames = ExtResource("1_mopce")
+animation = &"inner_ring"
+autoplay = "inner_ring"
+
+[node name="InnerRingCollider" type="CollisionShape2D" parent="InnerRing"]
+unique_name_in_owner = true
+shape = SubResource("CircleShape2D_u1eqt")

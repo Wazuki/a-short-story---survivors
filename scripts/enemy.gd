@@ -1,6 +1,7 @@
 extends CharacterBody2D
 
 var speed: float = 100.0
+var base_speed: float = 100.0
 var health: float = 3
 var damage: float = 1.0
 var xp_value: int
@@ -11,6 +12,7 @@ var knockback_velocity: Vector2
 # var knockback_target: Vector2
 var knockback_friction: float = 400.0 # The rate at which knockback decays - should decay rapidly, like the enemy is quickly getting their footing back
 var slowed_speed: float = 0.0
+var slow_decay_rate: float = 5.0
 
 # Booleans
 var is_dead: bool = false
@@ -130,11 +132,13 @@ func initialize() -> void:
 			$HealthBar.value = health
 			$HealthBar.visible = true
 
+	base_speed = speed
 	%Spritesheet.animation = "walk"
 	%Spritesheet.play()
 
 
 func _physics_process(delta: float) -> void:
+
 	if knockback_velocity.length() > 0.1:
 		knockback_velocity = knockback_velocity.move_toward(Vector2.ZERO, knockback_friction * delta)
 		# print_debug("kb velocity: " + str(knockback_velocity))
@@ -194,7 +198,9 @@ func _physics_process(delta: float) -> void:
 			%Spritesheet.play()
 			# Will fire a projectile at the player at the end of the animation
 		else: move()
-			
+		
+	# Finally, check if the enemy is slowed. If so, decrease the slow effect over time.
+	if speed < base_speed: speed = clampf(speed + slow_decay_rate * delta, 0, base_speed)
 
 
 
@@ -224,6 +230,11 @@ func move() -> void:
 
 	move_and_slide()
 	
+# Slow the enemy by a percentage of their speed
+func apply_slow(slow: float) -> void:
+	# Only apply slow if the enemy is not already slowed
+	if speed == base_speed: speed *= (1.0 - slow)
+
 
 
 func take_damage(dam: float) -> void:
