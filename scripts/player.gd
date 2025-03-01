@@ -20,6 +20,7 @@ var total_level_ups = 0
 
 @onready var player_info_text : RichTextLabel = get_node("/root/GameScene/UI/PlayerInfoContainer/Panel/MarginContainer/PlayerInfoText")
 
+signal _health_changed
 signal _health_depleted
 
 func _ready() -> void:
@@ -36,8 +37,7 @@ func initialize(character: Dictionary) -> void:
 	level = 1
 	xp_to_next_level = STARTING_TIL_NEXT_LEVEL
 	# Don't forget to reset the UI!
-	%HealthBar.max_value = health
-	%HealthBar.value = health
+	adjust_health_bar()
 	update_player_info_text()
 
 	%Spritesheet.animation = "idle"
@@ -103,12 +103,15 @@ func _physics_process(delta: float) -> void:
 
 func take_damage(damage: float) -> void:
 	health -= damage
-	%HealthBar.value = health
+	adjust_health_bar()
 
 # Heal the player by a percentage of max health, clamped by max health
 func heal_damage(heal: float) -> void:
 	health = clamp(health + (heal * max_health), 0, max_health)
-	%HealthBar.value = health
+	adjust_health_bar()
+
+func adjust_health_bar() -> void:
+	emit_signal("_health_changed", health, max_health)
 
 # TODO - Weapon-managed ranges with variable ranges.
 func get_target() -> Vector2:

@@ -2,6 +2,7 @@ extends Node
 
 
 @onready var player = get_node("/root/GameScene/Player")
+@onready var player_health_bar = get_node("/root/GameScene/UI/PlayerHealthBar")
 @onready var level_up_UI = get_node("/root/GameScene/UI/LevelUpUI")
 @onready var character_select_UI = get_node("/root/GameScene/UI/CharacterSelectUI")
 @onready var tilemap: TileMapLayer = get_node("/root/GameScene/Level")
@@ -15,13 +16,21 @@ extends Node
 
 @onready var mob_spawn_point: PathFollow2D = get_node("/root/GameScene/Player/MobSpawnPath/MobSpawnPoint")
 @onready var enemy_spawn_timer: Timer = get_node("/root/GameScene/EnemySpawnTimer")
+@onready var enemy_difficulty_timer: Timer = get_node("/root/GameScene/EnemySpawnTimer/EnemyDifficultyTimer")
 
 @onready var game_over_UI: PanelContainer = get_node("/root/GameScene/UI/GameOverUI")
 @onready var pause_button: Button = get_node("/root/GameScene/UI/PauseButton")
 
+const BASE_DIFFICULTY_INCREASE_TIME = 60.0
+const BASE_ENEMY_SPAWN_TIME = 0.5
+var enemy_spawn_time = BASE_ENEMY_SPAWN_TIME
+
+var game_time_elapsed: float = 0.0
+
 var total_enemies_spawned: int = 0
 var game_started: bool = false
 var weapons = []
+var difficulty = 0
 # var enemies: Array[Node2D]
 # var spawned_xp: Array[Node2D]
 
@@ -29,6 +38,7 @@ var weapons = []
 var total_enemies_killed: int = 0
 var total_xp_gained: int = 0
 var total_damage_done: float = 0.0
+
 
 var touch_input_enabled: bool = false
 
@@ -39,8 +49,10 @@ func _ready() -> void:
 	get_node("/root").call_deferred("remove_child",self)
 	get_node("/root/GameScene").call_deferred("add_child", self)
 	enemy_spawn_timer.connect("timeout", _on_enemy_spawn_timer_timeout)
+	enemy_difficulty_timer.connect("timeout", _on_enemy_difficulty_timer_timeout)
 	
 	player.connect("_health_depleted", game_over)
+	player.connect("_health_changed", update_player_info_text)
 	
 	# lol
 	var restart_game_button: Button = get_node("/root/GameScene/UI/GameOverUI/MarginContainer/Panel/VBoxContainer/MarginContainer/RestartButton")
@@ -60,8 +72,26 @@ func _ready() -> void:
 	character_select_UI.init()
 	pause_game()
 
+func _process(delta: float) -> void:
+	if game_started: 
+		game_time_elapsed += delta
+
+		# Update game time on the UI.
+		update_time_passed_label()
+		
+
+func update_time_passed_label() -> void:
+	var seconds = floori(game_time_elapsed)
+	var minutes = seconds / 60
+	var leftover_seconds = seconds % 60
+	var time_string = str(minutes) + ":" + str(leftover_seconds).pad_zeros(2)
+	$"/root/GameScene/UI/GameTimeLabel".text = "[p align=\"center\"]" + time_string
+
+	if minutes >= 5: # 5 minutes is the max time for a game
+		game_over()
 
 func spawn_enemy() -> void:
+
 	total_enemies_spawned += 1
 
 	# Spawn a basic enemy. Every 20 enemies, spawn an elite. Every 50, spawn a boss.
@@ -72,7 +102,7 @@ func spawn_enemy() -> void:
 		mob_spawn_point.progress_ratio = randf()
 
 
-	var new_enemy = preload("res://prefabs/enemy.tscn").instantiate()
+	var new_enemy = preload("res://prefabs/enemy_kinematic.tscn").instantiate()
 	new_enemy.global_position = mob_spawn_point.global_position 
 	add_child(new_enemy)
 	new_enemy.initialize() # Below functions moved to the enemy script!
@@ -86,6 +116,29 @@ func spawn_enemy() -> void:
 	#	new_enemy.initialize(new_enemy.EnemyType.BASIC)
 
 	# enemies.append(new_enemy)
+
+func _on_enemy_spawn_timer_timeout() -> void:
+	spawn_enemy()
+
+	# Spawn extra enemies based on the difficulty
+	var extra_enemy_count = difficulty
+	while extra_enemy_count > 0:
+		spawn_enemy()
+		extra_enemy_count -= 1
+
+	enemy_spawn_timer.wait_time = enemy_spawn_time
+
+func _on_enemy_difficulty_timer_timeout() -> void:
+	enemy_spawn_time = clamp(enemy_spawn_time - 0.1, 0.1, BASE_ENEMY_SPAWN_TIME)
+	difficulty += 1
+	# print_debug("Difficulty: " + str(difficulty))
+
+func update_player_info_text(health: float, max_health: float) -> void:
+	player_health_bar.health = health
+	player_health_bar.max_health = max_health
+
+	#player_health_bar.max_value = max_health
+	#player_health_bar.value = health
 
 func is_point_on_tilemap(pos: Vector2) -> bool:
 	
@@ -117,7 +170,15 @@ func start_game() -> void:
 
 	for w in weapons:
 		w.reset()
-		
+	
+	# Reset the enemy spawn timer and start it.
+	enemy_spawn_timer.wait_time = BASE_ENEMY_SPAWN_TIME
+	enemy_spawn_timer.start()
+	# Reset the enemy difficulty timer as well.
+	enemy_difficulty_timer.wait_time = BASE_DIFFICULTY_INCREASE_TIME
+	enemy_difficulty_timer.start()
+
+	game_time_elapsed = 0.0
 	# display_level_up()
 	# Display the character select screen
 	character_select_UI.visible = true
@@ -126,8 +187,12 @@ func select_character(character: Dictionary) -> void:
 	# Hide the select character UI and start the game after setting the player's stats
 	character_select_UI.visible = false
 	player.initialize(character)
+	player_health_bar.init_health(player.health) # Initialize the player's health bar - sets all the values to max health.
+
 	character["weapon"].level_up() # Don't need to ask the array since we have a ref already.
 	character["weapon"].visible = true # Make sure the weapon is visiible (required for some weapons)
+
+
 	unpause_game()
 	game_started = true
 	# print_debug("Selected " + character)
@@ -150,10 +215,9 @@ func quit_game() -> void:
 	get_tree().quit() # TODO - Save data. Confirm quit?
 
 
-func _on_enemy_spawn_timer_timeout() -> void:
-	spawn_enemy()
 
-# TODO - remove me after balancing pass on Slam and Waldos
+
+# TODO - remove me after balancing pass on Slam
 func round_to_dec(num: float, digit: int) -> float:
 	return round(num * pow(10.0, digit) / pow(10.0, digit))
 	
@@ -167,8 +231,9 @@ func game_over() -> void:
 func restart_game() -> void:
 	# Hide the game over UI and return the player to the main menu.
 	# print_debug("restart")
-	game_over_UI.visible = false
-	
+	game_over_UI.visible = false	
+	difficulty = 0
+
 	# Destroy all enemies
 	for e in get_tree().get_nodes_in_group("Enemies"):
 		e.queue_free()

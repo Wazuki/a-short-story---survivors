@@ -30,8 +30,11 @@ script = ExtResource("1_secww")
 [node name="HealthBar" parent="." instance=ExtResource("2_7xfje")]
 unique_name_in_owner = true
 visible = false
-offset_top = -21.0
-offset_bottom = -14.0
+offset_left = -23.0
+offset_top = -28.0
+offset_right = 913.0
+offset_bottom = 97.0
+scale = Vector2(0.05, 0.05)
 
 [node name="Spritesheet" type="AnimatedSprite2D" parent="."]
 unique_name_in_owner = true

@@ -26,6 +26,7 @@ func _on_level_up_button_pressed() -> void:
 	if typeof(level_up_option) == TYPE_STRING:
 		match level_up_option:
 			"health":
+				GameController.player.max_health += GameController.level_up_UI.LEVEL_UP_HEALTH_VAL
 				GameController.player.health += GameController.level_up_UI.LEVEL_UP_HEALTH_VAL
 			"speed":
 				GameController.player.speed += GameController.level_up_UI.LEVEL_UP_SPEED_VAL

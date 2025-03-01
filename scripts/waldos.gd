@@ -100,6 +100,9 @@ func level_up() -> void:
 	# Call the weapon's level up function, then finalize any others that aren't in weapon (projectiles, lifetime, etc)
 	if first_level_up:
 		first_level_up = false
+		visible = true
+		%InnerRing.visible = false
+		
 		weapon.fire_weapon()
 		return
 	else:

@@ -18,6 +18,8 @@ var slam_count: int = 0
 var targeting: bool = false
 var attack_origin: Vector2
 
+@onready var shockwave = get_node("/root/GameScene/UI/SlamShockwave")
+
 var icon: AtlasTexture = preload("res://sprites/frames/slam_icon.tres")
 
 var first_level_up
@@ -88,7 +90,8 @@ func spawn_next_slam() -> void:
 	new_slam.reparent(get_node("/root/GameScene"))
 
 	
-
+	#var anim_player: AnimationPlayer = shockwave.get_child(0)
+	#anim_player.play("Shockwave")
 	slam_count += 1
 
 
@@ -105,7 +108,14 @@ func _on_next_slam_timer_timeout() -> void:
 		targeting = false
 		weapon.fire_weapon()
 
-
+#TODO
+# Level 1: Base slam: single AOE burst with a fixed radius.
+# Level 2: Increase damage by a small percentage and/or slightly enlarge the AOE.
+# Level 3: Slightly reduced cooldown or faster animation.
+# Level 4: Improved Mechanics: The slam now chains to an extra mini-slam (a quick secondary burst).
+# Level 5: Further increase in area and damage, plus a minor debuff (like slowing enemies in the AOE).
+# Level 6: A unique tweak like a “shockwave” effect that travels further, extending damage beyond the initial hit.
+# Level 7: Signature Overhaul: The final form might spawn multiple mini-slams or leave a lingering damage-over-time area.
 
 func level_up() -> void:
 	# Call the weapon's level up function, then finalize any others that aren't in weapon (projectiles, lifetime, etc)

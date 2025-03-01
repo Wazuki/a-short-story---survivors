@@ -1,4 +1,4 @@
-extends CharacterBody2D
+extends RigidBody2D
 
 var speed: float = 100.0
 var base_speed: float = 100.0
@@ -8,6 +8,7 @@ var xp_value: int
 var health_drop_chance: float = 0.0
 var enemy_range:float
 
+var velocity: Vector2 = Vector2.ZERO
 var knockback_velocity: Vector2
 # var knockback_target: Vector2
 var knockback_friction: float = 400.0 # The rate at which knockback decays - should decay rapidly, like the enemy is quickly getting their footing back
@@ -136,6 +137,13 @@ func initialize() -> void:
 			$HealthBar.visible = true
 
 	base_speed = speed
+
+	# Set the scale of the enemy
+	%Spritesheet.scale = scale
+	%CollisionShape2D.scale = scale
+	%AvoidanceArea.scale = scale
+	%HealthBar.scale = scale
+
 	%Spritesheet.animation = "walk"
 	%Spritesheet.play()
 
@@ -143,12 +151,14 @@ func initialize() -> void:
 func _physics_process(delta: float) -> void:
 
 	if knockback_velocity.length() > 0.1:
-		knockback_velocity = knockback_velocity.move_toward(Vector2.ZERO, knockback_friction * delta)
+
 		# print_debug("kb velocity: " + str(knockback_velocity))
 		velocity = knockback_velocity
 		#move_and_slide()
 
 		move_and_collide(velocity * delta)
+		
+		knockback_velocity = knockback_velocity.move_toward(Vector2.ZERO, knockback_friction * delta)
 		#var collision = move_and_collide(velocity * delta)
 		#if collision:
 		#	var other = collision.get_collider()
@@ -158,7 +168,7 @@ func _physics_process(delta: float) -> void:
 
 	elif not is_dead && enemy_type != EnemyType.RANGED:
 		var direction = global_position.direction_to(player.global_position)
-		velocity = direction * speed # Character body automatically applies delta
+		velocity = direction * speed * delta
 
 		move()
 		# TODO - maybe revisit this later?
@@ -177,9 +187,9 @@ func _physics_process(delta: float) -> void:
 			if  global_position.distance_to(player.global_position) < enemy_range / 3:
 				# Move away from the player, they're too close
 				direction *= -1
-				velocity = direction * speed
+				velocity = direction * speed * delta
 			elif not is_shooting and global_position.distance_to(player.global_position) >= enemy_range: # We should only move when we are not shooting and the player is not in our face
-				velocity = direction * speed
+				velocity = direction * speed * delta
 		else: 
 			velocity = Vector2.ZERO
 
@@ -231,7 +241,7 @@ func move() -> void:
 	else: %Spritesheet.animation = "walk"
 	%Spritesheet.play()
 
-	move_and_slide()
+	move_and_collide(velocity)
 	
 # Slow the enemy by a percentage of their speed
 func apply_slow(slow: float) -> void:

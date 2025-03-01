@@ -1,4 +1,4 @@
-extends TextureRect
+extends ColorRect
 
 @export var node: Node2D # Which node to apply shader to
 @onready var camera := get_viewport().get_camera_2d()
@@ -23,4 +23,4 @@ func set_distortion_center(world_position: Vector2) -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	set_distortion_center(node.global_position)
+	set_distortion_center(GameController.player.global_position)
