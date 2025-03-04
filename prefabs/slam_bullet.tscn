@@ -1,6 +1,6 @@
 [gd_scene load_steps=24 format=3 uid="uid://dec2xuk5l87n3"]
 
-[ext_resource type="Script" path="res://scripts/slam_bullet.gd" id="1_kdetb"]
+[ext_resource type="Script" uid="uid://bxfe1b7hl3gd7" path="res://scripts/slam_bullet.gd" id="1_kdetb"]
 [ext_resource type="Texture2D" uid="uid://cfh5j288p8pxm" path="res://sprites/effects/slam sprites.png" id="1_wcjeg"]
 [ext_resource type="AudioStream" uid="uid://cigxx40o1qwv0" path="res://sounds/slam/rock_impact_heavy_slam_01.wav" id="3_r8dad"]
 [ext_resource type="AudioStream" uid="uid://bshjjlma2gtsm" path="res://sounds/slam/rock_impact_heavy_slam_02.wav" id="4_y7822"]
@@ -139,8 +139,6 @@ script = ExtResource("1_kdetb")
 unique_name_in_owner = true
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_wlqox")
-autoplay = "default"
-frame = 14
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_ock4d")

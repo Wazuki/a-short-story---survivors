@@ -9,7 +9,7 @@
 [ext_resource type="AudioStream" uid="uid://dax4rfyg1yk1a" path="res://sounds/music/Sketchbook 2024-12-21.ogg" id="7_7bn7d"]
 [ext_resource type="Texture2D" uid="uid://cdawaub8gn4r1" path="res://sprites/wenrexa/Icons/24.png" id="7_uohvc"]
 [ext_resource type="PackedScene" uid="uid://remf34e7bwbp" path="res://prefabs/healthbar.tscn" id="9_bil8f"]
-[ext_resource type="Shader" path="res://shaders/slam_shockwave.gdshader" id="9_elxod"]
+[ext_resource type="Shader" uid="uid://b2qp0hi3o8ykm" path="res://shaders/slam_shockwave.gdshader" id="9_elxod"]
 
 [sub_resource type="Curve2D" id="Curve2D_mixcd"]
 _data = {
@@ -106,8 +106,8 @@ tracks/1/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_um3am"]
 _data = {
-"RESET": SubResource("Animation_l46ks"),
-"Shockwave": SubResource("Animation_r45tw")
+&"RESET": SubResource("Animation_l46ks"),
+&"Shockwave": SubResource("Animation_r45tw")
 }
 
 [node name="GameScene" type="Node2D"]
@@ -295,7 +295,7 @@ mouse_filter = 2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="UI/SlamShockwave"]
 libraries = {
-"": SubResource("AnimationLibrary_um3am")
+&"": SubResource("AnimationLibrary_um3am")
 }
 
 [node name="MusicPlayer" type="AudioStreamPlayer" parent="."]

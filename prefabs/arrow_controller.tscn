@@ -1,6 +1,6 @@
 [gd_scene load_steps=11 format=3 uid="uid://bxbdgbhy2c1jt"]
 
-[ext_resource type="Script" path="res://scripts/arrow_controller.gd" id="1_5huhd"]
+[ext_resource type="Script" uid="uid://dvo0sqe3h7ewh" path="res://scripts/arrow_controller.gd" id="1_5huhd"]
 [ext_resource type="AudioStream" uid="uid://caynp5imqpr6p" path="res://sounds/arrow/bow_crossbow_arrow_shoot_type1_01.wav" id="2_xw3gd"]
 [ext_resource type="AudioStream" uid="uid://dure2rmud7vfm" path="res://sounds/arrow/bow_crossbow_arrow_shoot_type1_02.wav" id="3_bvuws"]
 [ext_resource type="AudioStream" uid="uid://cijdxd157angj" path="res://sounds/arrow/bow_crossbow_arrow_shoot_type1_03.wav" id="4_utlut"]

@@ -1,6 +1,6 @@
 [gd_scene load_steps=20 format=3 uid="uid://bivcmhjsdsyy2"]
 
-[ext_resource type="Script" path="res://scripts/player.gd" id="1_py671"]
+[ext_resource type="Script" uid="uid://bnx6epykj7o3t" path="res://scripts/player.gd" id="1_py671"]
 [ext_resource type="SpriteFrames" uid="uid://bjaasfha8sw2h" path="res://sprites/frames/tank_sprite_frames.tres" id="2_a2ns6"]
 [ext_resource type="PackedScene" uid="uid://c3oxmsxpdc8q6" path="res://prefabs/waldos.tscn" id="2_dkeni"]
 [ext_resource type="PackedScene" uid="uid://cs8qatetudify" path="res://prefabs/energy_sword.tscn" id="3_1yiyo"]

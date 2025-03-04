@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://dnfrt6fhx85bc"]
 
-[ext_resource type="Script" path="res://scripts/energy_sword_bullet.gd" id="1_3eofn"]
+[ext_resource type="Script" uid="uid://jhilq2p1iffw" path="res://scripts/energy_sword_bullet.gd" id="1_3eofn"]
 [ext_resource type="PackedScene" uid="uid://bmlrxncyo4hrg" path="res://prefabs/spritesheet.tscn" id="2_ydo0h"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ylso8"]

@@ -1,6 +1,6 @@
 [gd_scene load_steps=12 format=3 uid="uid://b7ljt8cww4jnc"]
 
-[ext_resource type="Shader" path="res://cyclic_slash.gdshader" id="1_co0kp"]
+[ext_resource type="Shader" uid="uid://cj4vunc3fiywd" path="res://cyclic_slash.gdshader" id="1_co0kp"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_lxrk5"]
 noise_type = 2
@@ -41,11 +41,11 @@ shader_parameter/derive_progress = -1.0
 shader_parameter/ease_progress = 0.0
 shader_parameter/time_scale = 0.25
 shader_parameter/anim_rot_amt = 1.0
-shader_parameter/zoom = 0.6
-shader_parameter/rotate_all = 285.0
 shader_parameter/base_noise = SubResource("NoiseTexture2D_0dj2h")
 shader_parameter/width_gradient_mask = SubResource("GradientTexture1D_qhe4b")
 shader_parameter/length_gradient_mask = SubResource("GradientTexture1D_n2npg")
+shader_parameter/zoom = 0.6
+shader_parameter/rotate_all = 285.0
 shader_parameter/emission_strength = 1.0
 shader_parameter/mix_strength = 1.0
 shader_parameter/color_lookup = SubResource("GradientTexture1D_2s1ic")

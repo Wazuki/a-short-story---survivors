@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://b5n6erabt05wg"]
 
-[ext_resource type="Script" path="res://scripts/health_pickup.gd" id="1_uwicw"]
+[ext_resource type="Script" uid="uid://dyibidpj6v7d" path="res://scripts/health_pickup.gd" id="1_uwicw"]
 [ext_resource type="Texture2D" uid="uid://bi3810x4wyns4" path="res://sprites/tilesets/chest/chest0_disabled.png" id="2_vdym8"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_140j5"]

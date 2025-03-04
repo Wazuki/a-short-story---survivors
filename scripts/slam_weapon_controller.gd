@@ -9,7 +9,7 @@ const SLOW_VALUE = 0.15
 # Level up unlock consts
 const MINI_SLAM_LEVEL = 4
 const MINI_SLAM_COUNT = 4
-const MINI_SLAM_OFFSET = 30
+const MINI_SLAM_OFFSET = 25
 const SLOW_ENABLED_LEVEL = 5
 const OVERHAUL_ENABLED_LEVEL = 7
 
@@ -44,6 +44,8 @@ var weapon
 
 # TODO - knockback?
 
+# TODO - a lot of these could probably benefit from a very simple state machine.
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	name = "Slam"
@@ -77,7 +79,7 @@ func _physics_process(_delta: float) -> void:
 		# slam_bullet.scale = scale
 		# Only put the weapon on cooldown if we hit something.
 		if slam_bullet.slam(global_position): 
-			if weapon.level >= OVERHAUL_ENABLED_LEVEL: pass # TODO
+			if weapon.level >= OVERHAUL_ENABLED_LEVEL: $"/root/GameScene/UI/SlamShockwave".get_child(0).play("Shockwave")
 			# weapon.fire_weapon() #  - slam_bullet.get_child(0).sprite_frames.get_frame_texture("default", 9).get_size()) - returns the size of the sprite frame
 		# print_debug("Global Pos: " + str(global_position) + " Local Pos: " + str(to_local(GameController.player.global_position)))
 		# Spawn slams!
@@ -87,21 +89,22 @@ func _physics_process(_delta: float) -> void:
 		#$NextSlamTimer.start()
 
 func spawn_mini_slams() -> void:
-	weapon.fire_weapon() # Weapon resets here as a result of the animation finishing. Should also prevent mini-slams from reseting the timer.
 	if weapon.level < MINI_SLAM_LEVEL: return # Only spawn the mini-slams if we're the appropriate level
 
 	# Spam a new slam in each orthagonal direction, offset by a small amount
 	# Only spawn mini-slam when the initial slam ends to represent a "chaning" effect and reduce screen clutter
-	var slam_cycles = 1 # TODO - make this external maybe?
+	# Add an extra cycle for every level past the first.
+
+	var slam_cycles = weapon.level - MINI_SLAM_LEVEL + 1 # Spawn extra mini-slams for each level past the cutoff
 	var offsets = []
 	for i in range(1, slam_cycles + 1):
-		var distance = i * MINI_SLAM_OFFSET
+		var distance = i * MINI_SLAM_OFFSET * slam_bullet.scale.x
 		offsets.append(Vector2(distance, 0))
 		offsets.append(Vector2(-distance, 0))
 		offsets.append(Vector2(0, distance))
 		offsets.append(Vector2(0, -distance))
 
-	for s in range(MINI_SLAM_COUNT):
+	for s in range(MINI_SLAM_COUNT * slam_cycles):
 		var new_slam = preload("res://prefabs/slam_bullet.tscn").instantiate()
 		new_slam.set_stats(weapon.damage/ 2, weapon.speed)
 		new_slam.scale = Vector2(0.65, 0.65)
@@ -112,7 +115,7 @@ func spawn_mini_slams() -> void:
 		# Set the new slam's position based on the offset
 		# new_slam.position = Vector2.ZERO
 		new_slam.is_mini_slam = true
-		new_slam.slam(slam_bullet.attack_origin + offsets[s])
+		new_slam.slam(slam_bullet.attack_origin + offsets[s].rotated(slam_bullet.rotation))
 		# print_debug("We are at " + str(global_position) + " and spawned a mini slam at " + str(new_slam.global_position + offsets[s]))
 
 
@@ -159,10 +162,10 @@ func level_up() -> void:
 				weapon_scale *= 1.1
 
 			6:
-				# A unique tweak like a “shockwave” effect that travels further, extending damage beyond the initial hit
+				# Extra mini-slams
 				pass # TODO
 			7:
-				# Signature Overhaul: The final form might spawn multiple mini-slams or leave a lingering damage-over-time area
+				# Signature Overhaul: shockwave
 				pass # Nothing to enable here due to consts now being used
 				
 
@@ -181,9 +184,9 @@ func get_level_up_text() -> String:
 			5:
 				return "Increased damage and area; slows."
 			6:
-				return "Triggers a shockwave."
+				return "Extra slams."
 			7:
-				return "Signature: TODO."
+				return "Signature: trigger a shockwave.."
 	return "Error! If you got here notify someone who isn't me."
 
 func is_slow_enabled() -> bool:

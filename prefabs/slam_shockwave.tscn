@@ -1,15 +1,15 @@
 [gd_scene load_steps=5 format=3 uid="uid://4x7awsvvkmgg"]
 
-[ext_resource type="Shader" path="res://shaders/slam_shockwave.gdshader" id="1_abx8b"]
-[ext_resource type="Script" path="res://distortion_shader.gd" id="2_g206u"]
+[ext_resource type="Shader" uid="uid://b2qp0hi3o8ykm" path="res://shaders/slam_shockwave.gdshader" id="1_abx8b"]
+[ext_resource type="Script" uid="uid://dwy2njsdfv5m4" path="res://distortion_shader.gd" id="2_g206u"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_e41ab"]
 shader = ExtResource("1_abx8b")
 shader_parameter/center = Vector2(0.5, 0.5)
 shader_parameter/force = 1.0
-shader_parameter/size = null
-shader_parameter/thickness = null
-shader_parameter/offset = null
+shader_parameter/size = 0.0
+shader_parameter/thickness = 0.0
+shader_parameter/offset = 0.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_lgf6k"]
 radius = 50.0

@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://clb7lgpy4ix3o"]
 
-[ext_resource type="Script" path="res://scripts/level_up_ui.gd" id="2_0x4o0"]
+[ext_resource type="Script" uid="uid://2fk6xtnjnchf" path="res://scripts/level_up_ui.gd" id="2_0x4o0"]
 [ext_resource type="PackedScene" uid="uid://bqtbeeisrsdix" path="res://prefabs/level_up_container.tscn" id="3_fr2nm"]
 
 [node name="LevelUpUI" type="Control"]

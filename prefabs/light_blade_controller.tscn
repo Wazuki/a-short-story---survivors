@@ -1,6 +1,6 @@
 [gd_scene load_steps=14 format=3 uid="uid://b31dds1jg253h"]
 
-[ext_resource type="Script" path="res://scripts/light_blade_controller.gd" id="1_yhd0t"]
+[ext_resource type="Script" uid="uid://cene1ujmvlgf6" path="res://scripts/light_blade_controller.gd" id="1_yhd0t"]
 [ext_resource type="PackedScene" uid="uid://bo0obxyme762a" path="res://prefabs/light_blade_bullet.tscn" id="2_8q4o0"]
 [ext_resource type="AudioStream" uid="uid://bo8inyjlpv8rw" path="res://sounds/light blade/whoosh_swish_high_fast_01.wav" id="3_dygc8"]
 [ext_resource type="AudioStream" uid="uid://b8ys860dgsqmj" path="res://sounds/light blade/whoosh_swish_high_fast_02.wav" id="4_k2nit"]

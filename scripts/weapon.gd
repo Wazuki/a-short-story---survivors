@@ -46,6 +46,7 @@ func reset_timer() -> void:
 	ready_to_fire = false
 	
 func fire_weapon() -> void:
+	# print_debug(get_parent().name + " is firing!")
 	ready_to_fire = false
 	cooldown_timer.start()
 

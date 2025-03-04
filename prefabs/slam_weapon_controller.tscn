@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://bdhnec2pb7ddj"]
 
-[ext_resource type="Script" path="res://scripts/slam_weapon_controller.gd" id="1_nq1cy"]
+[ext_resource type="Script" uid="uid://iambbmuvno82" path="res://scripts/slam_weapon_controller.gd" id="1_nq1cy"]
 [ext_resource type="PackedScene" uid="uid://dec2xuk5l87n3" path="res://prefabs/slam_bullet.tscn" id="2_7vlkr"]
 
 [node name="SlamWeaponController" type="Marker2D"]

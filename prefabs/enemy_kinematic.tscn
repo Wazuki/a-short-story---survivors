@@ -1,6 +1,6 @@
 [gd_scene load_steps=11 format=3 uid="uid://d2lds6aupinx5"]
 
-[ext_resource type="Script" path="res://scripts/enemy_kinematic.gd" id="1_1lqoj"]
+[ext_resource type="Script" uid="uid://be361hr1w38ld" path="res://scripts/enemy_kinematic.gd" id="1_1lqoj"]
 [ext_resource type="PackedScene" uid="uid://remf34e7bwbp" path="res://prefabs/healthbar.tscn" id="2_s1v1h"]
 [ext_resource type="SpriteFrames" uid="uid://c5hesxioqtbmd" path="res://sprites/frames/ranged_enemy.tres" id="3_7lfkj"]
 [ext_resource type="AudioStream" uid="uid://cp212fsoorkcu" path="res://sounds/LIQImpt_Goo Splatter_09.wav" id="4_d4qm8"]

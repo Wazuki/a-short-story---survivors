@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://3oo018qvrmpv"]
 
-[ext_resource type="Shader" path="res://shaders/replacement_color_code.gdshader" id="1_nc0vp"]
+[ext_resource type="Shader" uid="uid://bbsngblcf3cy6" path="res://shaders/replacement_color_code.gdshader" id="1_nc0vp"]
 [ext_resource type="Texture2D" uid="uid://bguee08c3f17c" path="res://sprites/frames/valkyrie_icon.tres" id="2_ahx5r"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_211uf"]

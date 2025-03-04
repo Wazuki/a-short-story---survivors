@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://c3oxmsxpdc8q6"]
 
-[ext_resource type="Script" path="res://scripts/waldos.gd" id="1_6uobc"]
+[ext_resource type="Script" uid="uid://bf7lxnme2sudh" path="res://scripts/waldos.gd" id="1_6uobc"]
 [ext_resource type="SpriteFrames" uid="uid://i48t47cwcjbo" path="res://sprites/frames/waldos_frames.tres" id="1_mopce"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_u1eqt"]

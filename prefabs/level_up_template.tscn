@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://bjuwjx5n7awgn"]
 
 [ext_resource type="Theme" uid="uid://c0re1bitbft18" path="res://theme by azagaya/sci-fi-theme.tres" id="1_lfrqp"]
-[ext_resource type="Script" path="res://scripts/level_up_template.gd" id="2_3cn8x"]
+[ext_resource type="Script" uid="uid://tbuhajvyrohh" path="res://scripts/level_up_template.gd" id="2_3cn8x"]
 [ext_resource type="Texture2D" uid="uid://blrx78f1corvf" path="res://sprites/frames/light_sword_icon.tres" id="3_apl21"]
 [ext_resource type="FontFile" uid="uid://diy1ksnxs4bot" path="res://m5x7.ttf" id="3_rkwwb"]
 
