@@ -23,6 +23,7 @@ shader_parameter/center = Vector2(0.5, 0.5)
 shader_parameter/force = 0.0
 shader_parameter/size = 0.0
 shader_parameter/thickness = 0.05
+shader_parameter/offset = 0.002
 
 [sub_resource type="Animation" id="Animation_l46ks"]
 length = 0.001
@@ -125,6 +126,15 @@ curve = SubResource("Curve2D_mixcd")
 [node name="MobSpawnPoint" type="PathFollow2D" parent="Player/MobSpawnPath"]
 unique_name_in_owner = true
 position = Vector2(550, 300)
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+zoom = Vector2(3.5, 3.5)
+limit_left = 0
+limit_top = 0
+limit_right = 1920
+limit_bottom = 1080
+limit_smoothed = true
+position_smoothing_enabled = true
 
 [node name="EnemySpawnTimer" type="Timer" parent="."]
 unique_name_in_owner = true

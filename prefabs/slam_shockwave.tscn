@@ -9,6 +9,7 @@ shader_parameter/center = Vector2(0.5, 0.5)
 shader_parameter/force = 1.0
 shader_parameter/size = null
 shader_parameter/thickness = null
+shader_parameter/offset = null
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_lgf6k"]
 radius = 50.0

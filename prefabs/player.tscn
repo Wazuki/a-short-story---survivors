@@ -66,15 +66,6 @@ shape = SubResource("CircleShape2D_px364")
 position = Vector2(0, 0.5)
 shape = SubResource("RectangleShape2D_lihhf")
 
-[node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(3.5, 3.5)
-limit_left = 0
-limit_top = 0
-limit_right = 1920
-limit_bottom = 1080
-limit_smoothed = true
-position_smoothing_enabled = true
-
 [node name="Spritesheet" type="AnimatedSprite2D" parent="."]
 unique_name_in_owner = true
 texture_filter = 1
