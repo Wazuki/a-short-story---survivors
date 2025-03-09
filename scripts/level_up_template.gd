@@ -5,7 +5,7 @@ var level_up_option
 func _ready() -> void:
 	pass
 
-func set_level_up_information(option: Node2D, level_up_text: String) -> void:
+func set_level_up_information(option, level_up_text: String) -> void:
 	level_up_option = option
 	%LevelUpName.text = "[center]" + level_up_option.name + "[/center]"
 	# %WeaponIcon.animation = level_up_info["spritesheet_ID"]

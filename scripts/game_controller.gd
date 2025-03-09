@@ -13,6 +13,7 @@ extends Node
 @onready var light_blade = get_node("/root/GameScene/Player/Weapons/LightBladeController")
 @onready var arrow = get_node("/root/GameScene/Player/Weapons/ArrowController")
 @onready var waldos = get_node("/root/GameScene/Player/Weapons/Waldos")
+@onready var chain_lightning = get_node("/root/GameScene/Player/Weapons/ChainLightning")
 
 @onready var mob_spawn_point: PathFollow2D = get_node("/root/GameScene/Player/MobSpawnPath/MobSpawnPoint")
 @onready var enemy_spawn_timer: Timer = get_node("/root/GameScene/EnemySpawnTimer")
@@ -78,6 +79,7 @@ func _ready() -> void:
 	weapons.append(light_blade)
 	weapons.append(arrow)
 	weapons.append(waldos)
+	weapons.append(chain_lightning)
 
 	load_game()
 	# Initialize the character select UI to properly set the weapons in the Dict
@@ -255,11 +257,6 @@ func apply_shockwave_displacement(origin: Vector2, strength: float) -> void:
 		# 	e.displaced = true
 		# 	# print_debug("Applied displacement of " + str(direction * displacement))
 		
-
-
-# TODO - remove me after balancing pass on Slam
-func round_to_dec(num: float, digit: int) -> float:
-	return round(num * pow(10.0, digit) / pow(10.0, digit))
 	
 func game_over() -> void:
 	#Pause the game, destroy all enemies, then show the game over UI 

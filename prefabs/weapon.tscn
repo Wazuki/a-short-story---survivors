@@ -2,5 +2,7 @@
 
 [ext_resource type="Script" uid="uid://djsxe1bhfgip3" path="res://scripts/weapon.gd" id="1_2yyph"]
 
-[node name="Weapon" type="Node2D"]
+[node name="Weapon" type="Area2D"]
+monitoring = false
+monitorable = false
 script = ExtResource("1_2yyph")

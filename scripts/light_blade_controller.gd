@@ -168,7 +168,7 @@ func get_level_up_text() -> String:
 				return "Increase size of third slash."
 			7:
 				return "Signature: Cause knockback with third slash."
-	return "Error! If you got here notify someone who isn't me."
+	return "Error! get_level_text() of Light Blade dropped out of switch!"
 
 
 

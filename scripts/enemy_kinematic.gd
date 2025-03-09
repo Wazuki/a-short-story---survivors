@@ -26,6 +26,7 @@ var is_shooting: bool = false
 var can_shoot: bool = true
 # var knocked_back: bool = false
 var displaced: bool = false
+var stunned: bool = false
 	# get:
 	# 	return displaced
 	# set(value): 
@@ -143,7 +144,7 @@ func initialize() -> void:
 			%HealthBar.init_health(health)
 			%HealthBar.set_textures(enemy_health_bar_background, enemy_health_bar)
 			%HealthBar.set_scale(Vector2(HEALTH_BAR_SCALE, HEALTH_BAR_SCALE))
-			%HealthBar.visible = true
+			# %HealthBar.visible = true # TODO - fix healthbar scaling.
 
 	base_speed = speed
 
@@ -241,7 +242,7 @@ func _physics_process(delta: float) -> void:
 #			knockback_target = Vector2.ZERO
 
 func move() -> void:
-	if is_shooting: return
+	if is_shooting or stunned: return
 
 	# Flip the sprite based on direction, but only if not currently displaced
 	if not displaced:
@@ -265,11 +266,17 @@ func apply_slow(slow: float) -> void:
 # 	if displaced: %DisplacementTimer.start()
 # 	else: %DisplacementTimer.stop()
 
+func apply_stun(duration: float) -> void:
+	stunned = true
+	var stun_timer = get_tree().create_timer(duration)
+	stun_timer.connect("timeout", remove_stun)
+
+func remove_stun() -> void: stunned = false
 
 func take_damage(dam: float) -> void:
 	health -= dam
 	GameController.total_damage_done += dam
-	
+
 	if has_health_bar: %HealthBar.health = health
 
 	if health <= 0 && not is_dead:

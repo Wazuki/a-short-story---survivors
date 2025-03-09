@@ -1,0 +1,6 @@
+[gd_resource type="AtlasTexture" load_steps=2 format=3 uid="uid://cvdqnpg7gow3s"]
+
+[ext_resource type="Texture2D" uid="uid://dbu6sycouoj1q" path="res://sprites/wenrexa/Skill Icons (Rounded)/28.png" id="1_jw57f"]
+
+[resource]
+atlas = ExtResource("1_jw57f")

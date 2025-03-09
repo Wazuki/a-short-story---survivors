@@ -1,6 +1,5 @@
-[gd_scene load_steps=17 format=3 uid="uid://c756hxrovtgc5"]
+[gd_scene load_steps=16 format=3 uid="uid://c756hxrovtgc5"]
 
-[ext_resource type="PackedScene" uid="uid://dl5cw6c7jx04m" path="res://chain_lightning.tscn" id="2_7vrjw"]
 [ext_resource type="PackedScene" uid="uid://bivcmhjsdsyy2" path="res://prefabs/player.tscn" id="2_po0ka"]
 [ext_resource type="PackedScene" uid="uid://dmtmv04oyd6hl" path="res://prefabs/level.tscn" id="2_x5ify"]
 [ext_resource type="PackedScene" uid="uid://cfdtpyse3s0tr" path="res://prefabs/character_select_ui.tscn" id="5_navxo"]
@@ -115,9 +114,6 @@ _data = {
 
 [node name="Level" parent="." instance=ExtResource("2_x5ify")]
 position = Vector2(0, 0)
-
-[node name="ChainLightning" parent="." instance=ExtResource("2_7vrjw")]
-position = Vector2(704, 671)
 
 [node name="Player" parent="." instance=ExtResource("2_po0ka")]
 unique_name_in_owner = true
