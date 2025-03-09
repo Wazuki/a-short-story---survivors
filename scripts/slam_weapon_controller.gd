@@ -5,6 +5,7 @@ const BASE_SPEED = 1.0
 const BASE_COOLDOWN = 1.5
 # const BASE_SLAMS = 1
 const SLOW_VALUE = 0.15
+const SHOCKWAVE_STRENGTH = 18
 
 # Level up unlock consts
 const MINI_SLAM_LEVEL = 4
@@ -30,10 +31,14 @@ var weapon_scale = Vector2(2, 2)
 var weapon_reduction_scale = 0.1
 var weapon_min_scale = Vector2(0.75, 0.75)
 
+var shockwave_time = 0.0
+var max_shockwave_time = 0.0
+var last_shockwave_time = -1.0
+
 # var slow_enabled = false
 # var overhaul_enabled: bool = false
 
-@onready var shockwave = get_node("/root/GameScene/UI/SlamShockwave")
+@onready var shockwave_anim_player: AnimationPlayer = $"/root/GameScene/UI/SlamShockwave/ShockwaveAnimPlayer"
 @onready var slam_bullet = %SlamBullet
 
 var icon: AtlasTexture = preload("res://sprites/frames/slam_icon.tres")
@@ -63,8 +68,18 @@ func reset() -> void:
 
 	first_level_up = true
 
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(_delta: float) -> void:
+	# if shockwave_time < max_shockwave_time:
+	# 	# Shader speed is about 60 units per second
+	# 	var shockwave_speed = 240
+	# 	shockwave_time += _delta
+
+	# 	if int(shockwave_time * shockwave_speed) > last_shockwave_time:
+	# 		GameController.apply_shockwave_displacement(slam_bullet.attack_origin,shockwave_speed, shockwave_time, 150)
+	# 		last_shockwave_time = int(shockwave_time * shockwave_speed) # Store last time we applied the shockwave
+
 	# If the player is moving, slowly scale the weapon down the min size. If not, reset the size to maximum.
 	if GameController.player.velocity.length() == 0: slam_bullet.scale = weapon_scale
 	else: slam_bullet.scale = slam_bullet.scale.move_toward(weapon_min_scale, weapon_reduction_scale * _delta) # move_towards returns a vector2 - doesn't actually assign it, doi
@@ -79,7 +94,11 @@ func _physics_process(_delta: float) -> void:
 		# slam_bullet.scale = scale
 		# Only put the weapon on cooldown if we hit something.
 		if slam_bullet.slam(global_position): 
-			if weapon.level >= OVERHAUL_ENABLED_LEVEL: $"/root/GameScene/UI/SlamShockwave".get_child(0).play("Shockwave")
+			if weapon.level >= OVERHAUL_ENABLED_LEVEL: 
+				shockwave_anim_player.play("Shockwave")
+				GameController.apply_shockwave_displacement(slam_bullet.attack_origin, SHOCKWAVE_STRENGTH)
+				#max_shockwave_time = shockwave_anim_player.current_animation_length
+				#shockwave_time = 0.0
 			# weapon.fire_weapon() #  - slam_bullet.get_child(0).sprite_frames.get_frame_texture("default", 9).get_size()) - returns the size of the sprite frame
 		# print_debug("Global Pos: " + str(global_position) + " Local Pos: " + str(to_local(GameController.player.global_position)))
 		# Spawn slams!
@@ -103,20 +122,24 @@ func spawn_mini_slams() -> void:
 		offsets.append(Vector2(-distance, 0))
 		offsets.append(Vector2(0, distance))
 		offsets.append(Vector2(0, -distance))
-
-	for s in range(MINI_SLAM_COUNT * slam_cycles):
-		var new_slam = preload("res://prefabs/slam_bullet.tscn").instantiate()
-		new_slam.set_stats(weapon.damage/ 2, weapon.speed)
-		new_slam.scale = Vector2(0.65, 0.65)
-		new_slam.get_node("AnimatedSprite2D").modulate = Color(1, 0, 0, 1)
-		# new_slam.name = "Mini-Slam"
-		slam_bullet.add_child(new_slam)
-		
-		# Set the new slam's position based on the offset
-		# new_slam.position = Vector2.ZERO
-		new_slam.is_mini_slam = true
-		new_slam.slam(slam_bullet.attack_origin + offsets[s].rotated(slam_bullet.rotation))
-		# print_debug("We are at " + str(global_position) + " and spawned a mini slam at " + str(new_slam.global_position + offsets[s]))
+	
+	for cycle in range(slam_cycles):
+		for s in range(MINI_SLAM_COUNT):
+			var new_slam = preload("res://prefabs/slam_bullet.tscn").instantiate()
+			new_slam.set_stats(weapon.damage/ 2, weapon.speed)
+			new_slam.scale = Vector2(0.65, 0.65)
+			# new_slam.get_node("AnimatedSprite2D").modulate = Color(1, 0, 0, 1)
+			# new_slam.name = "Mini-Slam"
+			slam_bullet.add_child(new_slam)
+			
+			# Set the new slam's position based on the offset
+			# new_slam.position = Vector2.ZERO
+			new_slam.is_mini_slam = true
+			# Calculate the index based on the cycle times the current slam to get the correct offset to stagger the slams
+			var index = cycle * MINI_SLAM_COUNT + s
+			new_slam.slam(slam_bullet.attack_origin + offsets[index].rotated(slam_bullet.rotation))
+			# print_debug("We are at " + str(global_position) + " and spawned a mini slam at " + str(new_slam.global_position + offsets[s]))
+		await get_tree().create_timer(0.2).timeout # Add a small delay before the next orthagonal slam
 
 
 # New fire weapon process
@@ -186,7 +209,7 @@ func get_level_up_text() -> String:
 			6:
 				return "Extra slams."
 			7:
-				return "Signature: trigger a shockwave.."
+				return "Signature: trigger a shockwave."
 	return "Error! If you got here notify someone who isn't me."
 
 func is_slow_enabled() -> bool:

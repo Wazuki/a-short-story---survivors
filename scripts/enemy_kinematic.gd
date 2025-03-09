@@ -1,5 +1,8 @@
 extends RigidBody2D
 
+const HEALTH_BAR_SCALE = 0.05
+const DISPLACEMENT_FRICTION = 120.0
+
 var speed: float = 100.0
 var base_speed: float = 100.0
 var health: float = 3
@@ -15,12 +18,19 @@ var knockback_friction: float = 400.0 # The rate at which knockback decays - sho
 var slowed_speed: float = 0.0
 var slow_decay_rate: float = 5.0
 
+
 # Booleans
 var is_dead: bool = false
 var has_health_bar: bool = false
 var is_shooting: bool = false
 var can_shoot: bool = true
 # var knocked_back: bool = false
+var displaced: bool = false
+	# get:
+	# 	return displaced
+	# set(value): 
+	# 	displaced = value
+	# 	_is_displaced()
 
 var player
 
@@ -69,8 +79,6 @@ const BOSS_ENEMY_STATS = {
 	"scale": Vector2(2, 2),
 	"health_drop_chance": 0.5
 }
-
-
 
 
 func _ready() -> void:
@@ -134,7 +142,8 @@ func initialize() -> void:
 			has_health_bar = true
 			%HealthBar.init_health(health)
 			%HealthBar.set_textures(enemy_health_bar_background, enemy_health_bar)
-			$HealthBar.visible = true
+			%HealthBar.set_scale(Vector2(HEALTH_BAR_SCALE, HEALTH_BAR_SCALE))
+			%HealthBar.visible = true
 
 	base_speed = speed
 
@@ -150,22 +159,25 @@ func initialize() -> void:
 
 func _physics_process(delta: float) -> void:
 
-	if knockback_velocity.length() > 0.1:
+	if displaced and not is_dead:
+		# Apply friction to slow down knockback over time.
+		velocity = velocity.move_toward(Vector2.ZERO, DISPLACEMENT_FRICTION * delta)
+		move()
+		if velocity.length() < 1.0 || velocity == Vector2.ZERO: displaced = false
+	# if knockback_velocity.length() > 0.1:
 
-		# print_debug("kb velocity: " + str(knockback_velocity))
-		velocity = knockback_velocity
-		#move_and_slide()
+	# 	# print_debug("kb velocity: " + str(knockback_velocity))
+	# 	velocity = knockback_velocity
+	# 	#move_and_slide()
 
-		move_and_collide(velocity * delta)
+	# 	move_and_collide(velocity * delta)
 		
-		knockback_velocity = knockback_velocity.move_toward(Vector2.ZERO, knockback_friction * delta)
-		#var collision = move_and_collide(velocity * delta)
-		#if collision:
-		#	var other = collision.get_collider()
-		#	if other.has_method("apply_knockback"):
-		#		other.apply_knockback(collision.get_normal(), 50)
-
-
+	# 	knockback_velocity = knockback_velocity.move_toward(Vector2.ZERO, knockback_friction * delta)
+	# 	#var collision = move_and_collide(velocity * delta)
+	# 	#if collision:
+	# 	#	var other = collision.get_collider()
+	# 	#	if other.has_method("apply_knockback"):
+	# 	#		other.apply_knockback(collision.get_normal(), 50)
 	elif not is_dead && enemy_type != EnemyType.RANGED:
 		var direction = global_position.direction_to(player.global_position)
 		velocity = direction * speed * delta
@@ -231,11 +243,12 @@ func _physics_process(delta: float) -> void:
 func move() -> void:
 	if is_shooting: return
 
-	# Flip the sprite based on direction
-	if velocity.x < 0:
-		$Spritesheet.flip_h = true
-	elif velocity.x > 0:
-		$Spritesheet.flip_h = false
+	# Flip the sprite based on direction, but only if not currently displaced
+	if not displaced:
+		if velocity.x < 0:
+			$Spritesheet.flip_h = true
+		elif velocity.x > 0:
+			$Spritesheet.flip_h = false
 	
 	if velocity == Vector2.ZERO: %Spritesheet.animation = "idle"
 	else: %Spritesheet.animation = "walk"
@@ -248,6 +261,9 @@ func apply_slow(slow: float) -> void:
 	# Only apply slow if the enemy is not already slowed
 	if speed == base_speed: speed *= (1.0 - slow)
 
+# func _is_displaced() -> void:
+# 	if displaced: %DisplacementTimer.start()
+# 	else: %DisplacementTimer.stop()
 
 
 func take_damage(dam: float) -> void:
@@ -274,7 +290,8 @@ func take_damage(dam: float) -> void:
 func apply_knockback(source: Vector2, strength: float) -> void:
 	# Calculate the direction from the knockback source to this enemy
 	var direction: Vector2 = (global_position - source).normalized()
-	knockback_velocity = direction * strength
+	# knockback_velocity = direction * strength
+	apply_impulse(direction * strength)
 
 func _on_spritesheet_animation_finished() -> void:
 	if is_dead:
@@ -297,3 +314,7 @@ func _on_spritesheet_animation_finished() -> void:
 
 func _on_shoot_timer_timeout() -> void:
 	can_shoot = true
+
+
+# func _on_displacement_timer_timeout() -> void:
+# 	displaced = false

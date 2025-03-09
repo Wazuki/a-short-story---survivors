@@ -21,6 +21,8 @@ extends Node
 @onready var game_over_UI: PanelContainer = get_node("/root/GameScene/UI/GameOverUI")
 @onready var pause_button: Button = get_node("/root/GameScene/UI/PauseButton")
 
+var quest: QuestResource = load("res://test_quest.tres")
+
 const BASE_DIFFICULTY_INCREASE_TIME = 60.0
 const BASE_ENEMY_SPAWN_TIME = 0.5
 var enemy_spawn_time = BASE_ENEMY_SPAWN_TIME
@@ -39,11 +41,21 @@ var total_enemies_killed: int = 0
 var total_xp_gained: int = 0
 var total_damage_done: float = 0.0
 
+var start_button_pressed = true
 
 var touch_input_enabled: bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	var instance := quest.instantiate()
+	Questify.start_quest(instance)
+	for q in Questify.get_quests():
+		print_debug(q.name)
+		for o in q.get_active_objectives():
+			print_debug(o.description)
+
+
+
 	# Move hte Game Controller node to be a child of the actual game scene.
 	# TODO - this is probably unnecessary.
 	get_node("/root").call_deferred("remove_child",self)
@@ -214,7 +226,35 @@ func quit_game() -> void:
 	save_game()
 	get_tree().quit() # TODO - Save data. Confirm quit?
 
+func apply_shockwave_displacement(origin: Vector2, strength: float) -> void:
+	# Apply the shockwave deplacement to all enemies based on the origin of the shockwave
+	for e in get_tree().get_nodes_in_group("Enemies"):
 
+		if e.displaced: continue # Skip to the next enemy since this one is already knocked back.
+
+		# Calculate the direction from the shockwave origin to the enemy and apply displacement based on the distance.
+		var direction = (e.global_position - origin).normalized()
+		var distance = e.global_position.distance_to(origin)
+		var shockwave_max_size = get_viewport().get_visible_rect().size.x / get_viewport().get_camera_2d().zoom.x
+		# print_debug("Distance: " + str(distance) + ", Max size: " + str(shockwave_max_size))
+		e.velocity = (direction * strength * clamp(1.0 - (distance / shockwave_max_size), 0.1, 1.0)) 
+		e.displaced = true
+		# var direction = (e.global_position - origin).normalized()
+		# var distance = e.global_position.distance_to(origin)
+		# var offset = 30
+		# # print_debug("Distance: " + str(distance) + ", Time: " + str(time))
+
+		# # If the enemy is within the active range of the shockwave
+		# if time*speed_per_frame - offset <= distance and distance <= time*speed_per_frame + offset:
+		# 	# Calculate the displacement based on the strength of the shockwave and the distance from the origin
+		# 	# var displacement = strength * (1.0 - (distance / time))
+		# 	# Scale displacement based on distance (closer = stronger impulse)
+		# 	var impulse_strength = strength * clamp(1.0 - (distance / time), 0.3, 1.0)
+		# 	# print_debug("Impulse strength: " + str(impulse_strength))
+		# 	e.apply_impulse(direction * impulse_strength)
+		# 	e.displaced = true
+		# 	# print_debug("Applied displacement of " + str(direction * displacement))
+		
 
 
 # TODO - remove me after balancing pass on Slam

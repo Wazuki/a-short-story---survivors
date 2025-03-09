@@ -49,6 +49,7 @@ func initialize(character: Dictionary) -> void:
 
 func _physics_process(delta: float) -> void:
 	if Input.is_action_just_released("give_xp"): gain_experience(10)
+	if Input.is_action_just_released("level"): gain_experience(30)
 	#GetVector() turns movement into 2D direction
 
  	# If the player is alive, move them based on input. This is also where we will fire weapons, gain XP, etc.
