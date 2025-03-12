@@ -1,0 +1,78 @@
+[gd_scene load_steps=3 format=3 uid="uid://dldh638n3k2vd"]
+
+[ext_resource type="Script" uid="uid://cujrdwyrt6nom" path="res://scripts/cooldown_panel.gd" id="1_84shc"]
+[ext_resource type="Texture2D" uid="uid://cvdqnpg7gow3s" path="res://sprites/wenrexa/Skill Icons (Rounded)/chain_lightning.tres" id="2_n26es"]
+
+[node name="CooldownPanel" type="Panel"]
+texture_filter = 1
+custom_minimum_size = Vector2(200, 0)
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -100.0
+offset_right = 100.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_horizontal = 4
+size_flags_vertical = 3
+script = ExtResource("1_84shc")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="TopContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Icon" type="TextureRect" parent="MarginContainer/VBoxContainer/TopContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+texture = ExtResource("2_n26es")
+expand_mode = 3
+stretch_mode = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/TopContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="NameText" type="RichTextLabel" parent="MarginContainer/VBoxContainer/TopContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+theme_override_font_sizes/normal_font_size = 14
+text = "Chain Lightning"
+scroll_active = false
+vertical_alignment = 1
+
+[node name="LevelText" type="RichTextLabel" parent="MarginContainer/VBoxContainer/TopContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_font_sizes/normal_font_size = 14
+text = "Level: 7"
+vertical_alignment = 3
+
+[node name="CooldownProgressBar" type="ProgressBar" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+step = 0.001
+value = 100.0

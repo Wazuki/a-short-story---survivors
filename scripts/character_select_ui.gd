@@ -40,6 +40,9 @@ var characters = {
 #var total_damage_done: float = 0.0
 
 func init() -> void:
+	var c = load("res://scripts/data_resources/unlockable_characters.tres")
+	print(c.valkyrie.stats[Character.Stat.HEALTH])
+
 	# Add weapons
 	valkyrie_stats.get_or_add("weapon", GameController.light_blade)
 	tank_stats.get_or_add("weapon", GameController.slam)

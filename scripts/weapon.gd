@@ -13,6 +13,8 @@ var ready_to_fire: bool
 
 var first_level_up: bool = true
 
+var cooldown_panel
+
 const OVERHAUL_LEVEL = 7
 
 # Called when the node enters the scene tree for the first time.

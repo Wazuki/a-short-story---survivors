@@ -22,6 +22,8 @@ extends Node
 @onready var game_over_UI: PanelContainer = get_node("/root/GameScene/UI/GameOverUI")
 @onready var pause_button: Button = get_node("/root/GameScene/UI/PauseButton")
 
+@onready var cooldown_container = get_node("/root/GameScene/UI/CooldownContainer")
+
 var quest: QuestResource = load("res://test_quest.tres")
 
 const BASE_DIFFICULTY_INCREASE_TIME = 60.0
@@ -210,6 +212,10 @@ func select_character(character: Dictionary) -> void:
 	unpause_game()
 	game_started = true
 	# print_debug("Selected " + character)
+
+func create_cooldown_panel(weapon) -> void:
+	var new_panel = preload("res://prefabs/cooldown_panel.tscn").instantiate()
+	new_panel
 
 
 func display_level_up() -> void:
