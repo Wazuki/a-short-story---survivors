@@ -1,8 +1,11 @@
-[gd_scene load_steps=20 format=3 uid="uid://dec2xuk5l87n3"]
+[gd_scene load_steps=24 format=3 uid="uid://dec2xuk5l87n3"]
 
-[ext_resource type="Script" path="res://scripts/slam_bullet.gd" id="1_kdetb"]
+[ext_resource type="Script" uid="uid://bxfe1b7hl3gd7" path="res://scripts/slam_bullet.gd" id="1_kdetb"]
 [ext_resource type="Texture2D" uid="uid://cfh5j288p8pxm" path="res://sprites/effects/slam sprites.png" id="1_wcjeg"]
-[ext_resource type="AudioStream" uid="uid://dsq6numv2ydt1" path="res://sounds/slam.wav" id="3_vwxht"]
+[ext_resource type="AudioStream" uid="uid://cigxx40o1qwv0" path="res://sounds/slam/rock_impact_heavy_slam_01.wav" id="3_r8dad"]
+[ext_resource type="AudioStream" uid="uid://bshjjlma2gtsm" path="res://sounds/slam/rock_impact_heavy_slam_02.wav" id="4_y7822"]
+[ext_resource type="AudioStream" uid="uid://bi60xnh10aswj" path="res://sounds/slam/rock_impact_heavy_slam_03.wav" id="5_ml8p4"]
+[ext_resource type="AudioStream" uid="uid://bbet27ibqj7s8" path="res://sounds/slam/rock_impact_heavy_slam_04.wav" id="6_7hbr0"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3lu01"]
 atlas = ExtResource("1_wcjeg")
@@ -64,6 +67,9 @@ region = Rect2(832, 320, 64, 64)
 animations = [{
 "frames": [{
 "duration": 1.0,
+"texture": null
+}, {
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_3lu01")
 }, {
 "duration": 1.0,
@@ -104,6 +110,9 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_psqnq")
+}, {
+"duration": 1.0,
+"texture": null
 }],
 "loop": false,
 "name": &"default",
@@ -111,9 +120,17 @@ animations = [{
 }]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ock4d"]
-radius = 19.0
+radius = 24.0
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_p2pwn"]
+streams_count = 4
+stream_0/stream = ExtResource("3_r8dad")
+stream_1/stream = ExtResource("4_y7822")
+stream_2/stream = ExtResource("5_ml8p4")
+stream_3/stream = ExtResource("6_7hbr0")
 
 [node name="SlamBullet" type="Area2D"]
+texture_filter = 1
 collision_layer = 0
 collision_mask = 2
 script = ExtResource("1_kdetb")
@@ -122,15 +139,14 @@ script = ExtResource("1_kdetb")
 unique_name_in_owner = true
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_wlqox")
-autoplay = "default"
-frame_progress = 0.50056
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_ock4d")
 
-[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource("3_vwxht")
-autoplay = true
+[node name="SlamSounds" type="AudioStreamPlayer2D" parent="."]
+unique_name_in_owner = true
+stream = SubResource("AudioStreamRandomizer_p2pwn")
+volume_db = -10.0
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]

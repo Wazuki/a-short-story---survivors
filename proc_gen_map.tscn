@@ -1,0 +1,17 @@
+[gd_scene load_steps=5 format=3 uid="uid://cafch6o8px8tf"]
+
+[ext_resource type="Script" uid="uid://tukeo5shqm03" path="res://proc_gen_map.gd" id="1_nbh0l"]
+[ext_resource type="TileSet" uid="uid://b0b3gdrw1na1e" path="res://sprites/tilesets/tileset.tres" id="2_rmar0"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_gpl3t"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_c3usa"]
+noise = SubResource("FastNoiseLite_gpl3t")
+
+[node name="proc_gen_map" type="Node2D"]
+script = ExtResource("1_nbh0l")
+noise_height_texture = SubResource("NoiseTexture2D_c3usa")
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+unique_name_in_owner = true
+tile_set = ExtResource("2_rmar0")

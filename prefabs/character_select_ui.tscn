@@ -1,7 +1,7 @@
 [gd_scene load_steps=13 format=3 uid="uid://cfdtpyse3s0tr"]
 
 [ext_resource type="Theme" uid="uid://b1mqo7cbopwv1" path="res://maintheme.tres" id="1_3slv1"]
-[ext_resource type="Script" path="res://scripts/character_select_ui.gd" id="1_rvfjh"]
+[ext_resource type="Script" uid="uid://b28cermtcuqwc" path="res://scripts/character_select_ui.gd" id="1_rvfjh"]
 [ext_resource type="Texture2D" uid="uid://bguee08c3f17c" path="res://sprites/frames/valkyrie_icon.tres" id="2_5ueb4"]
 [ext_resource type="FontFile" uid="uid://diy1ksnxs4bot" path="res://m5x7.ttf" id="3_6pbc1"]
 [ext_resource type="Texture2D" uid="uid://blrx78f1corvf" path="res://sprites/frames/light_sword_icon.tres" id="3_jad05"]

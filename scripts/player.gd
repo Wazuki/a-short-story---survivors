@@ -4,6 +4,7 @@ extends CharacterBody2D
 # const STARTING_SPEED = 300
 const STARTING_TIL_NEXT_LEVEL = 5
 
+var max_health
 var health
 var speed
 var armor: float # Each point of armor reduces damage by 0.1
@@ -19,6 +20,7 @@ var total_level_ups = 0
 
 @onready var player_info_text : RichTextLabel = get_node("/root/GameScene/UI/PlayerInfoContainer/Panel/MarginContainer/PlayerInfoText")
 
+signal _health_changed
 signal _health_depleted
 
 func _ready() -> void:
@@ -26,6 +28,7 @@ func _ready() -> void:
 
 func initialize(character: Dictionary) -> void:
 	health = character["health"]
+	max_health = health
 	speed = character["speed"]
 	armor = character["armor"]
 	%Spritesheet.sprite_frames = character["spritesheet"]
@@ -34,8 +37,7 @@ func initialize(character: Dictionary) -> void:
 	level = 1
 	xp_to_next_level = STARTING_TIL_NEXT_LEVEL
 	# Don't forget to reset the UI!
-	%HealthBar.max_value = health
-	%HealthBar.value = health
+	adjust_health_bar()
 	update_player_info_text()
 
 	%Spritesheet.animation = "idle"
@@ -46,6 +48,8 @@ func initialize(character: Dictionary) -> void:
 	# print_debug("Set character stats to " + str(character))
 
 func _physics_process(delta: float) -> void:
+	if Input.is_action_just_released("give_xp"): gain_experience(10)
+	if Input.is_action_just_released("level"): gain_experience(30)
 	#GetVector() turns movement into 2D direction
 
  	# If the player is alive, move them based on input. This is also where we will fire weapons, gain XP, etc.
@@ -79,14 +83,15 @@ func _physics_process(delta: float) -> void:
 			
 			for m in overlapping_mobs: total_damage += clamp((m.damage - (armor / 10)), 0, m.damage) # Clamp the damage to 0 if it's negative
 
-			health -= total_damage * delta # Deal damage for each mob touching the player times delta so they don't explode
-			%HealthBar.value = health
+			#health -= total_damage * delta # Deal damage for each mob touching the player times delta so they don't explode
+			take_damage(total_damage * delta)
 			# Firing weapons moved to each weapon function to make them independent of the player.
 			
 		var xp_to_absorb = %PickupRadius.get_overlapping_areas()
 		# print_debug("There are " + str(xp_to_absorb.size()) + " xp in range!")
 		for xp in xp_to_absorb:
-			xp.absorbing = true # Call the Absorb function on the XP so they fly towards the player
+			# This should be illegal lmao
+			if "absorbing" in xp: xp.absorbing = true # Call the Absorb function on the XP so they fly towards the player
 			if not %XPPickupSound.playing: %XPPickupSound.play() # Play the XP sound but only if it's not currently playing to rpevent spam
 
 		update_player_info_text()
@@ -96,6 +101,18 @@ func _physics_process(delta: float) -> void:
 		# emit_signal("_health_depleted")
 		%Spritesheet.animation = "death"
 		%Spritesheet.play()
+
+func take_damage(damage: float) -> void:
+	health -= damage
+	adjust_health_bar()
+
+# Heal the player by a percentage of max health, clamped by max health
+func heal_damage(heal: float) -> void:
+	health = clamp(health + (heal * max_health), 0, max_health)
+	adjust_health_bar()
+
+func adjust_health_bar() -> void:
+	emit_signal("_health_changed", health, max_health)
 
 # TODO - Weapon-managed ranges with variable ranges.
 func get_target() -> Vector2:

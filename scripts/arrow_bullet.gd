@@ -7,6 +7,8 @@ var speed: float
 var damage: float
 var pierce: int
 var total_pierced: int = 0
+var splittable: bool = false
+
 
 func initialize(dmg: float, spd: float, rng: float, prc: int) -> void:
 	damage = dmg
@@ -26,7 +28,13 @@ func _physics_process(delta: float) -> void:
 
 func _on_body_entered(body:Node2D) -> void:
 	if body != null && not body.is_dead: # If we're using masks property, it should ONLY be an enemy!
+		damage = GameController.arrow.weapon.damage_calc()
 		body.take_damage(damage)
+
+		if body.is_dead && splittable:
+			splittable = false
+			GameController.arrow.spawn_split_arrows(global_position)
+
 		total_pierced += 1
 		if total_pierced >= pierce:
 			queue_free()

@@ -1,7 +1,7 @@
 [gd_scene load_steps=17 format=3 uid="uid://vq6b006w6gq2"]
 
 [ext_resource type="Texture2D" uid="uid://b8jbfk5blexdc" path="res://sprites/effects/arrow sprites.png" id="1_u2b3l"]
-[ext_resource type="Script" path="res://scripts/arrow_bullet.gd" id="1_vpwkj"]
+[ext_resource type="Script" uid="uid://bq8qg7bu5usx3" path="res://scripts/arrow_bullet.gd" id="1_vpwkj"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_e7s2f"]
 atlas = ExtResource("1_u2b3l")
@@ -98,7 +98,7 @@ animations = [{
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_7c23j"]
 height = 52.0
 
-[node name="ArrowBullet" type="Area2D"]
+[node name="ArrowBullet" type="Area2D" groups=["Projectiles"]]
 position = Vector2(30, 0)
 collision_layer = 0
 collision_mask = 2

@@ -70,7 +70,7 @@ func set_value(v: int) -> void:
 func _on_body_entered(body: Node2D) -> void:
 	if body == GameController.player:
 		body.gain_experience(xp_value)
-		GameController.stop_tracking_xp_orb(self)
+		# GameController.stop_tracking_xp_orb(self)
 		GameController.total_xp_gained += xp_value
 		# print_debug("Total XP Gained: " + str(GameController.total_xp_gained))
 		queue_free()

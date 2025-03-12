@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://c756hxrovtgc5"]
+[gd_scene load_steps=16 format=3 uid="uid://c756hxrovtgc5"]
 
 [ext_resource type="PackedScene" uid="uid://bivcmhjsdsyy2" path="res://prefabs/player.tscn" id="2_po0ka"]
 [ext_resource type="PackedScene" uid="uid://dmtmv04oyd6hl" path="res://prefabs/level.tscn" id="2_x5ify"]
@@ -7,12 +7,108 @@
 [ext_resource type="PackedScene" uid="uid://clb7lgpy4ix3o" path="res://prefabs/level_up_ui.tscn" id="6_kdryc"]
 [ext_resource type="PackedScene" uid="uid://cqph8d6325sto" path="res://prefabs/main_menu.tscn" id="7_6e45b"]
 [ext_resource type="AudioStream" uid="uid://dax4rfyg1yk1a" path="res://sounds/music/Sketchbook 2024-12-21.ogg" id="7_7bn7d"]
+[ext_resource type="Texture2D" uid="uid://cdawaub8gn4r1" path="res://sprites/wenrexa/Icons/24.png" id="7_uohvc"]
+[ext_resource type="PackedScene" uid="uid://remf34e7bwbp" path="res://prefabs/healthbar.tscn" id="9_bil8f"]
+[ext_resource type="Shader" uid="uid://b2qp0hi3o8ykm" path="res://shaders/slam_shockwave.gdshader" id="9_elxod"]
 
 [sub_resource type="Curve2D" id="Curve2D_mixcd"]
 _data = {
 "points": PackedVector2Array(0, 0, 0, 0, 550, 300, 0, 0, 0, 0, 1350, 300, 0, 0, 0, 0, 1350, 800, 0, 0, 0, 0, 550, 800, 0, 0, 0, 0, 550, 300)
 }
 point_count = 5
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ahwn2"]
+shader = ExtResource("9_elxod")
+shader_parameter/center = Vector2(0.5, 0.5)
+shader_parameter/force = 0.0
+shader_parameter/size = 0.0
+shader_parameter/thickness = 0.05
+shader_parameter/offset = 0.002
+
+[sub_resource type="Animation" id="Animation_l46ks"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = false
+tracks/0/path = NodePath(".:material:shader_param/size")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [null]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = false
+tracks/1/path = NodePath(".:material:shader_param/force")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [null]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".:material:shader_parameter/size")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath(".:material:shader_parameter/force")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_r45tw"]
+resource_name = "Shockwave"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:material:shader_parameter/size")
+tracks/0/interp = 1
+tracks/0/loop_wrap = false
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 2.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:material:shader_parameter/force")
+tracks/1/interp = 1
+tracks/1/loop_wrap = false
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 0.2]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_um3am"]
+_data = {
+&"RESET": SubResource("Animation_l46ks"),
+&"Shockwave": SubResource("Animation_r45tw")
+}
 
 [node name="GameScene" type="Node2D"]
 
@@ -31,12 +127,72 @@ curve = SubResource("Curve2D_mixcd")
 unique_name_in_owner = true
 position = Vector2(550, 300)
 
+[node name="Camera2D" type="Camera2D" parent="Player"]
+zoom = Vector2(3.5, 3.5)
+limit_left = 0
+limit_top = 0
+limit_right = 1920
+limit_bottom = 1080
+limit_smoothed = true
+position_smoothing_enabled = true
+
 [node name="EnemySpawnTimer" type="Timer" parent="."]
 unique_name_in_owner = true
 wait_time = 0.5
 autostart = true
 
+[node name="EnemyDifficultyTimer" type="Timer" parent="EnemySpawnTimer"]
+wait_time = 60.0
+autostart = true
+
 [node name="UI" type="CanvasLayer" parent="."]
+
+[node name="SlamShockwave" type="ColorRect" parent="UI"]
+material = SubResource("ShaderMaterial_ahwn2")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="ShockwaveAnimPlayer" type="AnimationPlayer" parent="UI/SlamShockwave"]
+libraries = {
+&"": SubResource("AnimationLibrary_um3am")
+}
+
+[node name="PlayerHealthBar" parent="UI" instance=ExtResource("9_bil8f")]
+offset_left = -781.0
+offset_top = -522.0
+offset_right = 155.0
+offset_bottom = -397.0
+
+[node name="GameTimeLabel" type="RichTextLabel" parent="UI"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -100.0
+offset_top = 20.0
+offset_right = 100.0
+offset_bottom = 60.0
+grow_horizontal = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_font_sizes/normal_font_size = 48
+bbcode_enabled = true
+text = "[p align=\"center\"]0:00"
+scroll_active = false
+
+[node name="CooldownContainer" type="HBoxContainer" parent="UI"]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -129.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_vertical = 8
+alignment = 1
 
 [node name="PlayerInfoContainer" type="PanelContainer" parent="UI"]
 offset_left = 10.0
@@ -140,13 +296,18 @@ theme_override_font_sizes/font_size = 80
 text = "DISAVOW"
 
 [node name="PauseButton" type="Button" parent="UI"]
+unique_name_in_owner = true
 process_mode = 3
-offset_left = 1861.0
-offset_top = 18.0
-offset_right = 1893.0
-offset_bottom = 50.0
-theme_type_variation = &"PauseButton"
-toggle_mode = true
+visible = false
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -62.0
+offset_top = 16.0
+offset_right = -16.0
+offset_bottom = 57.0
+grow_horizontal = 0
+icon = ExtResource("7_uohvc")
 
 [node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
 process_mode = 3
@@ -157,4 +318,3 @@ bus = &"Music"
 parameters/looping = true
 
 [connection signal="timeout" from="EnemySpawnTimer" to="." method="_on_enemy_spawn_timer_timeout"]
-[connection signal="toggled" from="UI/PauseButton" to="UI/MainMenu" method="_on_pause_button_toggled"]

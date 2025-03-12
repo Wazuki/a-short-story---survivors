@@ -2,6 +2,7 @@ extends Node
 
 
 @onready var player = get_node("/root/GameScene/Player")
+@onready var player_health_bar = get_node("/root/GameScene/UI/PlayerHealthBar")
 @onready var level_up_UI = get_node("/root/GameScene/UI/LevelUpUI")
 @onready var character_select_UI = get_node("/root/GameScene/UI/CharacterSelectUI")
 @onready var tilemap: TileMapLayer = get_node("/root/GameScene/Level")
@@ -12,34 +13,61 @@ extends Node
 @onready var light_blade = get_node("/root/GameScene/Player/Weapons/LightBladeController")
 @onready var arrow = get_node("/root/GameScene/Player/Weapons/ArrowController")
 @onready var waldos = get_node("/root/GameScene/Player/Weapons/Waldos")
+@onready var chain_lightning = get_node("/root/GameScene/Player/Weapons/ChainLightning")
 
 @onready var mob_spawn_point: PathFollow2D = get_node("/root/GameScene/Player/MobSpawnPath/MobSpawnPoint")
 @onready var enemy_spawn_timer: Timer = get_node("/root/GameScene/EnemySpawnTimer")
+@onready var enemy_difficulty_timer: Timer = get_node("/root/GameScene/EnemySpawnTimer/EnemyDifficultyTimer")
 
 @onready var game_over_UI: PanelContainer = get_node("/root/GameScene/UI/GameOverUI")
+@onready var pause_button: Button = get_node("/root/GameScene/UI/PauseButton")
+
+@onready var cooldown_container = get_node("/root/GameScene/UI/CooldownContainer")
+
+var quest: QuestResource = load("res://test_quest.tres")
+
+const BASE_DIFFICULTY_INCREASE_TIME = 60.0
+const BASE_ENEMY_SPAWN_TIME = 0.5
+var enemy_spawn_time = BASE_ENEMY_SPAWN_TIME
+
+var game_time_elapsed: float = 0.0
 
 var total_enemies_spawned: int = 0
 var game_started: bool = false
 var weapons = []
-var enemies: Array[Node2D]
-var spawned_xp: Array[Node2D]
+var difficulty = 0
+# var enemies: Array[Node2D]
+# var spawned_xp: Array[Node2D]
 
 # Variables to save/load to track player stats
 var total_enemies_killed: int = 0
 var total_xp_gained: int = 0
 var total_damage_done: float = 0.0
 
+var start_button_pressed = true
+
 var touch_input_enabled: bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	var instance := quest.instantiate()
+	Questify.start_quest(instance)
+	for q in Questify.get_quests():
+		print_debug(q.name)
+		for o in q.get_active_objectives():
+			print_debug(o.description)
+
+
+
 	# Move hte Game Controller node to be a child of the actual game scene.
 	# TODO - this is probably unnecessary.
 	get_node("/root").call_deferred("remove_child",self)
 	get_node("/root/GameScene").call_deferred("add_child", self)
 	enemy_spawn_timer.connect("timeout", _on_enemy_spawn_timer_timeout)
+	enemy_difficulty_timer.connect("timeout", _on_enemy_difficulty_timer_timeout)
 	
 	player.connect("_health_depleted", game_over)
+	player.connect("_health_changed", update_player_info_text)
 	
 	# lol
 	var restart_game_button: Button = get_node("/root/GameScene/UI/GameOverUI/MarginContainer/Panel/VBoxContainer/MarginContainer/RestartButton")
@@ -53,14 +81,33 @@ func _ready() -> void:
 	weapons.append(light_blade)
 	weapons.append(arrow)
 	weapons.append(waldos)
+	weapons.append(chain_lightning)
 
 	load_game()
 	# Initialize the character select UI to properly set the weapons in the Dict
 	character_select_UI.init()
 	pause_game()
 
+func _process(delta: float) -> void:
+	if game_started: 
+		game_time_elapsed += delta
+
+		# Update game time on the UI.
+		update_time_passed_label()
+		
+
+func update_time_passed_label() -> void:
+	var seconds = floori(game_time_elapsed)
+	var minutes = seconds / 60
+	var leftover_seconds = seconds % 60
+	var time_string = str(minutes) + ":" + str(leftover_seconds).pad_zeros(2)
+	$"/root/GameScene/UI/GameTimeLabel".text = "[p align=\"center\"]" + time_string
+
+	if minutes >= 5: # 5 minutes is the max time for a game
+		game_over()
 
 func spawn_enemy() -> void:
+
 	total_enemies_spawned += 1
 
 	# Spawn a basic enemy. Every 20 enemies, spawn an elite. Every 50, spawn a boss.
@@ -71,19 +118,43 @@ func spawn_enemy() -> void:
 		mob_spawn_point.progress_ratio = randf()
 
 
-	var new_enemy = preload("res://prefabs/enemy.tscn").instantiate()
+	var new_enemy = preload("res://prefabs/enemy_kinematic.tscn").instantiate()
 	new_enemy.global_position = mob_spawn_point.global_position 
 	add_child(new_enemy)
-
+	new_enemy.initialize() # Below functions moved to the enemy script!
+	
 	# Initialize the enemy as an elite or boss if the total enemies spawned is a multiple of 20 or 50
-	if total_enemies_spawned % 50 == 0:
-		new_enemy.initialize("boss")
-	elif total_enemies_spawned % 20 == 0:
-		new_enemy.initialize("elite")
-	else:
-		new_enemy.initialize("basic")
+	#if total_enemies_spawned % 50 == 0:
+	#	new_enemy.initialize(new_enemy.EnemyType.BOSS)
+	#elif total_enemies_spawned % 20 == 0:
+	#	new_enemy.initialize(new_enemy.EnemyType.ELITE)
+	#else:
+	#	new_enemy.initialize(new_enemy.EnemyType.BASIC)
 
-	enemies.append(new_enemy)
+	# enemies.append(new_enemy)
+
+func _on_enemy_spawn_timer_timeout() -> void:
+	spawn_enemy()
+
+	# Spawn extra enemies based on the difficulty
+	var extra_enemy_count = difficulty
+	while extra_enemy_count > 0:
+		spawn_enemy()
+		extra_enemy_count -= 1
+
+	enemy_spawn_timer.wait_time = enemy_spawn_time
+
+func _on_enemy_difficulty_timer_timeout() -> void:
+	enemy_spawn_time = clamp(enemy_spawn_time - 0.1, 0.1, BASE_ENEMY_SPAWN_TIME)
+	difficulty += 1
+	# print_debug("Difficulty: " + str(difficulty))
+
+func update_player_info_text(health: float, max_health: float) -> void:
+	player_health_bar.health = health
+	player_health_bar.max_health = max_health
+
+	#player_health_bar.max_value = max_health
+	#player_health_bar.value = health
 
 func is_point_on_tilemap(pos: Vector2) -> bool:
 	
@@ -93,12 +164,6 @@ func is_point_on_tilemap(pos: Vector2) -> bool:
 	return cell == null # If the cell is null we're off the map - return true, go back to the loop, and try again.
 	# return false # We want this to return false in the end because the loop will run until we find a cell that is ON the map. True continues the loop!
 
-func stop_tracking_enemy(e: Node2D) -> void:
-	enemies.erase(e)
-	
-func stop_tracking_xp_orb(xp: Node2D) -> void:
-	spawned_xp.erase(xp)
-
 func spawn_experience_orb(pos: Vector2, value: int) -> void:
 	var xp_orb = preload("res://prefabs/experience_orb.tscn").instantiate()
 	call_deferred("add_child", xp_orb)
@@ -106,8 +171,14 @@ func spawn_experience_orb(pos: Vector2, value: int) -> void:
 	xp_orb.initialize(pos, value) # 10 as a basic "large XP test"
 	# xp_orb.global_position = pos
 	# xp_orb.set_value(15) # Basic XP test
-	spawned_xp.append(xp_orb)
+	# spawned_xp.append(xp_orb)
 	# print("spawned xp")
+
+func spawn_health_pickup(pos: Vector2) -> void:
+	var health_pickup = preload("res://prefabs/health_pickup.tscn").instantiate()
+	call_deferred("add_child", health_pickup)
+	health_pickup.initialize(pos)
+	# print("spawned health")
 
 # Reset enemies and weapons, then let the player select a character.
 func start_game() -> void:
@@ -116,6 +187,14 @@ func start_game() -> void:
 	for w in weapons:
 		w.reset()
 	
+	# Reset the enemy spawn timer and start it.
+	enemy_spawn_timer.wait_time = BASE_ENEMY_SPAWN_TIME
+	enemy_spawn_timer.start()
+	# Reset the enemy difficulty timer as well.
+	enemy_difficulty_timer.wait_time = BASE_DIFFICULTY_INCREASE_TIME
+	enemy_difficulty_timer.start()
+
+	game_time_elapsed = 0.0
 	# display_level_up()
 	# Display the character select screen
 	character_select_UI.visible = true
@@ -124,11 +203,19 @@ func select_character(character: Dictionary) -> void:
 	# Hide the select character UI and start the game after setting the player's stats
 	character_select_UI.visible = false
 	player.initialize(character)
+	player_health_bar.init_health(player.health) # Initialize the player's health bar - sets all the values to max health.
+
 	character["weapon"].level_up() # Don't need to ask the array since we have a ref already.
 	character["weapon"].visible = true # Make sure the weapon is visiible (required for some weapons)
+
+
 	unpause_game()
 	game_started = true
 	# print_debug("Selected " + character)
+
+func create_cooldown_panel(weapon) -> void:
+	var new_panel = preload("res://prefabs/cooldown_panel.tscn").instantiate()
+	new_panel
 
 
 func display_level_up() -> void:
@@ -136,21 +223,46 @@ func display_level_up() -> void:
 
 func pause_game() -> void:
 	get_tree().paused = true
+	pause_button.visible = false
 
 func unpause_game() -> void:
 	get_tree().paused = false
+	pause_button.visible = true
 
 func quit_game() -> void:
 	# Save the game and quit
 	save_game()
 	get_tree().quit() # TODO - Save data. Confirm quit?
 
+func apply_shockwave_displacement(origin: Vector2, strength: float) -> void:
+	# Apply the shockwave deplacement to all enemies based on the origin of the shockwave
+	for e in get_tree().get_nodes_in_group("Enemies"):
 
-func _on_enemy_spawn_timer_timeout() -> void:
-	spawn_enemy()
+		if e.displaced: continue # Skip to the next enemy since this one is already knocked back.
 
-func round_to_dec(num: float, digit: int) -> float:
-	return round(num * pow(10.0, digit) / pow(10.0, digit))
+		# Calculate the direction from the shockwave origin to the enemy and apply displacement based on the distance.
+		var direction = (e.global_position - origin).normalized()
+		var distance = e.global_position.distance_to(origin)
+		var shockwave_max_size = get_viewport().get_visible_rect().size.x / get_viewport().get_camera_2d().zoom.x
+		# print_debug("Distance: " + str(distance) + ", Max size: " + str(shockwave_max_size))
+		e.velocity = (direction * strength * clamp(1.0 - (distance / shockwave_max_size), 0.1, 1.0)) 
+		e.displaced = true
+		# var direction = (e.global_position - origin).normalized()
+		# var distance = e.global_position.distance_to(origin)
+		# var offset = 30
+		# # print_debug("Distance: " + str(distance) + ", Time: " + str(time))
+
+		# # If the enemy is within the active range of the shockwave
+		# if time*speed_per_frame - offset <= distance and distance <= time*speed_per_frame + offset:
+		# 	# Calculate the displacement based on the strength of the shockwave and the distance from the origin
+		# 	# var displacement = strength * (1.0 - (distance / time))
+		# 	# Scale displacement based on distance (closer = stronger impulse)
+		# 	var impulse_strength = strength * clamp(1.0 - (distance / time), 0.3, 1.0)
+		# 	# print_debug("Impulse strength: " + str(impulse_strength))
+		# 	e.apply_impulse(direction * impulse_strength)
+		# 	e.displaced = true
+		# 	# print_debug("Applied displacement of " + str(direction * displacement))
+		
 	
 func game_over() -> void:
 	#Pause the game, destroy all enemies, then show the game over UI 
@@ -162,19 +274,22 @@ func game_over() -> void:
 func restart_game() -> void:
 	# Hide the game over UI and return the player to the main menu.
 	# print_debug("restart")
-	game_over_UI.visible = false
-	
+	game_over_UI.visible = false	
+	difficulty = 0
+
 	# Destroy all enemies
-	for e in enemies:
+	for e in get_tree().get_nodes_in_group("Enemies"):
 		e.queue_free()
-	enemies.clear()
+
+	# Don't forget to destroy any pickups (health/XP)
+	for p in get_tree().get_nodes_in_group("Pickups"):
+		p.queue_free()
+
+	# Destroy all projectiles
+	for p in get_tree().get_nodes_in_group("Projectiles"):
+		p.queue_free()
 	
-	# Detroy experience too
-	for xp in spawned_xp:
-		xp.queue_free()
-	spawned_xp.clear()
-	
-	get_node("/root/GameScene/UI/MainMenu").visible = true
+	get_node("/root/GameScene/UI/MainMenu/MainMenu").visible = true
 
 	# TODO - reset the player's position too!
 	

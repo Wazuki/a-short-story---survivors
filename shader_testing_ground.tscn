@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://3oo018qvrmpv"]
+
+[ext_resource type="Shader" uid="uid://bbsngblcf3cy6" path="res://shaders/replacement_color_code.gdshader" id="1_nc0vp"]
+[ext_resource type="Texture2D" uid="uid://bguee08c3f17c" path="res://sprites/frames/valkyrie_icon.tres" id="2_ahx5r"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_211uf"]
+shader = ExtResource("1_nc0vp")
+shader_parameter/replacement_color = Color(0.513117, 0.0207361, 0.784508, 1)
+
+[node name="Area2D" type="Area2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+material = SubResource("ShaderMaterial_211uf")
+texture = ExtResource("2_ahx5r")
+
+[node name="ColorPicker" type="ColorPicker" parent="."]
+offset_left = 48.0
+offset_top = -289.0
+offset_right = 346.0
+offset_bottom = 285.0
+color = Color(0.105882, 0.105882, 0.105882, 1)

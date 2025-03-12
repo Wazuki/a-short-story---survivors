@@ -1,0 +1,76 @@
+[gd_scene load_steps=11 format=3 uid="uid://d2lds6aupinx5"]
+
+[ext_resource type="Script" uid="uid://be361hr1w38ld" path="res://scripts/enemy_kinematic.gd" id="1_1lqoj"]
+[ext_resource type="PackedScene" uid="uid://remf34e7bwbp" path="res://prefabs/healthbar.tscn" id="2_s1v1h"]
+[ext_resource type="SpriteFrames" uid="uid://drpsnnuwf674n" path="res://sprites/frames/basic_enemy.tres" id="3_3soxo"]
+[ext_resource type="AudioStream" uid="uid://cp212fsoorkcu" path="res://sounds/LIQImpt_Goo Splatter_09.wav" id="4_d4qm8"]
+[ext_resource type="AudioStream" uid="uid://cpa54i274qfh7" path="res://sounds/ranged enemy/sci-fi_weapon_blaster_laser_boom_small_01.wav" id="5_tu46d"]
+[ext_resource type="AudioStream" uid="uid://cecnc2bgd4mfk" path="res://sounds/ranged enemy/sci-fi_weapon_blaster_laser_boom_small_02.wav" id="6_vh4cx"]
+[ext_resource type="AudioStream" uid="uid://dbnoxtq3ysjbb" path="res://sounds/ranged enemy/sci-fi_weapon_blaster_laser_boom_small_03.wav" id="7_m3rpv"]
+[ext_resource type="AudioStream" uid="uid://dlijmd2ioepir" path="res://sounds/ranged enemy/sci-fi_weapon_blaster_laser_boom_small_04.wav" id="8_gd34y"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_bw8w4"]
+radius = 12.0
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_h6a0t"]
+streams_count = 4
+stream_0/stream = ExtResource("5_tu46d")
+stream_1/stream = ExtResource("6_vh4cx")
+stream_2/stream = ExtResource("7_m3rpv")
+stream_3/stream = ExtResource("8_gd34y")
+
+[node name="Enemy_Kinematic" type="RigidBody2D" groups=["Enemies"]]
+y_sort_enabled = true
+collision_layer = 2
+collision_mask = 3
+mass = 5.0
+gravity_scale = 0.0
+lock_rotation = true
+script = ExtResource("1_1lqoj")
+
+[node name="HealthBar" parent="." instance=ExtResource("2_s1v1h")]
+unique_name_in_owner = true
+visible = false
+offset_left = -23.0
+offset_top = -28.0
+offset_right = 913.0
+offset_bottom = 97.0
+scale = Vector2(0.05, 0.05)
+
+[node name="Spritesheet" type="AnimatedSprite2D" parent="."]
+unique_name_in_owner = true
+texture_filter = 1
+sprite_frames = ExtResource("3_3soxo")
+animation = &"idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(-1, 1)
+shape = SubResource("CapsuleShape2D_bw8w4")
+
+[node name="AvoidanceArea" type="Area2D" parent="."]
+unique_name_in_owner = true
+visible = false
+
+[node name="AvoidanceAreaCollider" type="CollisionShape2D" parent="AvoidanceArea"]
+position = Vector2(-1, 1)
+shape = SubResource("CapsuleShape2D_bw8w4")
+
+[node name="DeathSound" type="AudioStreamPlayer2D" parent="."]
+unique_name_in_owner = true
+stream = ExtResource("4_d4qm8")
+
+[node name="ShootSound" type="AudioStreamPlayer2D" parent="."]
+unique_name_in_owner = true
+stream = SubResource("AudioStreamRandomizer_h6a0t")
+
+[node name="ShootTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+
+[node name="DisplacementTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 2.0
+
+[connection signal="animation_finished" from="Spritesheet" to="." method="_on_spritesheet_animation_finished"]
+[connection signal="timeout" from="ShootTimer" to="." method="_on_shoot_timer_timeout"]
+[connection signal="timeout" from="DisplacementTimer" to="." method="_on_displacement_timer_timeout"]
