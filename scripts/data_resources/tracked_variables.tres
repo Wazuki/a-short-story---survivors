@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="TrackedVariables" load_steps=2 format=3 uid="uid://c5hn8t8tmrw7l"]
+
+[ext_resource type="Script" uid="uid://bjpyjoom02brh" path="res://scripts/data_resources/tracked_variables.gd" id="1_vhe0d"]
+
+[resource]
+script = ExtResource("1_vhe0d")
+values = {
+0: 0,
+1: 0,
+2: 0,
+3: 0
+}
+metadata/_custom_type_script = "uid://bjpyjoom02brh"
