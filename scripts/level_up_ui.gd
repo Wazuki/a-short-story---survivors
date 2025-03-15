@@ -36,12 +36,7 @@ func show_level_up_screen() -> void:
 		var weapon = weapons.pop_front() # Pick a random weapon from the list of weapons
 		# If the weapon is at max level, it's not a valid option - remove it from the array and try again.
 		# print_debug("Array size: " + str(weapons.size()))
-		# TEMPORARY FIX - TODO - refactor ALL weapons!
-		if weapon.name == "ChainLightning":
-			if weapon.level >= MAX_WEAPON_LEVEL: 
-				continue
-			else: level_up_options.append(weapon)
-		elif weapon.weapon.level >= MAX_WEAPON_LEVEL: 
+		if weapon.level >= MAX_WEAPON_LEVEL: 
 			continue
 		else: level_up_options.append(weapon)
 

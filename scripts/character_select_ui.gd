@@ -1,125 +1,127 @@
 extends Control
 
-const TANK_UNLOCK_VAL = 5000
-const HUNTRESS_UNLOCK_VAL = 1000
-const TECHNICIAN_UNLOCK_VAL = 10000
+var UNLOCKABLE_CHARACTER_DATA: Unlockable_Characters = load("res://scripts/data_resources/unlockable_characters.tres")
+var characters: Array[Character]
+# var character_dict_by_name = {}
+var panels_expanded = false
 
-var valkyrie_stats = {
-	"health": 100,
-	"speed": 150.0,
-	"armor": 1.0,
-}
+var selected_character_panel: CharacterSelectPanel = null
 
-var tank_stats = {
-	"health": 200,
-	"speed": 100.0,
-	"armor": 5.0,
-}
-
-var huntress_stats = {
-	"health": 75,
-	"speed": 200.0,
-	"armor": 0.1,
-}
-
-var technician_stats = {
-	"health": 150,
-	"speed": 110.0,
-	"armor": 3.0,
-}
-
-var characters = {
-	"Valkyrie": valkyrie_stats,
-	"Tank": tank_stats,
-	"Huntress": huntress_stats,
-	"Technician": technician_stats,
-}
-
-#var total_enemies_killed: int = 0
-#var total_xp_gained: int = 0
-#var total_damage_done: float = 0.0
+@onready var character_panel_container = %CharacterPanelContainer
 
 func init() -> void:
-	var c = load("res://scripts/data_resources/unlockable_characters.tres")
-	print(c.valkyrie.stats[Character.Stat.HEALTH])
+	UNLOCKABLE_CHARACTER_DATA._init()
+	characters = UNLOCKABLE_CHARACTER_DATA.get_all_chars()
+	# print_debug("There are " + str(characters.size()) + " characters loaded!")
 
-	# Add weapons
-	valkyrie_stats.get_or_add("weapon", GameController.light_blade)
-	tank_stats.get_or_add("weapon", GameController.slam)
-	huntress_stats.get_or_add("weapon", GameController.arrow)
-	technician_stats.get_or_add("weapon", GameController.waldos)
+	# Debug function for checking some Web5 stuff mostly related to possible load order issues.
+	# for c in characters:
+	# 	if c.character_name == null:
+	# 		print_debug("Error! Found a null character! Running init")
+	# 		UNLOCKABLE_CHARACTER_DATA._init()
+	# 		characters = UNLOCKABLE_CHARACTER_DATA.get_all_chars()
+	# 		break
+	# 	else: print_debug(c.character_name)
 
-	# Add spritesheest
-	valkyrie_stats.get_or_add("spritesheet", preload("res://sprites/frames/valkyrie_sprite_frames.tres"))
-	tank_stats.get_or_add("spritesheet", preload("res://sprites/frames/tank_sprite_frames.tres"))
-	huntress_stats.get_or_add("spritesheet", preload("res://sprites/frames/huntress_sprite_frames.tres"))
-	technician_stats.get_or_add("spritesheet", preload("res://sprites/frames/technician_sprite_frames.tres"))
+	# Add the characters to a string dictionary then initialize a panel for each character.
+	for c in characters:
+		# character_dict_by_name[c.character_name] = c
+		# print_debug("Deploying " + c.character_name)
+		# Set up the character panel, initialize it, and assign it to the right container.
+		var char_panel = preload("res://prefabs/char_select_panel.tscn").instantiate()
+		char_panel.initialize(c)
+		char_panel.activate_panel.connect(display_character_info)
+		c.unlocked.connect(char_panel.unlock_char)
+		%CharacterPanelContainer.add_child(char_panel)
+		connect("visibility_changed", char_panel.start_scramble_timer)
 
-	# Add unlock requirement UI elements
-	tank_stats.get_or_add("unlock_reqs", {
-		GameController.total_xp_gained: TANK_UNLOCK_VAL,
-	})
-	tank_stats.get_or_add("CharPanel", %TankCharacterPanel)
-	tank_stats.get_or_add("LockPanel", %LockPanel_Tank)
-	tank_stats.get_or_add("ReqText", %RequirementsText_Tank)
-	tank_stats.get_or_add("unlock_text_val", "ACQUIRE %s/" + str(tank_stats.unlock_reqs.values()[0]) + " KNOWLEDGE")
-
-	huntress_stats.get_or_add("unlock_reqs", {
-		GameController.total_enemies_killed: HUNTRESS_UNLOCK_VAL,
-	})
-	huntress_stats.get_or_add("CharPanel", %HuntressCharacterPanel)
-	huntress_stats.get_or_add("LockPanel", %LockPanel_Huntress)
-	huntress_stats.get_or_add("ReqText", %RequirementsText_Huntress)
-	huntress_stats.get_or_add("unlock_text_val", "ELIMINATE %s/" + str(huntress_stats.unlock_reqs.values()[0]) + " FOES")
-
-	technician_stats.get_or_add("unlock_reqs", {
-		GameController.total_damage_done: TECHNICIAN_UNLOCK_VAL,
-	})
-	technician_stats.get_or_add("CharPanel", %TechnicianCharacterPanel)
-	technician_stats.get_or_add("LockPanel", %LockPanel_Technician)
-	technician_stats.get_or_add("ReqText", %RequirementsText_Technician)
-	technician_stats.get_or_add("unlock_text_val", "ADMINISTER %s/" + str(technician_stats.unlock_reqs.values()[0]) + " WOUNDS")
+	# TEMPORARY - TODO - REMOVE THIS ONCE WE HAVE ENOUGH CHARACTERS!
+	# ADd some "Coming Soon" characters while we have less than 4
+	if characters.size() < 8:
+		for x in 8 - characters.size():
+			# print_debug("Deploying bonus character " + str(x))
+			var char_panel = preload("res://prefabs/char_select_panel.tscn").instantiate()
+			var c: Character = Character.new()
+			c.set_stats("COMING SOON", 9999, 9999, 9999, Weapon.Type.SLAM, TrackedVariables.Type.LEVELS, 9223372036854775807)
+			c.icon = preload("res://sprites/frames/valkyrie_icon.tres")
+			
+			char_panel.initialize(c)
+			char_panel.activate_panel.connect(display_character_info)
+			# c.unlocked.connect(char_panel.unlock_char)
+			%CharacterPanelContainer.add_child(char_panel)
+			connect("visibility_changed", char_panel.start_scramble_timer)
 
 	check_unlock_requiremets()
-	
 
-func _on_character_select_button_pressed(character :String) -> void:
-	# print_debug("Selected " + character)
-	GameController.select_character(characters[character])
+
+func display_character_info(panel: Panel) -> void:
+	# Deactivate the previously selected character's panel (if applicable). The clicked panel will set itself.
+	if selected_character_panel and selected_character_panel != panel: selected_character_panel.deactivate_panel()
+	selected_character_panel = panel
+
+	# Tween the WeaponInfo and CharacterInfo panels to stretch their rects to act like they're phasing in. But only once.
+	if not panels_expanded:
+		var weapon_tween = get_tree().create_tween()
+		weapon_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+		weapon_tween.tween_property(%WeaponInfoPanel, "scale:y", 1.0, 0.5)
+
+		var char_tween = get_tree().create_tween()
+		char_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+		char_tween.tween_property(%CharacterInfoPanel, "scale:y", 1.0, 0.5)
+		panels_expanded = true
+
+	# Assign the character's information to the two side panels, including setting icons and text.
+	%CharacterIcon.texture = panel.character.icon
+	%CharacterNameText.text = panel.character.character_name
+	# Concat a string of the character's description and then their stats (Health, Armor, Speed)
+	%CharacterInfoText.text = panel.character.description
+	%CharacterInfoText.text += "\n\nHealth: " + str(panel.character.get_stat_value(Character.Stat.HEALTH))
+	%CharacterInfoText.text += "\n\nArmor: " + str(panel.character.get_stat_value(Character.Stat.ARMOR))
+	%CharacterInfoText.text += "\n\nSpeed: " + str(panel.character.get_stat_value(Character.Stat.SPEED))
+
+	# Assign the character's starting weapon information to the left panel.
+	var starting_weapon = GameController.get_weapon_by_type(panel.character.starting_weapon)
+	%WeaponIcon.texture = starting_weapon.icon
+	%WeaponInfoText.text = starting_weapon.description
+	%WeaponInfoText.text += "\n\nDamage: " + str(starting_weapon.damage)
+	%WeaponInfoText.text += "\n\nCooldown: " + str(starting_weapon.cooldown)
+	%WeaponInfoText.text += "\n\nRange: " + str(starting_weapon.get_weapon_range())
+
+	# Set the button's parameters so when we click it we'll tell the GameController to start the game with this character.
+
+	# if %SelectCharacterButton.is_connected("pressed", _on_character_select_button_pressed.bind(panel.character)): 
+	# 	%SelectCharacterButton.disconnect("pressed", _on_character_select_button_pressed.bind(panel.character))
+	# 	print_debug("disconnected")
+	# else: %SelectCharacterButton.connect("pressed", _on_select_character_button_pressed.bind(panel.character))
+
+
+# func _on_character_select_button_pressed() -> void:
+# 	var char_name = selected_character_panel.character.character_name
+# 	if char_name in character_dict_by_name: GameController.select_character(character_dict_by_name[char_name])
 	
 func check_unlock_requiremets() -> void:
 	# Check if the player has unlocked any characters
 	for c in characters:
-		if characters[c].has("unlock_reqs"):
-			# Update the unlock requirements values before checking them.
-			update_unlock_var(c)
+		# print_debug("Unlock status: " + c.character_name + " is " + str(c.is_unlocked))
+		# Skip unlocked characters.
+		if c.is_unlocked: continue
 
-			# print_debug(str(characters[c]["unlock_reqs"]))
-			var unlock_var = characters[c]["unlock_reqs"].keys()[0]
-			var unlock_threshold = characters[c]["unlock_reqs"].values()[0]
-			# print_debug("Req: " + str(unlock_var), "Value: " + str(characters[c]["unlock_reqs"].values()[0]))
-			if unlock_var >= unlock_threshold:
-				# Unlock character
-				characters[c]["LockPanel"].visible = false
-				characters[c]["CharPanel"].visible = true
-			else: 
-				var unlock_text:String = "[p align=center]"
-				unlock_text += characters[c]["unlock_text_val"]
-				# characters[c]["ReqText"].text = unlock_text.format({"{0}": str(unlock_var)})
-				characters[c]["ReqText"].text = unlock_text % str(roundi(unlock_var))
+		# We're going to be updating the unlock variables differently now so we only need to ask the GameController to check the saved data.
+		# Match the unlock variable to the type to see if we've surpassed the threshold. If so, unlock the character.
+		if c.unlock_variable == TrackedVariables.Type.NONE: c.unlock()
+		# Otherwise, unlock the character if the tracked variable (what the player has achieved) is greater than the unlock value
+		elif  GameController.tracked_variables.get_value(c.unlock_variable) >= c.unlock_value:
+			c.unlock()
+			
+# Tell the GameController to start thw game with the selected character.
+func _on_select_character_button_pressed() -> void:
+	GameController.select_character(selected_character_panel.character)
 
-func update_unlock_var(character: String) -> void:
-	var val
-	var threshold_val = characters[character]["unlock_reqs"].values()[0]
-	# var threshold_val 
-	match character:
-		# Append a new key to the new value, then erase the old key
-		"Tank":
-			val = GameController.total_xp_gained
-			# print_debug(character + ": " + str(characters["Tank"]["unlock_reqs"].keys()[0]))
-		"Huntress":
-			val = GameController.total_enemies_killed
-		"Technician":
-			val = GameController.total_damage_done	
-	characters[character]["unlock_reqs"].clear()
-	characters[character]["unlock_reqs"][val] = threshold_val		
+# When the panel becomes visible or invisible, reset the parameters so the character select screen goes back to normal.
+func _on_visibility_changed() -> void:
+	%WeaponInfoPanel.scale.y = 0
+	%CharacterInfoPanel.scale.y = 0
+	if selected_character_panel:
+		selected_character_panel.deactivate_panel()
+		selected_character_panel = null
+	panels_expanded = false

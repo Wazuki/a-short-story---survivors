@@ -40,9 +40,11 @@ var difficulty = 0
 # var spawned_xp: Array[Node2D]
 
 # Variables to save/load to track player stats
-var total_enemies_killed: int = 0
-var total_xp_gained: int = 0
-var total_damage_done: float = 0.0
+# var total_enemies_killed: int = 0
+# var total_xp_gained: int = 0
+# var total_damage_done: float = 0.0
+
+var tracked_variables :TrackedVariables = preload("res://scripts/data_resources/tracked_variables.tres")
 
 var start_button_pressed = true
 
@@ -66,8 +68,12 @@ func _ready() -> void:
 	enemy_spawn_timer.connect("timeout", _on_enemy_spawn_timer_timeout)
 	enemy_difficulty_timer.connect("timeout", _on_enemy_difficulty_timer_timeout)
 	
-	player.connect("_health_depleted", game_over)
-	player.connect("_health_changed", update_player_info_text)
+	# Player connected signals.
+	player.connect("gained_xp", _on_player_gain_xp) # Called when the player gains xp.
+	player.connect("gained_level", _on_player_gain_level) # Called when the player gains a level.
+	player.connect("_health_depleted", game_over) # When the player dies
+	player.connect("_health_changed", update_player_info_text) # When the player's health changes (but not zero)
+	
 	
 	# lol
 	var restart_game_button: Button = get_node("/root/GameScene/UI/GameOverUI/MarginContainer/Panel/VBoxContainer/MarginContainer/RestartButton")
@@ -123,6 +129,10 @@ func spawn_enemy() -> void:
 	add_child(new_enemy)
 	new_enemy.initialize() # Below functions moved to the enemy script!
 	
+	# Connect any important signals to the GameController from the new enemy.
+	new_enemy.damaged.connect(_on_enemy_damaged)
+	new_enemy.health_depleted.connect(_on_enemy_health_depleted)
+
 	# Initialize the enemy as an elite or boss if the total enemies spawned is a multiple of 20 or 50
 	#if total_enemies_spawned % 50 == 0:
 	#	new_enemy.initialize(new_enemy.EnemyType.BOSS)
@@ -143,6 +153,12 @@ func _on_enemy_spawn_timer_timeout() -> void:
 		extra_enemy_count -= 1
 
 	enemy_spawn_timer.wait_time = enemy_spawn_time
+
+# Signals for tracking global player-saved variables.
+func _on_enemy_damaged(amount) -> void: tracked_variables.add_value(TrackedVariables.Type.DAMAGE, amount)
+func _on_enemy_health_depleted() -> void: tracked_variables.add_value(TrackedVariables.Type.KILLS, 1)
+func _on_player_gain_xp(amount) -> void: tracked_variables.add_value(TrackedVariables.Type.XP, amount)
+func _on_player_gain_level() -> void: tracked_variables.add_value(TrackedVariables.Type.LEVELS, 1)
 
 func _on_enemy_difficulty_timer_timeout() -> void:
 	enemy_spawn_time = clamp(enemy_spawn_time - 0.1, 0.1, BASE_ENEMY_SPAWN_TIME)
@@ -199,14 +215,28 @@ func start_game() -> void:
 	# Display the character select screen
 	character_select_UI.visible = true
 
-func select_character(character: Dictionary) -> void:
+func select_character(character: Character) -> void:
 	# Hide the select character UI and start the game after setting the player's stats
 	character_select_UI.visible = false
 	player.initialize(character)
 	player_health_bar.init_health(player.health) # Initialize the player's health bar - sets all the values to max health.
 
-	character["weapon"].level_up() # Don't need to ask the array since we have a ref already.
-	character["weapon"].visible = true # Make sure the weapon is visiible (required for some weapons)
+	# TODO - Improve the functionality of the initial weapon gaining via the Weapon enum. Prefer instantiating new instance maybe.
+	match character.starting_weapon:
+		Weapon.Type.LIGHT_BLADE:
+			light_blade.level_up()
+		Weapon.Type.CHAIN_LIGHTNING:
+			chain_lightning.level_up()
+		Weapon.Type.SLAM:
+			slam.level_up()
+		Weapon.Type.ARROW:
+			arrow.level_up()
+		Weapon.Type.WALDOS:
+			waldos.level_up()
+			waldos.visible = true	
+
+	#character["weapon"].level_up() # Don't need to ask the array since we have a ref already.
+	#character["weapon"].visible = true # Make sure the weapon is visiible (required for some weapons)
 
 
 	unpause_game()
@@ -216,7 +246,6 @@ func select_character(character: Dictionary) -> void:
 func create_cooldown_panel(weapon) -> void:
 	var new_panel = preload("res://prefabs/cooldown_panel.tscn").instantiate()
 	new_panel
-
 
 func display_level_up() -> void:
 	level_up_UI.show_level_up_screen()
@@ -302,9 +331,11 @@ func save_game() -> void:
 	save_data.set_value("Settings", "music_volume", db_to_linear(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("Music"))))
 	
 	# Save the player's stats
-	save_data.set_value("SaveData","enemies killed", total_enemies_killed)
-	save_data.set_value("SaveData","xp gained", total_xp_gained)
-	save_data.set_value("SaveData","damage done", total_damage_done)
+	save_data.set_value("SaveData","enemies killed", tracked_variables.get_value(TrackedVariables.Type.KILLS))
+	save_data.set_value("SaveData","xp gained", tracked_variables.get_value(TrackedVariables.Type.XP))
+	save_data.set_value("SaveData","damage done", tracked_variables.get_value(TrackedVariables.Type.DAMAGE))
+	save_data.set_value("SaveData","levels gained", tracked_variables.get_value(TrackedVariables.Type.LEVELS))
+
 	save_data.save("user://save_game.cfg")
 	print_debug("Game saved!")
 
@@ -322,9 +353,18 @@ func load_game() -> void:
 	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), linear_to_db(save_data.get_value("Settings", "sound_volume", 0.5)))
 	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Music"), linear_to_db(save_data.get_value("Settings", "music_volume", 0.5)))
 
-	total_enemies_killed = save_data.get_value("SaveData","enemies killed")
-	total_xp_gained = save_data.get_value("SaveData","xp gained")
-	total_damage_done = save_data.get_value("SaveData","damage done")
+	# Load the player's tracked variables from file and assign it to the tracked variable var
+	tracked_variables.set_value(TrackedVariables.Type.KILLS, save_data.get_value("SaveData","enemies killed", 0))
+	tracked_variables.set_value(TrackedVariables.Type.XP, save_data.get_value("SaveData","xp gained", 0))
+	tracked_variables.set_value(TrackedVariables.Type.DAMAGE, save_data.get_value("SaveData","damage done", 0))
+	tracked_variables.set_value(TrackedVariables.Type.LEVELS, save_data.get_value("SaveData","levels gained", 0))
+	
+	for v in tracked_variables.values:
+		var value = tracked_variables.values[v]
+		print_debug(str(v) + " " + str(value))
+
+	# total_xp_gained = save_data.get_value("SaveData","xp gained")
+	# total_damage_done = save_data.get_value("SaveData","damage done")
 	# print_debug("Game loaded!")
 	# print_debug("Enemies killed: " + str(total_enemies_killed))
 	# print_debug("XP gained: " + str(total_xp_gained))
@@ -332,9 +372,13 @@ func load_game() -> void:
 
 func reset_game() -> void:
 	# Reset the player's stats and save the game
-	total_enemies_killed = 0
-	total_xp_gained = 0
-	total_damage_done = 0.0
+	for v in tracked_variables.values: tracked_variables.set_value(v, 0) # Iterates through the tracked variables and zeroes them out.
 	save_game()
+
 	character_select_UI.check_unlock_requiremets()
 	print_debug("Game reset!")
+
+# Go through the weapons and find the one that matches our type and return it.
+func get_weapon_by_type(t: Weapon.Type) -> Weapon:
+	for w in weapons: if w.weapon_type == t: return w
+	return null

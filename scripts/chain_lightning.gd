@@ -32,6 +32,7 @@ var hit_targets: Array
 
 func _ready() -> void:
 	super._ready()
+	description = "A chaining electrical blast."
 	reset()
 
 func reset() -> void:
@@ -49,29 +50,30 @@ func reset() -> void:
 # 2. If the enemy is in range, launch the lightning at it.
 # 3. Once the tween ends (the enemy is hit), find the next closest enemy and repeat.
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
+	fire_lightning()
+
+func fire_lightning() -> void:
+	# Check if an enemy is in range. If so, fire the lightning.
 	if ready_to_fire:
 		# Reset the global position of the lightning to our pos.
 		%Lightning.global_position = global_position
 		# Reset the targets we've hit and the current chain count, then fire the weapon.
 		hit_targets.clear()
 		current_chain = 0
-		fire_lightning()
 
-func fire_lightning() -> void:
-	# Check if an enemy is in range. If so, fire the lightning.
-	if has_overlapping_bodies():
-		# print_debug("zap")
-		%LightningSounds.play()
-		ready_to_fire = false
-		current_chain += 1
-		hit_targets.append(get_overlapping_bodies().pick_random())
-		var target = hit_targets.front()
+		if has_overlapping_bodies():
+			# print_debug("zap")
+			%LightningSounds.play()
+			ready_to_fire = false
+			current_chain += 1
+			hit_targets.append(get_overlapping_bodies().pick_random())
+			var target = hit_targets.front()
 
-		lightning.look_at(target.global_position)
-		lightning.animate_lightning(lightning.global_position, target.global_position, LIGHTNING_DURATION)
-		damage_target(target)
-		# await(get_tree().create_timer(0.3).timeout)
+			lightning.look_at(target.global_position)
+			lightning.animate_lightning(lightning.global_position, target.global_position, LIGHTNING_DURATION)
+			damage_target(target)
+			# await(get_tree().create_timer(0.3).timeout)
 
 
 func jump_next_target() -> void:
@@ -169,7 +171,7 @@ func level_up() -> void:
 	fire_weapon()
 
 func get_level_up_text() -> String:
-	if first_level_up: return "A chaining electrical blast."
+	if first_level_up: return description
 	else:
 		match level + 1:
 			2: return "Max Chains: 3\nSpark linger on hit.\n(TODO)"
@@ -179,3 +181,7 @@ func get_level_up_text() -> String:
 			6: return "Max Chains: 13\nFinal chain deals full damage."
 			7: return "Max Chains: 16\nLast jump explodes.\n(TODO)"
 	return "Error! get_level_text() of Chain Lightning dropped out of switch!"
+
+
+func _on_body_entered(_body: Node2D) -> void:
+	fire_lightning()

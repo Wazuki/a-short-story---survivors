@@ -16,10 +16,39 @@ enum Stat
     Stat.SPEED: 0,
 }
 
-func set_stats(health: float, armor: float, speed: float) -> void:
+var character_name: String
+var description: String
+var spritesheet
+var icon
+var starting_weapon: Weapon.Type
+var unlock_variable: TrackedVariables.Type
+var unlock_value = 0
+var is_unlocked: bool = false
+signal unlocked
+
+# Initialize all the starting characters' attributes like stats, weapon, and unlock conditions.
+func set_stats(char_name: String, health: float, armor: float, speed: float, starting_weap: Weapon.Type, unlock_var: TrackedVariables.Type = TrackedVariables.Type.NONE, unlock_val = 0) -> void:
+    character_name = char_name
+
     stats = {
         Stat.HEALTH: health,
         Stat.MAX_HEALTH: health,
         Stat.ARMOR: armor,
         Stat.SPEED: speed 
     }
+
+    starting_weapon = starting_weap
+
+    unlock_variable = unlock_var
+    unlock_value = unlock_val
+
+    # print_debug("Unlock variable is " + TrackedVariables.Type.keys()[unlock_variable])
+
+# Unlock the character then notify the UI to update.
+func unlock() -> void:
+    if is_unlocked: return
+    else:
+        is_unlocked = true
+    unlocked.emit()
+
+func get_stat_value(stat: Stat) -> float: return stats.get(stat)

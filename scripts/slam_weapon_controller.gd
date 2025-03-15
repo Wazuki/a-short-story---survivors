@@ -1,4 +1,4 @@
-extends Marker2D
+extends Weapon
 
 const BASE_DAMAGE = 50.0
 const BASE_SPEED = 1.0
@@ -43,28 +43,21 @@ var last_shockwave_time = -1.0
 
 var icon: AtlasTexture = preload("res://sprites/frames/slam_icon.tres")
 
-var first_level_up
-
-var weapon
-
-# TODO - knockback?
-
 # TODO - a lot of these could probably benefit from a very simple state machine.
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	super._ready()
 	name = "Slam"
-	weapon = preload("res://prefabs/weapon.tscn").instantiate()
-	add_child(weapon)
-
+	description = "A massive slam that deals damage in an area. Shrinks while moving."
 	# slam_bullet.get_node("AnimatedSprite2D").connect("animation_finished", _on_slam_animation_finished)
 	# reset()
 
 func reset() -> void:
 	#max_slams = BASE_SLAMS
 	# print_debug("Slam reset")
-	weapon.set_stats(BASE_DAMAGE, BASE_SPEED, BASE_COOLDOWN)
-	weapon.reset_timer()
+	set_stats(BASE_DAMAGE, BASE_SPEED, BASE_COOLDOWN)
+	reset_timer()
 
 	first_level_up = true
 
@@ -84,17 +77,20 @@ func _physics_process(_delta: float) -> void:
 	if GameController.player.velocity.length() == 0: slam_bullet.scale = weapon_scale
 	else: slam_bullet.scale = slam_bullet.scale.move_toward(weapon_min_scale, weapon_reduction_scale * _delta) # move_towards returns a vector2 - doesn't actually assign it, doi
 
-	if weapon.ready_to_fire: #&& not targeting:
+	slam()
+
+func slam() -> void:
+	if ready_to_fire and not get_overlapping_bodies().is_empty(): #&& not targeting:
 		# Could be moved to the end of the weapon timer, but shouldn't matter since we end up back here as a result of the timer being reset.
 		# Reset the bullet back to its original position so it lines up to the player's position. 
 		slam_bullet.set_as_top_level(false)
-		slam_bullet.set_stats(weapon.damage, weapon.speed)
+		slam_bullet.set_stats(damage, speed)
 		slam_bullet.global_position = global_position
 		# slam_bullet.reparent(self)
 		# slam_bullet.scale = scale
 		# Only put the weapon on cooldown if we hit something.
 		if slam_bullet.slam(global_position): 
-			if weapon.level >= OVERHAUL_ENABLED_LEVEL: 
+			if level >= OVERHAUL_ENABLED_LEVEL: 
 				shockwave_anim_player.play("Shockwave")
 				GameController.apply_shockwave_displacement(slam_bullet.attack_origin, SHOCKWAVE_STRENGTH)
 				#max_shockwave_time = shockwave_anim_player.current_animation_length
@@ -107,14 +103,15 @@ func _physics_process(_delta: float) -> void:
 		# slam()
 		#$NextSlamTimer.start()
 
+
 func spawn_mini_slams() -> void:
-	if weapon.level < MINI_SLAM_LEVEL: return # Only spawn the mini-slams if we're the appropriate level
+	if level < MINI_SLAM_LEVEL: return # Only spawn the mini-slams if we're the appropriate level
 
 	# Spam a new slam in each orthagonal direction, offset by a small amount
 	# Only spawn mini-slam when the initial slam ends to represent a "chaning" effect and reduce screen clutter
 	# Add an extra cycle for every level past the first.
 
-	var slam_cycles = weapon.level - MINI_SLAM_LEVEL + 1 # Spawn extra mini-slams for each level past the cutoff
+	var slam_cycles = level - MINI_SLAM_LEVEL + 1 # Spawn extra mini-slams for each level past the cutoff
 	var offsets = []
 	for i in range(1, slam_cycles + 1):
 		var distance = i * MINI_SLAM_OFFSET * slam_bullet.scale.x
@@ -126,7 +123,7 @@ func spawn_mini_slams() -> void:
 	for cycle in range(slam_cycles):
 		for s in range(MINI_SLAM_COUNT):
 			var new_slam = preload("res://prefabs/slam_bullet.tscn").instantiate()
-			new_slam.set_stats(weapon.damage/ 2, weapon.speed)
+			new_slam.set_stats(damage/ 2, speed)
 			new_slam.scale = Vector2(0.65, 0.65)
 			# new_slam.get_node("AnimatedSprite2D").modulate = Color(1, 0, 0, 1)
 			# new_slam.name = "Mini-Slam"
@@ -164,40 +161,35 @@ func level_up() -> void:
 	# Call the weapon's level up function, then finalize any others that aren't in weapon (projectiles, lifetime, etc)
 	if first_level_up:
 		first_level_up = false
-		weapon.fire_weapon()
+		fire_weapon()
 		return
 	else:
-		weapon.level += 1
-		match weapon.level:
+		level += 1
+		match level:
 			2:
 				# ~10% damage increase, 10% size increase
-				weapon.damage *= 1.1
+				damage *= 1.1
 				weapon_scale *= 1.1
 			3:
 				# Slightly reduced cooldown or faster animation
-				weapon.cooldown *= 0.9
+				cooldown *= 0.9
 			4:
 				# Improved Mechanics: The slam now chains to an extra mini-slam (a quick secondary burst)
 				pass # Nothing to change here due to consts being used
 			5:
 				# Further increase in area and damage, plus a minor debuff (like slowing enemies in the AOE)
-				weapon.damage *= 1.1
+				damage *= 1.1
 				weapon_scale *= 1.1
-
-			6:
-				# Extra mini-slams
-				pass # TODO
-			7:
-				# Signature Overhaul: shockwave
-				pass # Nothing to enable here due to consts now being used
+			# Extra mini-slams at level 6
+			# Overaul at level 7
 				
 
-		weapon.fire_weapon()
+		fire_weapon()
 
 func get_level_up_text() -> String:
-	if first_level_up: return "A massive slam that deals damage in an area. Shrinks while moving."
+	if first_level_up: return description
 	else:
-		match weapon.level + 1:
+		match level + 1:
 			2:
 				return "Increased damage and size"
 			3:
@@ -213,7 +205,10 @@ func get_level_up_text() -> String:
 	return "Error! If you got here notify someone who isn't me."
 
 func is_slow_enabled() -> bool:
-	return weapon.level >= SLOW_ENABLED_LEVEL
+	return level >= SLOW_ENABLED_LEVEL
+
+func _on_body_entered(_body: Node2D) -> void:
+	slam()
 
 # # Handles timing and spawning swords whenever the Weapon timer expires, called on physics process
 # func spawn_next_slam() -> void:
@@ -314,3 +309,5 @@ func is_slow_enabled() -> bool:
 # 		level_up_string += "Cooldown " + str(GameController.round_to_dec(weapon.cooldown, 2)) + "s -> " + str(GameController.round_to_dec((weapon.cooldown * LEVEL_UP_COOLDOWN),2)) + "s";
 		
 # 	return level_up_string
+
+

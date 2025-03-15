@@ -57,3 +57,5 @@ collision_mask = 2
 [node name="JumpRangeCollider" type="CollisionShape2D" parent="Lightning/JumpRange"]
 shape = SubResource("CircleShape2D_6hnyf")
 debug_color = Color(0.730697, 0.472891, 0, 0.42)
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

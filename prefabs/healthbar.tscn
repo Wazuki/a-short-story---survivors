@@ -1,12 +1,13 @@
 [gd_scene load_steps=6 format=3 uid="uid://remf34e7bwbp"]
 
 [ext_resource type="Texture2D" uid="uid://b6j5e7obnriul" path="res://sprites/frames/health_bar_background.tres" id="1_gtxcr"]
-[ext_resource type="Shader" uid="uid://ohpo486rikqo" path="res://shaders/white_shader.tres" id="2_0fw0d"]
+[ext_resource type="Shader" uid="uid://ohpo486rikqo" path="res://shaders/color_replace_shader.tres" id="2_0fw0d"]
 [ext_resource type="Script" uid="uid://vgn66484wg7m" path="res://scripts/healthbar.gd" id="2_787gw"]
 [ext_resource type="Texture2D" uid="uid://wnbx4f2ymn8s" path="res://sprites/frames/health_bar_progress_texture.tres" id="3_c27ai"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_ptjpl"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_c83tg"]
 shader = ExtResource("2_0fw0d")
+shader_parameter/ColorParameter = Color(1, 1, 1, 1)
 
 [node name="HealthBarContainer" type="TextureProgressBar"]
 z_index = 1
@@ -30,7 +31,7 @@ script = ExtResource("2_787gw")
 
 [node name="DamageBar" type="TextureProgressBar" parent="."]
 unique_name_in_owner = true
-material = SubResource("ShaderMaterial_ptjpl")
+material = SubResource("ShaderMaterial_c83tg")
 layout_mode = 2
 offset_left = 16.0
 offset_top = 16.0

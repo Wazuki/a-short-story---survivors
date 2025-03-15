@@ -41,4 +41,8 @@ func init_health(_health) -> void:
 	# print_debug("Max health: " + str(max_health) + " Health: " + str(health) + " Input var: " + str(_health))
 
 func _on_damage_timer_timeout() -> void:
-	damage_bar.value = health # Catch the damage bar up to the health bar.
+	# Tween the value until it reaches the health over a very short period.
+	var tween = get_tree().create_tween()
+	tween.tween_property(damage_bar, "value", health, 0.3).set_trans(Tween.TRANS_LINEAR) # Target, path in target (string), target value, duration
+	# damage_bar.value = health # Catch the damage bar up to the health bar.
+	# tween.tween_property(self, "white_bar_value", target_health, 0.5).set_trans(Tween.TRANS_LINEAR)

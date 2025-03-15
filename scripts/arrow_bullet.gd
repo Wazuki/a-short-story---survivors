@@ -28,7 +28,7 @@ func _physics_process(delta: float) -> void:
 
 func _on_body_entered(body:Node2D) -> void:
 	if body != null && not body.is_dead: # If we're using masks property, it should ONLY be an enemy!
-		damage = GameController.arrow.weapon.damage_calc()
+		damage = GameController.arrow.damage_calc()
 		body.take_damage(damage)
 
 		if body.is_dead && splittable:

@@ -1,4 +1,4 @@
-extends Area2D
+extends Weapon
 
 const BASE_DAMAGE = 8.0
 const BASE_SPEED = PI / 2
@@ -16,7 +16,6 @@ const OVERHAUL_GROWTH_RATE = Vector2(0.3, 0.3)
 
 var icon: AtlasTexture = preload("res://sprites/frames/waldos_icon.tres")
 
-var first_level_up
 var weapon_scale: Vector2
 var slow_enabled: bool = false
 var inner_ring_enabled: bool = false
@@ -24,18 +23,18 @@ var overhaul_enabled: bool = false
 var expanding: bool = false
 var max_scale = Vector2(3,3)
 
-var weapon
-
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	super._ready()
 	name = "Spinning Waldos"
-	weapon = preload("res://prefabs/weapon.tscn").instantiate()
-	add_child(weapon)
+	description = "Spinning waldos form an area of constant damage."
+	# weapon = preload("res://prefabs/weapon.tscn").instantiate()
+	# add_child(weapon)
 	# reset()
 
 func reset() -> void:
-	weapon.set_stats(BASE_DAMAGE, 1.0, 1.0)
-	weapon.reset_timer()
+	set_stats(BASE_DAMAGE, 1.0, 1.0)
+	reset_timer()
 	weapon_scale = BASE_SCALE
 	scale = weapon_scale
 	first_level_up = true
@@ -67,11 +66,11 @@ func _physics_process(delta: float) -> void:
 
 	%InnerRing.scale = Vector2(0.5, 0.5) # The inner ring should always be a fixed starting size.
 
-	if weapon.ready_to_fire:
+	if ready_to_fire:
 		var colliding_bodies = get_overlapping_bodies()
 		if colliding_bodies.size() > 0:
 			deal_damage(colliding_bodies)
-			weapon.fire_weapon()
+			fire_weapon()
 		# Check to see if the inner ring is enabled. If so, repeat the process.
 		if inner_ring_enabled:
 			colliding_bodies = %InnerRing.get_overlapping_bodies()
@@ -79,12 +78,12 @@ func _physics_process(delta: float) -> void:
 				deal_damage(colliding_bodies)
 				# print_debug("Inner ring dealt damage")
 				# Probably unnessary but a safety check for weird corner cases
-				weapon.fire_weapon() # This just resets the timer/bool so firing twice doesn't have any real effect besides making sure we are firing every time we DO deal damage
+				fire_weapon() # This just resets the timer/bool so firing twice doesn't have any real effect besides making sure we are firing every time we DO deal damage
 		
 
 func deal_damage(colliding_bodies: Array[Node2D]) -> void:
 	for e in colliding_bodies:
-		e.take_damage(weapon.damage)
+		e.take_damage(damage)
 		if slow_enabled: e.apply_slow(SLOW_VALUE)
 
 
@@ -103,18 +102,18 @@ func level_up() -> void:
 		visible = true
 		%InnerRing.visible = false
 		
-		weapon.fire_weapon()
+		fire_weapon()
 		return
 	else:
-		weapon.level += 1
-		match weapon.level:
+		level += 1
+		match level:
 			2:
 				# Level 2: ~10% damage and scale increase
-				weapon.damage *= 1.1
+				damage *= 1.1
 				weapon_scale *= 1.25
 			3:
 				# Level 3: Increased damage frequency (basically Cooldown)
-				weapon.cooldown *= 0.9
+				cooldown *= 0.9
 			4:
 				# Level 4: Slow enemies on hit
 				slow_enabled = true
@@ -124,7 +123,7 @@ func level_up() -> void:
 				inner_ring_enabled = true
 			6:
 				# Level 6: Further boost damage frequency and add a shield effect
-				weapon.cooldown *= 9
+				cooldown *= 9
 				# TODO - shield effect
 			7:
 				# Level 7: Signature overhaul - burst mode? 
@@ -133,12 +132,12 @@ func level_up() -> void:
 				expanding = true
 				
 		scale = weapon_scale
-		weapon.fire_weapon()
+		fire_weapon()
 
 func get_level_up_text() -> String:
-	if first_level_up: return "Spinning waldos form an area of constant damage."
+	if first_level_up: return description
 	else:
-		match weapon.level + 1:
+		match level + 1:
 			2:
 				return "Increased damage and size."
 			3:

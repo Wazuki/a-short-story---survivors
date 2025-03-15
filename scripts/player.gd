@@ -20,18 +20,20 @@ var total_level_ups = 0
 
 @onready var player_info_text : RichTextLabel = get_node("/root/GameScene/UI/PlayerInfoContainer/Panel/MarginContainer/PlayerInfoText")
 
+signal gained_xp(amount)
+signal gained_level
 signal _health_changed
 signal _health_depleted
 
 func _ready() -> void:
 	level_up_text_reset_pos = %LevelUpText.position
 
-func initialize(character: Dictionary) -> void:
-	health = character["health"]
+func initialize(character: Character) -> void:
+	health = character.get_stat_value(Character.Stat.HEALTH)
 	max_health = health
-	speed = character["speed"]
-	armor = character["armor"]
-	%Spritesheet.sprite_frames = character["spritesheet"]
+	speed = character.get_stat_value(Character.Stat.SPEED)
+	armor = character.get_stat_value(Character.Stat.ARMOR)
+	%Spritesheet.sprite_frames = character.spritesheet
 
 	experience = 0
 	level = 1
@@ -147,6 +149,7 @@ func get_highest_hp_target() -> Vector2:
 
 func gain_experience(xp: float) -> void:
 	# If the player gets enough XP, level up!
+	emit_signal("gained_xp", xp)
 	experience += xp
 	tween_xp_bar()
 	update_player_info_text()
@@ -173,6 +176,7 @@ func tween_xp_bar() -> void:
 	while experience >= xp_to_next_level:
 		experience -= xp_to_next_level
 		total_level_ups += 1
+		emit_signal("gained_level")
 		tween.tween_property(%XPBar, "value", 0.0, 0.5)
 		tween.tween_property(%XPBar, "value", experience, 1.0)
 	tween.tween_callback(%XPBar.hide)

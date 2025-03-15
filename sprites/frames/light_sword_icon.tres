@@ -1,7 +1,6 @@
 [gd_resource type="AtlasTexture" load_steps=2 format=3 uid="uid://blrx78f1corvf"]
 
-[ext_resource type="Texture2D" uid="uid://cx7x17rr3hc5b" path="res://sprites/effects/light sword sprites.png" id="1_4mays"]
+[ext_resource type="Texture2D" uid="uid://br1xqkdcb16ff" path="res://sprites/wenrexa/Skill Icons (Rounded)/light_blade.png" id="1_06yvo"]
 
 [resource]
-atlas = ExtResource("1_4mays")
-region = Rect2(21, 32, 35, 14)
+atlas = ExtResource("1_06yvo")

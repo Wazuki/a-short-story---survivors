@@ -15,7 +15,7 @@ func slam(pos: Vector2) -> bool:
 
 	if not overlapping_bodies.is_empty() || is_mini_slam: # Mini-slams should always fire whether there are enemies there or not.
 		# Fire the weapon from here because it means we hit something.
-		GameController.slam.weapon.fire_weapon() # Weapon resets here as a result of the animation finishing. Should also prevent mini-slams from reseting the timer.
+		GameController.slam.fire_weapon() # Weapon resets here as a result of the animation finishing. Should also prevent mini-slams from reseting the timer.
 		#reparent(get_node("/root/GameScene"))
 		%AnimatedSprite2D.frame = 0
 		enemies_damaged_this_cycle.clear()

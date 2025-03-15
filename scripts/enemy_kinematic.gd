@@ -35,6 +35,10 @@ var stunned: bool = false
 
 var player
 
+# Signals
+signal damaged(damage: float)
+signal health_depleted
+
 # var enemy_types = ["basic", "elite", "boss", "ranged"]
 enum EnemyType { BASIC, ELITE, BOSS, RANGED }
 var enemy_type: EnemyType = EnemyType.BASIC
@@ -275,7 +279,7 @@ func remove_stun() -> void: stunned = false
 
 func take_damage(dam: float) -> void:
 	health -= dam
-	GameController.total_damage_done += dam
+	emit_signal("damaged", dam)
 
 	if has_health_bar: %HealthBar.health = health
 
@@ -294,6 +298,9 @@ func take_damage(dam: float) -> void:
 		$DeathSound.play()
 		is_dead = true
 
+		# Emit the signal indicating we have died
+		emit_signal("health_depleted")
+
 func apply_knockback(source: Vector2, strength: float) -> void:
 	# Calculate the direction from the knockback source to this enemy
 	var direction: Vector2 = (global_position - source).normalized()
@@ -303,7 +310,7 @@ func apply_knockback(source: Vector2, strength: float) -> void:
 func _on_spritesheet_animation_finished() -> void:
 	if is_dead:
 		# GameController.stop_tracking_enemy(self)
-		GameController.total_enemies_killed += 1
+		# GameController.total_enemies_killed += 1
 		# print_debug("Enemy died")
 		queue_free()
 	elif is_shooting:
