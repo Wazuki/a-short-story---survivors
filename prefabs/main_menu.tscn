@@ -206,14 +206,14 @@ size_flags_vertical = 3
 size_flags_stretch_ratio = 0.25
 theme = ExtResource("2_cwdrn")
 
-[node name="QuitButton" type="Button" parent="PauseMenu/AspectRatioContainer/Panel/MarginContainer/VBoxContainer"]
+[node name="EndRunButton" type="Button" parent="PauseMenu/AspectRatioContainer/Panel/MarginContainer/VBoxContainer"]
 process_mode = 3
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 6
 theme = ExtResource("2_cwdrn")
 theme_override_font_sizes/font_size = 48
-text = "WITHDRAW"
+text = "CEASE CYCLE"
 
 [node name="OptionsMenu" type="Control" parent="."]
 unique_name_in_owner = true
@@ -450,7 +450,7 @@ size_flags_stretch_ratio = 0.25
 [connection signal="pressed" from="MainMenu/AspectRatioContainer/Panel/MarginContainer/VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]
 [connection signal="pressed" from="PauseMenu/AspectRatioContainer/Panel/MarginContainer/VBoxContainer/ResumeButton" to="." method="_on_resume_button_pressed"]
 [connection signal="pressed" from="PauseMenu/AspectRatioContainer/Panel/MarginContainer/VBoxContainer/OptionsButton" to="." method="_on_options_button_pressed"]
-[connection signal="pressed" from="PauseMenu/AspectRatioContainer/Panel/MarginContainer/VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]
+[connection signal="pressed" from="PauseMenu/AspectRatioContainer/Panel/MarginContainer/VBoxContainer/EndRunButton" to="." method="_on_end_run_button_pressed"]
 [connection signal="toggled" from="OptionsMenu/AspectRatioContainer/Panel/MarginContainer/VBoxContainer/InputContainer/TouchInputButton" to="." method="_on_touch_input_button_toggled"]
 [connection signal="drag_ended" from="OptionsMenu/AspectRatioContainer/Panel/MarginContainer/VBoxContainer/MainVolumeContainer/SoundSlider" to="." method="_on_sound_slider_drag_ended"]
 [connection signal="drag_ended" from="OptionsMenu/AspectRatioContainer/Panel/MarginContainer/VBoxContainer/MusicVolumeContainer/MusicSlider" to="." method="_on_music_slider_drag_ended"]

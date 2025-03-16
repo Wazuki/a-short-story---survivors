@@ -1,0 +1,91 @@
+[gd_resource type="VisualShader" load_steps=8 format=3 uid="uid://i6u8nkquwumv"]
+
+[sub_resource type="VisualShaderNodeInput" id="VisualShaderNodeInput_bq5j4"]
+input_name = "color"
+
+[sub_resource type="VisualShaderNodeColorParameter" id="VisualShaderNodeColorParameter_qgxjl"]
+parameter_name = "blink_color"
+default_value_enabled = true
+default_value = Color(1, 0.784314, 0.341176, 1)
+
+[sub_resource type="VisualShaderNodeFloatFunc" id="VisualShaderNodeFloatFunc_k77u3"]
+function = 0
+
+[sub_resource type="VisualShaderNodeMix" id="VisualShaderNodeMix_x7uyg"]
+default_input_values = [0, Quaternion(0, 0, 0, 0), 1, Quaternion(1, 1, 1, 1), 2, Quaternion(0.5, 0.5, 0.5, 0.5)]
+op_type = 5
+
+[sub_resource type="VisualShaderNodeInput" id="VisualShaderNodeInput_wohn3"]
+input_name = "time"
+
+[sub_resource type="VisualShaderNodeFloatOp" id="VisualShaderNodeFloatOp_oxcd5"]
+default_input_values = [0, 0.0, 1, 8.0]
+operator = 2
+
+[sub_resource type="VisualShaderNodeFloatParameter" id="VisualShaderNodeFloatParameter_5i3uv"]
+parameter_name = "blink_speed"
+default_value_enabled = true
+default_value = 5.0
+
+[resource]
+code = "shader_type canvas_item;
+render_mode blend_mix;
+
+uniform vec4 blink_color : source_color = vec4(1.000000, 0.784314, 0.341176, 1.000000);
+uniform float blink_speed = 5.0;
+
+
+
+void fragment() {
+// Input:2
+	vec4 n_out2p0 = COLOR;
+
+
+// ColorParameter:3
+	vec4 n_out3p0 = blink_color;
+
+
+// Input:6
+	float n_out6p0 = TIME;
+
+
+// FloatParameter:8
+	float n_out8p0 = blink_speed;
+
+
+// FloatOp:7
+	float n_out7p0 = n_out6p0 * n_out8p0;
+
+
+// FloatFunc:4
+	float n_out4p0 = sin(n_out7p0);
+
+
+// Mix:5
+	vec4 n_out5p0 = mix(n_out2p0, n_out3p0, vec4(n_out4p0));
+
+
+// Output:0
+	COLOR.rgb = vec3(n_out5p0.xyz);
+
+
+}
+"
+mode = 1
+flags/light_only = false
+nodes/fragment/0/position = Vector2(1160, 100)
+nodes/fragment/2/node = SubResource("VisualShaderNodeInput_bq5j4")
+nodes/fragment/2/position = Vector2(240, 100)
+nodes/fragment/3/node = SubResource("VisualShaderNodeColorParameter_qgxjl")
+nodes/fragment/3/position = Vector2(240, 220)
+nodes/fragment/4/node = SubResource("VisualShaderNodeFloatFunc_k77u3")
+nodes/fragment/4/position = Vector2(760, 480)
+nodes/fragment/5/node = SubResource("VisualShaderNodeMix_x7uyg")
+nodes/fragment/5/position = Vector2(840, 100)
+nodes/fragment/6/node = SubResource("VisualShaderNodeInput_wohn3")
+nodes/fragment/6/position = Vector2(240, 480)
+nodes/fragment/7/node = SubResource("VisualShaderNodeFloatOp_oxcd5")
+nodes/fragment/7/position = Vector2(540, 460)
+nodes/fragment/8/node = SubResource("VisualShaderNodeFloatParameter_5i3uv")
+nodes/fragment/8/position = Vector2(-60, 520)
+nodes/fragment/connections = PackedInt32Array(2, 0, 5, 0, 5, 0, 0, 0, 6, 0, 7, 0, 8, 0, 7, 1, 3, 0, 5, 1, 7, 0, 4, 0, 4, 0, 5, 2)

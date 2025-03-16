@@ -73,3 +73,8 @@ func set_touch_input_button_state(state: bool) -> void:
 func _on_resume_button_pressed() -> void:
 	%PauseMenu.visible = false
 	GameController.unpause_game()
+
+
+func _on_end_run_button_pressed() -> void:
+	%PauseMenu.visible = false
+	GameController.game_over()

@@ -27,6 +27,7 @@ var max_scale = Vector2(3,3)
 func _ready() -> void:
 	super._ready()
 	name = "Spinning Waldos"
+	weapon_type = Weapon.Type.WALDOS
 	description = "Spinning waldos form an area of constant damage."
 	# weapon = preload("res://prefabs/weapon.tscn").instantiate()
 	# add_child(weapon)
@@ -101,9 +102,6 @@ func level_up() -> void:
 		first_level_up = false
 		visible = true
 		%InnerRing.visible = false
-		
-		fire_weapon()
-		return
 	else:
 		level += 1
 		match level:
@@ -131,8 +129,9 @@ func level_up() -> void:
 				overhaul_enabled = true
 				expanding = true
 				
-		scale = weapon_scale
-		fire_weapon()
+	scale = weapon_scale
+	super.level_up()
+	fire_weapon()
 
 func get_level_up_text() -> String:
 	if first_level_up: return description

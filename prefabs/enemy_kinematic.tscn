@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://d2lds6aupinx5"]
+[gd_scene load_steps=12 format=3 uid="uid://d2lds6aupinx5"]
 
 [ext_resource type="Script" uid="uid://be361hr1w38ld" path="res://scripts/enemy_kinematic.gd" id="1_1lqoj"]
 [ext_resource type="PackedScene" uid="uid://remf34e7bwbp" path="res://prefabs/healthbar.tscn" id="2_s1v1h"]
@@ -9,8 +9,11 @@
 [ext_resource type="AudioStream" uid="uid://dbnoxtq3ysjbb" path="res://sounds/ranged enemy/sci-fi_weapon_blaster_laser_boom_small_03.wav" id="7_m3rpv"]
 [ext_resource type="AudioStream" uid="uid://dlijmd2ioepir" path="res://sounds/ranged enemy/sci-fi_weapon_blaster_laser_boom_small_04.wav" id="8_gd34y"]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_bw8w4"]
-radius = 12.0
+[sub_resource type="CircleShape2D" id="CircleShape2D_3soxo"]
+radius = 13.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_3m2xr"]
+radius = 4.0
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_h6a0t"]
 streams_count = 4
@@ -21,8 +24,8 @@ stream_3/stream = ExtResource("8_gd34y")
 
 [node name="Enemy_Kinematic" type="RigidBody2D" groups=["Enemies"]]
 y_sort_enabled = true
+position = Vector2(0, -6)
 collision_layer = 2
-collision_mask = 3
 mass = 5.0
 gravity_scale = 0.0
 lock_rotation = true
@@ -46,15 +49,16 @@ animation = &"idle"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 unique_name_in_owner = true
 position = Vector2(-1, 1)
-shape = SubResource("CapsuleShape2D_bw8w4")
+shape = SubResource("CircleShape2D_3soxo")
 
-[node name="AvoidanceArea" type="Area2D" parent="."]
-unique_name_in_owner = true
-visible = false
+[node name="EnemyAvoidanceArea" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 4
 
-[node name="AvoidanceAreaCollider" type="CollisionShape2D" parent="AvoidanceArea"]
-position = Vector2(-1, 1)
-shape = SubResource("CapsuleShape2D_bw8w4")
+[node name="EnemyAvoidanceCollider" type="CollisionShape2D" parent="EnemyAvoidanceArea"]
+position = Vector2(0, 6)
+shape = SubResource("CircleShape2D_3m2xr")
+debug_color = Color(0.922462, 5.14036e-05, 0.687427, 0.42)
 
 [node name="DeathSound" type="AudioStreamPlayer2D" parent="."]
 unique_name_in_owner = true

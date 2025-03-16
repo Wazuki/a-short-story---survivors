@@ -81,6 +81,7 @@ func display_character_info(panel: Panel) -> void:
 
 	# Assign the character's starting weapon information to the left panel.
 	var starting_weapon = GameController.get_weapon_by_type(panel.character.starting_weapon)
+	print_debug(panel.character.character_name + "'s starting weapon: " + starting_weapon.name)
 	%WeaponIcon.texture = starting_weapon.icon
 	%WeaponInfoText.text = starting_weapon.description
 	%WeaponInfoText.text += "\n\nDamage: " + str(starting_weapon.damage)

@@ -1,7 +1,13 @@
-[gd_scene load_steps=3 format=3 uid="uid://dldh638n3k2vd"]
+[gd_scene load_steps=5 format=3 uid="uid://dldh638n3k2vd"]
 
 [ext_resource type="Script" uid="uid://cujrdwyrt6nom" path="res://scripts/cooldown_panel.gd" id="1_84shc"]
 [ext_resource type="Texture2D" uid="uid://cvdqnpg7gow3s" path="res://sprites/wenrexa/Skill Icons (Rounded)/chain_lightning.tres" id="2_n26es"]
+[ext_resource type="Shader" uid="uid://i6u8nkquwumv" path="res://shaders/blinking_text_shader.tres" id="3_n26es"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_finpa"]
+shader = ExtResource("3_n26es")
+shader_parameter/blink_color = Color(1, 0.784314, 0.341176, 1)
+shader_parameter/blink_speed = 5.0
 
 [node name="CooldownPanel" type="Panel"]
 texture_filter = 1
@@ -27,10 +33,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
@@ -69,10 +75,24 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_font_sizes/normal_font_size = 14
 text = "Level: 7"
+scroll_active = false
 vertical_alignment = 3
 
 [node name="CooldownProgressBar" type="ProgressBar" parent="MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.4
 step = 0.001
 value = 100.0
+
+[node name="FiringText" type="RichTextLabel" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+visible = false
+material = SubResource("ShaderMaterial_finpa")
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.4
+text = "FIRING"
+horizontal_alignment = 1
+vertical_alignment = 1

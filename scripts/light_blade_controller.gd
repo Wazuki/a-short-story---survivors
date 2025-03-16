@@ -57,6 +57,7 @@ func _physics_process(_delta: float) -> void:
 func slash() -> void:
 	# Slash once, then, once the animation ends, slash again until reaching the final slash.
 	if ready_to_fire and not currently_slashing and not get_overlapping_bodies().is_empty():
+		begin_attack_sequence.emit() # Tell the listeners (Cooldown Panel et al) that we have started attacking.
 		if current_slash < slashes:
 			## Pause for a frame or so to prevent engine weirdness with animation doubling? Testing function
 			# await get_tree().create_timer(get_process_delta_time()).timeout
@@ -82,15 +83,21 @@ func slash() -> void:
 
 
 		else:
-			# Reset the timer and the slash count.
-			%LightBlade.reset_animation()
-			fire_weapon()
-			current_slash = 0
-			# print_debug("Resetting slash")
+			reset_attack_chain()
 
 func end_slash() -> void: 
 	currently_slashing = false
 	%LightBlade.reset_damaged_enemies()
+	# If we are currently on the last attack chain, reset the weapon.
+	if current_slash >= slashes: reset_attack_chain()
+
+func reset_attack_chain() -> void:
+	# Reset the timer and the slash count.
+	%LightBlade.reset_animation()
+	fire_weapon()
+	current_slash = 0
+	# print_debug("Resetting slash")
+
 
 # Handles timing and spawning swords whenever the Weapon timer expires, called on physics process
 #func spawn_new_light_sword() -> void:
@@ -109,8 +116,6 @@ func level_up() -> void:
 	# Call the weapon's level up function, then finalize any others that aren't in weapon (projectiles, lifetime, etc)
 	if first_level_up:
 		first_level_up = false
-		fire_weapon()
-		return
 	else:
 		level += 1
 		match level:
@@ -138,7 +143,7 @@ func level_up() -> void:
 				# Level up UI handles checking if the weapon is a levle up option. Duh.
 				overhaul_enabled = true
 				
-
+		super.level_up()
 		fire_weapon()
 
 # Upgrade Plan

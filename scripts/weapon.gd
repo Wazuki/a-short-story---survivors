@@ -16,9 +16,20 @@ var crit_mod: float
 var cooldown_timer: Timer
 var ready_to_fire: bool
 
-var first_level_up: bool = true
+var first_level_up: bool = true:
+	get:
+		return first_level_up
+	set(value):
+		first_level_up = value
+		if not first_level_up: create_cooldown_panel.emit() # Emit the signal only if we are now false - theoretically should only be called once?
+
 
 var cooldown_panel
+signal fire
+signal critical_hit
+signal create_cooldown_panel
+signal begin_attack_sequence
+signal gained_level(value)
 
 const OVERHAUL_LEVEL = 7
 
@@ -26,6 +37,7 @@ const OVERHAUL_LEVEL = 7
 func _ready() -> void:
 	# Create the weapon timer programmatically.
 	cooldown_timer = Timer.new()
+	cooldown_timer.one_shot = true
 	cooldown_timer.connect("timeout", _on_weapon_timer_timeout)
 	add_child(cooldown_timer)
 	# cooldown_timer.wait_time = cooldown
@@ -34,6 +46,8 @@ func _ready() -> void:
 	crit_mod = 0
 	
 	ready_to_fire = false
+
+func level_up() -> void: gained_level.emit(level)
 
 # Helper targeting functions!
 func get_closest_target() -> Vector2:
@@ -83,8 +97,11 @@ func reset_timer() -> void:
 	
 func fire_weapon() -> void:
 	# print_debug(get_parent().name + " is firing!")
-	ready_to_fire = false
-	cooldown_timer.start()
+	if cooldown_timer.is_stopped():
+		ready_to_fire = false
+		cooldown_timer.start()
+		fire.emit()
+	# print_debug("fire")
 
 func set_stats(base_damage: float, base_speed: float, base_cooldown: float):
 	level = 1
@@ -101,6 +118,7 @@ func damage_calc() -> float:
 		return damage
 	elif (randf() <= crit_chance):
 		# print("Crit with " + get_parent().name)
+		critical_hit.emit()
 		return damage * crit_mod
 	else: return damage
 

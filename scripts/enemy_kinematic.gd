@@ -155,7 +155,7 @@ func initialize() -> void:
 	# Set the scale of the enemy
 	%Spritesheet.scale = scale
 	%CollisionShape2D.scale = scale
-	%AvoidanceArea.scale = scale
+	# %AvoidanceArea.scale = scale
 	%HealthBar.scale = scale
 
 	%Spritesheet.animation = "walk"
@@ -294,7 +294,7 @@ func take_damage(dam: float) -> void:
 		# print_debug("We died at " + str(global_position.x) + "," + str(global_position.y))
 		$Spritesheet.animation = "death"
 		$Spritesheet.play()
-		%HealthBar.queue_free()
+		%HealthBar.call_deferred("queue_free")
 		$DeathSound.play()
 		is_dead = true
 
@@ -312,7 +312,7 @@ func _on_spritesheet_animation_finished() -> void:
 		# GameController.stop_tracking_enemy(self)
 		# GameController.total_enemies_killed += 1
 		# print_debug("Enemy died")
-		queue_free()
+		call_deferred("queue_free")
 	elif is_shooting:
 		is_shooting = false
 		%Spritesheet.animation = "walk"

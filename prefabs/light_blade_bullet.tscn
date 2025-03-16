@@ -131,7 +131,7 @@ animations = [{
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_u00uc"]
-radius = 12.0
+radius = 16.0
 height = 45.0
 
 [node name="LightBladeBullet" type="Area2D"]
@@ -149,7 +149,6 @@ animation = &"slash1"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 unique_name_in_owner = true
-position = Vector2(-7.23998e-06, 2)
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_u00uc")
 

@@ -1,7 +1,7 @@
 extends Resource
 class_name  TrackedVariables
 
-enum Type { NONE = -1, KILLS, XP, LEVELS, DAMAGE }
+enum Type { KILLS, XP, LEVELS, DAMAGE, NONE = -1 }
 
 @export var values: Dictionary = {
     Type.KILLS: 0.0,

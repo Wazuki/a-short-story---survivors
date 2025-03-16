@@ -88,6 +88,11 @@ func _ready() -> void:
 	weapons.append(arrow)
 	weapons.append(waldos)
 	weapons.append(chain_lightning)
+	slam.create_cooldown_panel.connect(create_cooldown_panel.bind(slam))
+	light_blade.create_cooldown_panel.connect(create_cooldown_panel.bind(light_blade))
+	arrow.create_cooldown_panel.connect(create_cooldown_panel.bind(arrow))
+	waldos.create_cooldown_panel.connect(create_cooldown_panel.bind(waldos))
+	chain_lightning.create_cooldown_panel.connect(create_cooldown_panel.bind(chain_lightning))
 
 	load_game()
 	# Initialize the character select UI to properly set the weapons in the Dict
@@ -243,9 +248,14 @@ func select_character(character: Character) -> void:
 	game_started = true
 	# print_debug("Selected " + character)
 
-func create_cooldown_panel(weapon) -> void:
+# Create a new cooldown panel and instantiate it, then connect the weapon firing signal to resetting the cooldown panel's timer
+func create_cooldown_panel(weapon: Weapon) -> void:
 	var new_panel = preload("res://prefabs/cooldown_panel.tscn").instantiate()
-	new_panel
+	new_panel.initialize(weapon.icon, weapon.name, weapon.cooldown)
+	weapon.fire.connect(new_panel.reset_cooldown)
+	weapon.gained_level.connect(new_panel.update_level_text)
+	weapon.begin_attack_sequence.connect(new_panel.begin_attack_sequence)
+	cooldown_container.add_child(new_panel)
 
 func display_level_up() -> void:
 	level_up_UI.show_level_up_screen()
@@ -318,6 +328,10 @@ func restart_game() -> void:
 	for p in get_tree().get_nodes_in_group("Projectiles"):
 		p.queue_free()
 	
+	# Destroy all cooldown panels.
+	for c in cooldown_container.get_children():
+		c.queue_free()
+	
 	get_node("/root/GameScene/UI/MainMenu/MainMenu").visible = true
 
 	# TODO - reset the player's position too!
@@ -361,7 +375,8 @@ func load_game() -> void:
 	
 	for v in tracked_variables.values:
 		var value = tracked_variables.values[v]
-		print_debug(str(v) + " " + str(value))
+		var value_name:String = TrackedVariables.Type.keys()[v]
+		print_debug(value_name + " " + str(value))
 
 	# total_xp_gained = save_data.get_value("SaveData","xp gained")
 	# total_damage_done = save_data.get_value("SaveData","damage done")
@@ -381,4 +396,5 @@ func reset_game() -> void:
 # Go through the weapons and find the one that matches our type and return it.
 func get_weapon_by_type(t: Weapon.Type) -> Weapon:
 	for w in weapons: if w.weapon_type == t: return w
+	print_debug(Weapon.Type.keys()[t] + " was not found in the weapon array.")
 	return null

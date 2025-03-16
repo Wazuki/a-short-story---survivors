@@ -36,6 +36,7 @@ var overhaul_split_enabled: bool = false
 func _ready() -> void:
 	super._ready()
 	name = "Arrow"
+	weapon_type = Weapon.Type.ARROW
 	description = "A single piercing projectile with moderate damage."
 	# weapon = preload("res://prefabs/weapon.tscn").instantiate()
 	# add_child(weapon)
@@ -117,8 +118,6 @@ func level_up() -> void:
 	# Call the weapon's level up function, then finalize any others that aren't in weapon (projectiles, lifetime, etc)
 	if first_level_up:
 		first_level_up = false
-		fire_weapon()
-		return
 	else:
 		level += 1
 		match level:
@@ -147,8 +146,8 @@ func level_up() -> void:
 				# Level up UI handles checking if the weapon is a levle up option. Duh.
 				overhaul_split_enabled = true
 				
-
-		fire_weapon()
+	super.level_up()
+	fire_weapon()
 		
 func get_level_up_text() -> String:
 	if first_level_up: return description

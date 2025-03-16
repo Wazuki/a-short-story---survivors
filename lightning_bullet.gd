@@ -1,5 +1,23 @@
 extends Sprite2D
 
+# var damage: float
+var jump_speed: float
+var current_chain: int
+var max_chains: int
+var can_split: bool = false
+
+var hit_targets: Array
+
+signal jumping_ended
+
+ # current_chain starts at 1 instead of 0 because we are only spawning a lightning if we have a target, i.e. this IS chain 1
+func initiailize(speed: float, max_jumps: int, cur_chain:int = 1, splittable: bool = false) -> void:
+	# damage = dmg
+	current_chain = cur_chain
+	can_split = splittable
+	jump_speed = speed
+	max_chains = max_jumps
+
 func interpolate(length, duration = 0.1):
 	var tween_offset = get_tree().create_tween()
 	var tween_rect_w = get_tree().create_tween()
@@ -22,9 +40,74 @@ func animate_lightning(start_pos: Vector2, target_pos: Vector2, duration: float)
 	tween.tween_property(self, "region_rect", Rect2(0, 0, 0, 12), duration).set_ease(Tween.EASE_OUT) # Animates the rect to shrink the lightning
 	#await get_tree().create_timer(duration).timeout
 
-	tween.chain().tween_callback(get_parent().jump_next_target) # Jump to the next lightning target (if possible)
+	tween.chain().tween_callback(jump_to_next_target) # Jump to the next lightning target (if possible)
 
+func jump_first_target(target: Node2D) -> void:
+	look_at(target.global_position)
+	animate_lightning(global_position, target.global_position, jump_speed)
+	damage_target(target)
 
+func jump_to_next_target() -> void:
+	if %JumpRange.has_overlapping_bodies() and current_chain < max_chains:
+		current_chain += 1
+		
+		# Get a new target randomly based on the overlapping bodies in the jump collider, but make sure we don't hit the same target(s)
+		var target = null
+		var bodies_in_range: Array = %JumpRange.get_overlapping_bodies()
+		bodies_in_range.shuffle()
+
+		# Cycle through the (now randomized) set of bodies we found until we find one we haevn't hit yet and make it a new target.
+		for b in bodies_in_range:
+			if hit_targets.has(b):
+				continue
+			else:
+				target = b
+				break
+
+		# If we still don't have a target it means there aren't any valid targets in range and we should reset the weapon cooldown and leave.
+		if target == null: 
+			end_lightning_sequence()
+			return
+
+		# Now that we have a target, add it to the array so we don't hit it again this cycle.
+		hit_targets.append(target)
+
+		# print("Jump! " + str(current_chain))
+		look_at(target.global_position)
+		animate_lightning(global_position, target.global_position, jump_speed)
+		damage_target(target)
+
+		# Now that we've done all that, if we are of the level where we can arc, try to arc.
+		if GameController.chain_lightning.is_splittable() and GameController.chain_lightning.is_splitting_this_attack:
+			GameController.chain_lightning.spawn_chained_lightning_bolt(bodies_in_range.pick_random(), current_chain - 1, global_position) # Subtract 1 from the chain to account for the first jump
+			can_split = false
+			# print_debug("Arced!")
+
+	else:
+		end_lightning_sequence()
+
+# Through masking, we should only hit enemies with our abilities.
+func damage_target(enemy: Node2D) -> void:
+	var damage_mod
+
+	# If we've reached the right level and we are on the final chain, it should deal full damage instead.
+	if (GameController.chain_lightning.is_final_chain_full_damage and current_chain == max_chains) or current_chain == 1: # The first strike should also deal full damage.
+		damage_mod = 1.0
+	else:
+		# Retrieve the proper modifier (defaulting to 1.0 if the key wasn't found) and apply damage to the target with the modifier
+		damage_mod = GameController.chain_lightning.get_chain_modifier(current_chain)
+
+	var damage_result = GameController.chain_lightning.damage_calc()
+
+	enemy.take_damage(damage_result * damage_mod)
+	if GameController.chain_lightning.is_stun_enabled(): enemy.apply_stun(GameController.chain_lightning.STUN_DURATION)
+
+func end_lightning_sequence() -> void:
+	jumping_ended.emit()
+	# print_debug("Lighting ended after " + str(current_chain) + " jumps")
+	call_deferred("queue_free")
+	
+	
 
 func spark(distance = 900):
 	interpolate(distance, 0.2)

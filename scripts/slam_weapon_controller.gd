@@ -49,6 +49,7 @@ var icon: AtlasTexture = preload("res://sprites/frames/slam_icon.tres")
 func _ready() -> void:
 	super._ready()
 	name = "Slam"
+	weapon_type = Weapon.Type.SLAM
 	description = "A massive slam that deals damage in an area. Shrinks while moving."
 	# slam_bullet.get_node("AnimatedSprite2D").connect("animation_finished", _on_slam_animation_finished)
 	# reset()
@@ -81,6 +82,7 @@ func _physics_process(_delta: float) -> void:
 
 func slam() -> void:
 	if ready_to_fire and not get_overlapping_bodies().is_empty(): #&& not targeting:
+		begin_attack_sequence.emit() # Tell the listeners (Cooldown Panel et al) that we have started attacking.
 		# Could be moved to the end of the weapon timer, but shouldn't matter since we end up back here as a result of the timer being reset.
 		# Reset the bullet back to its original position so it lines up to the player's position. 
 		slam_bullet.set_as_top_level(false)
@@ -161,8 +163,6 @@ func level_up() -> void:
 	# Call the weapon's level up function, then finalize any others that aren't in weapon (projectiles, lifetime, etc)
 	if first_level_up:
 		first_level_up = false
-		fire_weapon()
-		return
 	else:
 		level += 1
 		match level:
@@ -183,8 +183,8 @@ func level_up() -> void:
 			# Extra mini-slams at level 6
 			# Overaul at level 7
 				
-
-		fire_weapon()
+	super.level_up()
+	fire_weapon()
 
 func get_level_up_text() -> String:
 	if first_level_up: return description
