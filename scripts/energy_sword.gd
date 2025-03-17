@@ -40,7 +40,7 @@ func _physics_process(delta: float) -> void:
 
 # Handles timing and spawning swords whenever the Weapon timer expires, called on physics process
 func spawn_new_energy_sword() -> void:
-	var new_sword = preload("res://prefabs/energy_sword_bullet.tscn").instantiate()
+	var new_sword = preload("res://prefabs/bullets/energy_sword_bullet.tscn").instantiate()
 	add_child(new_sword)
 	new_sword.position = Vector2.ZERO
 	weapon.fire_weapon()

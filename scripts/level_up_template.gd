@@ -12,7 +12,8 @@ func set_level_up_information(option, level_up_text: String) -> void:
 	# %WeaponIcon.rotation = level_up_info["icon_rotation"]
 	# %WeaponIcon.position = level_up_info["icon_offset"]
 	# %WeaponIcon.scale = level_up_info["icon_scale"]
-	%LevelInformation.text = "[center]" + level_up_text+ "[/center]"
+	# Add a line break before the level up text to allow seperation between icon and text.
+	%LevelInformation.text = "[center]\n" + level_up_text+ "[/center]"
 
 func set_level_up_information_string(option: String, level_up_text: String) -> void:
 	level_up_option = option

@@ -75,7 +75,7 @@ func arrow() -> void:
 		fire_weapon()
 
 func spawn_arrow(target: Vector2, arrow_size: Vector2 = Vector2.ONE) -> void:
-	var new_arrow = preload("res://prefabs/arrow_bullet.tscn").instantiate()
+	var new_arrow = preload("res://prefabs/bullets/arrow_bullet.tscn").instantiate()
 	new_arrow.initialize(damage, speed, BASE_RANGE, pierce) # TODO - Range increase with level?
 	new_arrow.scale = arrow_size
 
@@ -92,7 +92,7 @@ func spawn_arrow(target: Vector2, arrow_size: Vector2 = Vector2.ONE) -> void:
 func spawn_split_arrows(spawn_pos: Vector2) -> void:
 	# Spawn 8 split arrows when killing a target.
 	for a in 8:
-		var new_arrow = preload("res://prefabs/arrow_bullet.tscn").instantiate()
+		var new_arrow = preload("res://prefabs/bullets/arrow_bullet.tscn").instantiate()
 		new_arrow.initialize(damage / 2, speed, BASE_RANGE, pierce)
 		new_arrow.scale = SMALL_ARROW_SIZE
 
@@ -198,5 +198,3 @@ func _on_body_entered(body:Node2D) -> void:
 	#	level_up_string += "Cooldown " + str(GameController.round_to_dec(weapon.cooldown, 2)) + "s -> " + str(GameController.round_to_dec((weapon.cooldown * LEVEL_UP_COOLDOWN),2)) + "s";
 		
 	#return level_up_string
-
-

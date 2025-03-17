@@ -113,10 +113,12 @@ _data = {
 [node name="GameScene" type="Node2D"]
 
 [node name="Level" parent="." instance=ExtResource("2_x5ify")]
+z_index = -99
 position = Vector2(0, 0)
 
 [node name="Player" parent="." instance=ExtResource("2_po0ka")]
 unique_name_in_owner = true
+z_index = 1
 position = Vector2(964, 540)
 
 [node name="MobSpawnPath" type="Path2D" parent="Player"]

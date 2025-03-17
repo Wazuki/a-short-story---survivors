@@ -1,6 +1,13 @@
 extends Node
 
+## Default values for the game.
+## Tracks the z-index for all sprite layers
+var sprite_constants: SpriteConstants = preload("res://scripts/data_resources/sprite_constants.tres")
 
+## In game variables
+var tracked_variables :TrackedVariables = preload("res://scripts/data_resources/tracked_variables.tres")
+
+# TODO - clean this up some day will ya? It's gettin crowded!
 @onready var player = get_node("/root/GameScene/Player")
 @onready var player_health_bar = get_node("/root/GameScene/UI/PlayerHealthBar")
 @onready var level_up_UI = get_node("/root/GameScene/UI/LevelUpUI")
@@ -13,7 +20,7 @@ extends Node
 @onready var light_blade = get_node("/root/GameScene/Player/Weapons/LightBladeController")
 @onready var arrow = get_node("/root/GameScene/Player/Weapons/ArrowController")
 @onready var waldos = get_node("/root/GameScene/Player/Weapons/Waldos")
-@onready var chain_lightning = get_node("/root/GameScene/Player/Weapons/ChainLightning")
+@onready var chain_lightning = get_node("/root/GameScene/Player/Weapons/ChainLightning") as ChainLightning
 
 @onready var mob_spawn_point: PathFollow2D = get_node("/root/GameScene/Player/MobSpawnPath/MobSpawnPoint")
 @onready var enemy_spawn_timer: Timer = get_node("/root/GameScene/EnemySpawnTimer")
@@ -44,7 +51,7 @@ var difficulty = 0
 # var total_xp_gained: int = 0
 # var total_damage_done: float = 0.0
 
-var tracked_variables :TrackedVariables = preload("res://scripts/data_resources/tracked_variables.tres")
+
 
 var start_button_pressed = true
 

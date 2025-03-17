@@ -1,6 +1,6 @@
 [gd_scene load_steps=24 format=3 uid="uid://dec2xuk5l87n3"]
 
-[ext_resource type="Script" uid="uid://bxfe1b7hl3gd7" path="res://scripts/slam_bullet.gd" id="1_kdetb"]
+[ext_resource type="Script" uid="uid://bxfe1b7hl3gd7" path="res://scripts/bullets/slam_bullet.gd" id="1_kdetb"]
 [ext_resource type="Texture2D" uid="uid://cfh5j288p8pxm" path="res://sprites/effects/slam sprites.png" id="1_wcjeg"]
 [ext_resource type="AudioStream" uid="uid://cigxx40o1qwv0" path="res://sounds/slam/rock_impact_heavy_slam_01.wav" id="3_r8dad"]
 [ext_resource type="AudioStream" uid="uid://bshjjlma2gtsm" path="res://sounds/slam/rock_impact_heavy_slam_02.wav" id="4_y7822"]
@@ -130,6 +130,8 @@ stream_2/stream = ExtResource("5_ml8p4")
 stream_3/stream = ExtResource("6_7hbr0")
 
 [node name="SlamBullet" type="Area2D"]
+z_index = 20
+z_as_relative = false
 texture_filter = 1
 collision_layer = 0
 collision_mask = 2

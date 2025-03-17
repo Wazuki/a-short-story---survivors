@@ -277,7 +277,7 @@ func _on_spritesheet_animation_finished() -> void:
 		%Spritesheet.animation = "walk"
 		%Spritesheet.play()
 		# Shoot a projectile at the player.
-		var projectile = preload("res://prefabs/enemy_bullet.tscn").instantiate()
+		var projectile = preload("res://prefabs/bullets/enemy_bullet.tscn").instantiate()
 		projectile.global_position = global_position
 		projectile.initialize(player.global_position, damage)
 		get_parent().add_child(projectile)

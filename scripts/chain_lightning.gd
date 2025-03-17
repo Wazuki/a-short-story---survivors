@@ -1,3 +1,4 @@
+class_name ChainLightning
 extends Weapon
 
 const BASE_DAMAGE = 10
@@ -12,6 +13,15 @@ const APPLY_STUN_LEVEL = 4
 const ARC_SPLIT_LEVEL = 5
 const FINAL_CHAIN_FULL_DAMAGE_LEVEL = 6
 # OVERHAUL_ENABLED = 7 const in base class
+
+# Lightning Strike Parameters
+var lightning_strike: = preload("res://prefabs/bullets/lightning_strike.tscn")
+var lightning_strike_damage_modifier: float = 0.5
+var lightning_strike_lifetime: float = 2.5
+var lightning_strike_damage_cooldown: float = 0.5
+const STRIKE_MODULUS = 4
+
+
 
 # @onready var lightning = %Lightning
 var lightning_bullet
@@ -39,7 +49,7 @@ func _ready() -> void:
 	weapon_type = Weapon.Type.CHAIN_LIGHTNING
 	description = "A chaining electrical blast."
 	# reset()
-	lightning_bullet = preload("res://prefabs/chain_lightning_bullet.tscn")
+	lightning_bullet = preload("res://prefabs/bullets/chain_lightning_bullet.tscn")
 
 func reset() -> void:
 	# current_chain = 0
@@ -85,6 +95,17 @@ func spawn_chained_lightning_bolt(target: Node2D, chain_count: int, start_pos: V
 	new_lightning.initiailize(jump_speed, max_chains, chain_count, false)
 	new_lightning.jump_first_target(target)
 	new_lightning.jumping_ended.connect(fire_weapon)
+
+## Spawns a lightning strike, an area that deals damage over time.
+## [b]Parameters:[/b]: spawn position (Vector2)
+func spawn_lightning_stike(spawn_pos: Vector2) -> void:
+	# Before spawning, make sure we don't overlap a damage field that's already on the board to reduce clutter.
+	if LightningStrike.can_spawn_strike_at_pos(spawn_pos, get_tree()):
+		var new_strike = lightning_strike.instantiate() as LightningStrike # Using "new" replaces the regular instantiation!
+		# Add it to the scene tree so everything hopefully instantiates properly.
+		new_strike.initialize_strike(damage * lightning_strike_damage_modifier, spawn_pos, lightning_strike_lifetime, lightning_strike_damage_cooldown)
+		get_tree().root.add_child(new_strike)
+		# get_node("/root/GameScene").add_child(new_strike)
 
 # Moved to lightning_bullet.gd
 # func jump_next_target() -> void:
@@ -174,7 +195,7 @@ func level_up() -> void:
 				# Final Chain deals full damage. - DONE
 				max_chains = 13
 			7: 
-				# Last jump explodes
+				# Last jump explodes - DONE!!
 				# This level is handled by the OVERHAUL_ENABLED const rather than a bool
 				# var overhaul_enabled = true
 				max_chains = 16
@@ -186,12 +207,12 @@ func get_level_up_text() -> String:
 	if first_level_up: return description
 	else:
 		match level + 1:
-			2: return "\nCritical hits may reset cooldown.\nIncreased crit chance.\n\nMax Chains: 3"
-			3: return "\nFaster chaining speed.\nIncreased crit chance.\n\nMax Chains: 5"
-			4: return "\nApply stun on hit.\nIncreased crit chance.\n\nMax Chains: 7"
-			5: return "\nArcs occasionally split to two enemies.\n\nMax Chains: 10"
-			6: return "\nFinal chain deals full damage.\n\nMax Chains: 13"
-			7: return "\nSignature: Last jump explodes.\nIncreased crit chance.\n\nMax Chains: 16"
+			2: return "Critical hits may reset cooldown.\n\nIncreased crit chance.\n\nMax Chains: 3"
+			3: return "Faster chaining speed.\n\nIncreased crit chance.\n\nMax Chains: 5"
+			4: return "Apply stun on hit.\n\nIncreased crit chance.\n\nMax Chains: 7"
+			5: return "Arcs occasionally split to two enemies.\n\nMax Chains: 10"
+			6: return "Final chain deals full damage.\n\nMax Chains: 13"
+			7: return "Signature: Every fourth jump creates a damage field if possible.\n\nIncreased crit chance.\n\nMax Chains: 16"
 	return "Error! get_level_text() of Chain Lightning dropped out of switch!"
 
 

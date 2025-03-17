@@ -1,0 +1,52 @@
+class_name LightningStrike extends Bullet
+
+## How often we deal damage.
+var damage_cooldown = 0.5
+var damage_timer = 0.0
+
+## Spawns a lightning strike at target Vector2.
+## Requires a spawn position, lifetime, and damage.
+func _init(dmg, spawn_pos: Vector2, strike_lifetime: float, dmg_cooldown: float) -> void:
+	# Call the super constructors to initialize these vars
+	# Will automatically set up the timer and kill the aoe after the duration because we set lifetime dependent to true.
+	super._init(dmg, spawn_pos, GameController.sprite_constants.Z_INDEX.LIGHTNING_STRIKE, 0.0, null, strike_lifetime, true)
+	
+	damage_cooldown = dmg_cooldown
+
+
+# Called when it enters the scene tree.
+func _ready() -> void:
+	super._ready()
+	name = "Lightning Strike" # Part of a node so belongs in ready.
+
+	# This has to be done HERE because _init only handles data, this is scene tree work.
+	# When spawning, we don't automatically trigger _on_body_entered() for bodies we start overlapping.
+	# Call get_overlapping_bodies() manually and assign it to the affected_bodies array if it isn't empty. Then deal damage.
+	if not get_overlapping_bodies().is_empty():
+		affected_bodies = get_overlapping_bodies()
+	# Immediately deal damage on spawn - this will also trigger the timer.
+	deal_damage_to_affected_bodies()
+
+
+# Deal damage based on a cooldown tracked internally.
+func _physics_process(delta: float) -> void:
+	damage_timer -= delta
+	if damage_timer <= 0:
+		deal_damage_to_affected_bodies()
+
+## Deal damage to any affected bodies based on the array.
+## Reset the cooldown after dealing  damage.
+func deal_damage_to_affected_bodies() -> void:
+	if not affected_bodies.is_empty():
+		for e in affected_bodies:
+			var enemy = e as Enemy
+			enemy.take_damage(damage)
+	damage_timer = damage_cooldown
+
+		
+
+# Add the enemy to the affected_bodies array so we can damage them on cooldown.
+func _on_body_entered(body:Node2D) -> void: affected_bodies.append(body)
+
+# Remove the enemy from the affected_bodies array when they leave the area
+func _on_body_exited(body:Node2D) -> void: affected_bodies.erase(body)

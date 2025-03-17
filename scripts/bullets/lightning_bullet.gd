@@ -1,5 +1,6 @@
 extends Sprite2D
 
+
 # var damage: float
 var jump_speed: float
 var current_chain: int
@@ -82,6 +83,13 @@ func jump_to_next_target() -> void:
 			GameController.chain_lightning.spawn_chained_lightning_bolt(bodies_in_range.pick_random(), current_chain - 1, global_position) # Subtract 1 from the chain to account for the first jump
 			can_split = false
 			# print_debug("Arced!")
+
+		# Finally, if the overhaul is enabled and we are on a chain that is a multiple of 4, spawn a strike.
+		var modulus = GameController.chain_lightning.STRIKE_MODULUS		
+		if GameController.chain_lightning.is_overhaul_enabled() and current_chain % modulus == 0: 
+			GameController.chain_lightning.spawn_lightning_stike(target.global_position)
+			# print_debug("Spawned lightning aoe!")
+
 
 	else:
 		end_lightning_sequence()

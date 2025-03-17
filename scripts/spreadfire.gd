@@ -65,7 +65,7 @@ func fire_weapon() -> void:
 			spawn_bullet(GameController.player.get_target(), GameController.player, fire_angle)
 
 func spawn_bullet(target: Vector2, player: Node2D, angle: float):
-	var new_bullet = preload("res://prefabs/spreadfire_bullet.tscn").instantiate()
+	var new_bullet = preload("res://prefabs/bullets/spreadfire_bullet.tscn").instantiate()
 	new_bullet.global_position = player.global_position
 	new_bullet.global_rotation = player.global_rotation
 	new_bullet.look_at(target)

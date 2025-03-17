@@ -45,13 +45,15 @@ func initialize(character: Character) -> void:
 	%Spritesheet.animation = "idle"
 	%Spritesheet.play()
 
-
+	# Set the player's z-index
+	z_index = GameController.sprite_constants.Z_INDEX.PLAYER
 	# weapon = character["weapon"]
 	# print_debug("Set character stats to " + str(character))
 
 func _physics_process(delta: float) -> void:
 	if Input.is_action_just_released("give_xp"): gain_experience(10)
 	if Input.is_action_just_released("level"): gain_experience(30)
+	if Input.is_action_just_released("difficulty_increase"): GameController.difficulty += 5
 	if Input.is_action_pressed("time_cheat"): Engine.time_scale = 5.0
 	elif Input.is_action_just_released("time_cheat"): Engine.time_scale = 1.0
 	#GetVector() turns movement into 2D direction

@@ -23,6 +23,7 @@ stream_2/stream = ExtResource("7_m3rpv")
 stream_3/stream = ExtResource("8_gd34y")
 
 [node name="Enemy_Kinematic" type="RigidBody2D" groups=["Enemies"]]
+z_index = 100
 y_sort_enabled = true
 position = Vector2(0, -6)
 collision_layer = 2

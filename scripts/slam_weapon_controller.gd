@@ -50,7 +50,7 @@ func _ready() -> void:
 	super._ready()
 	name = "Slam"
 	weapon_type = Weapon.Type.SLAM
-	description = "A massive slam that deals damage in an area. Shrinks while moving."
+	description = "A massive slam that deals damage in an area.\n\nShrinks while moving."
 	# slam_bullet.get_node("AnimatedSprite2D").connect("animation_finished", _on_slam_animation_finished)
 	# reset()
 
@@ -124,7 +124,7 @@ func spawn_mini_slams() -> void:
 	
 	for cycle in range(slam_cycles):
 		for s in range(MINI_SLAM_COUNT):
-			var new_slam = preload("res://prefabs/slam_bullet.tscn").instantiate()
+			var new_slam = preload("res://prefabs/bullets/slam_bullet.tscn").instantiate()
 			new_slam.set_stats(damage/ 2, speed)
 			new_slam.scale = Vector2(0.65, 0.65)
 			# new_slam.get_node("AnimatedSprite2D").modulate = Color(1, 0, 0, 1)

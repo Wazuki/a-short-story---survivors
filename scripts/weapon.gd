@@ -122,4 +122,5 @@ func damage_calc() -> float:
 		return damage * crit_mod
 	else: return damage
 
-func get_weapon_range() -> float: return %WeaponRange.shape.radius
+func get_weapon_range() -> float: return %WeaponRange.shape.radius ## Returns the weapon range (the radius of the collider)
+func is_overhaul_enabled() -> bool: return level >= OVERHAUL_LEVEL ## Check to see if we've reached the level of our overhaul.
