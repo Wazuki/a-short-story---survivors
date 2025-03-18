@@ -1,13 +1,13 @@
 extends Sprite2D
 
-
 # var damage: float
 var jump_speed: float
 var current_chain: int
 var max_chains: int
 var can_split: bool = false
 
-var hit_targets: Array
+var hit_targets: Array[Node2D]
+var current_jump_target: Enemy
 
 signal jumping_ended
 
@@ -26,27 +26,31 @@ func interpolate(length, duration = 0.1):
 	tween_offset.tween_property(self, "offset", Vector2(length/2.0, 0), duration)
 	tween_rect_w.tween_property(self, "region_rect", Rect2(0, 0, length, 12), duration)
 
-func animate_lightning(start_pos: Vector2, target_pos: Vector2, duration: float):
+## Animates the lightning bolt to stretch out to the target and then shrink into it by tweening its position against the target's and shrinking the rect.[br]
+## Takes a [start_pos: Vector2], [target: Node2D], [duration: float]
+func animate_lightning(start_pos: Vector2, target: Node2D, duration: float):
 	# Tween towards the target, then shrink the width while moving the rect forward.
-	var distance = start_pos.distance_to(target_pos)
-
+	var distance = start_pos.distance_to(target.global_position)
+	var jump_pos = target.global_position
 	self.global_position = start_pos
 
 	var tween = get_tree().create_tween()
 	# Animate the lightning stretching -> animate the pos back while shrinking the lightning
 	# Rect2: (x (repeats texture horizontal), y (repeats texture vertical), w (controls width), h (controls height))
 	tween.tween_property(self, "region_rect", Rect2(0, 0, distance, 12), duration).set_ease(Tween.EASE_OUT) # Animates the rect, stretching the lightnig out
-	tween.tween_property(self, "global_position", target_pos, duration).set_ease(Tween.EASE_OUT) # Animates the global pos shift
+	tween.tween_property(self, "global_position", jump_pos, duration).set_ease(Tween.EASE_OUT) # Animates the global pos shift
 	tween.set_parallel(true) # The tween right BEFORE set_parallel() also becomes parallel!
 	tween.tween_property(self, "region_rect", Rect2(0, 0, 0, 12), duration).set_ease(Tween.EASE_OUT) # Animates the rect to shrink the lightning
 	#await get_tree().create_timer(duration).timeout
-
-	tween.chain().tween_callback(jump_to_next_target) # Jump to the next lightning target (if possible)
+	
+	tween.finished.connect(damage_target) # Damage the target then jump to the next one
 
 func jump_first_target(target: Node2D) -> void:
+	current_jump_target = target
+	hit_targets.append(current_jump_target) # Make sure we don't the same target again
+
 	look_at(target.global_position)
-	animate_lightning(global_position, target.global_position, jump_speed)
-	damage_target(target)
+	animate_lightning(global_position, target, jump_speed)
 
 func jump_to_next_target() -> void:
 	if %JumpRange.has_overlapping_bodies() and current_chain < max_chains:
@@ -55,15 +59,18 @@ func jump_to_next_target() -> void:
 		# Get a new target randomly based on the overlapping bodies in the jump collider, but make sure we don't hit the same target(s)
 		var target = null
 		var bodies_in_range: Array = %JumpRange.get_overlapping_bodies()
-		bodies_in_range.shuffle()
+		# Check if we've hit any targets yet - they might be dead. If we haven't, just pick a random target. Otherwise, iterate.
+		if hit_targets.is_empty(): target = bodies_in_range.pick_random()
+		else:
+			bodies_in_range.shuffle()
 
-		# Cycle through the (now randomized) set of bodies we found until we find one we haevn't hit yet and make it a new target.
-		for b in bodies_in_range:
-			if hit_targets.has(b):
-				continue
-			else:
-				target = b
-				break
+			# Cycle through the (now randomized) set of bodies we found until we find one we haevn't hit yet and make it a new target.
+			for b in bodies_in_range:
+				if hit_targets.has(b):
+					continue
+				else:
+					target = b
+					break
 
 		# If we still don't have a target it means there aren't any valid targets in range and we should reset the weapon cooldown and leave.
 		if target == null: 
@@ -73,13 +80,15 @@ func jump_to_next_target() -> void:
 		# Now that we have a target, add it to the array so we don't hit it again this cycle.
 		hit_targets.append(target)
 
+		current_jump_target = target
 		# print("Jump! " + str(current_chain))
 		look_at(target.global_position)
-		animate_lightning(global_position, target.global_position, jump_speed)
-		damage_target(target)
+		animate_lightning(global_position, target, jump_speed)
 
 		# Now that we've done all that, if we are of the level where we can arc, try to arc.
-		if GameController.chain_lightning.is_splittable() and GameController.chain_lightning.is_splitting_this_attack:
+		# Make sure this bullet is: able to split and that this is an attack we should split on.
+		if can_split and GameController.chain_lightning.is_splitting_this_attack:
+			# print_debug("Attempting to arc!")
 			GameController.chain_lightning.spawn_chained_lightning_bolt(bodies_in_range.pick_random(), current_chain - 1, global_position) # Subtract 1 from the chain to account for the first jump
 			can_split = false
 			# print_debug("Arced!")
@@ -95,8 +104,9 @@ func jump_to_next_target() -> void:
 		end_lightning_sequence()
 
 # Through masking, we should only hit enemies with our abilities.
-func damage_target(enemy: Node2D) -> void:
+func damage_target() -> void:
 	var damage_mod
+	var enemy = current_jump_target as Enemy
 
 	# If we've reached the right level and we are on the final chain, it should deal full damage instead.
 	if (GameController.chain_lightning.is_final_chain_full_damage and current_chain == max_chains) or current_chain == 1: # The first strike should also deal full damage.
@@ -107,17 +117,21 @@ func damage_target(enemy: Node2D) -> void:
 
 	var damage_result = GameController.chain_lightning.damage_calc()
 
-	enemy.take_damage(damage_result * damage_mod)
+	# Before we deal damage we should make sure the target isn't dead!
+	if not enemy.is_dead: enemy.take_damage(damage_result * damage_mod)
+
 	if GameController.chain_lightning.is_stun_enabled(): enemy.apply_stun(GameController.chain_lightning.STUN_DURATION)
+	# After dealing damage, try to jump to the next target.
+	jump_to_next_target()
 
 func end_lightning_sequence() -> void:
 	jumping_ended.emit()
 	# print_debug("Lighting ended after " + str(current_chain) + " jumps")
 	call_deferred("queue_free")
+	# print_debug("queue lightning for delete")
 	
 	
-
-func spark(distance = 900):
-	interpolate(distance, 0.2)
-	await get_tree().create_timer(0.3).timeout
-	interpolate(0, 0.1)
+# func spark(distance = 900):
+# 	interpolate(distance, 0.2)
+# 	await get_tree().create_timer(0.3).timeout
+# 	interpolate(0, 0.1)

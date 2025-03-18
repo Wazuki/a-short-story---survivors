@@ -143,8 +143,8 @@ func level_up() -> void:
 				# Level up UI handles checking if the weapon is a levle up option. Duh.
 				overhaul_enabled = true
 				
-		super.level_up()
-		fire_weapon()
+	super.level_up()
+	fire_weapon()
 
 # Upgrade Plan
 # Level 1: 2 swipe combo

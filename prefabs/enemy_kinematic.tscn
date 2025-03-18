@@ -76,6 +76,19 @@ unique_name_in_owner = true
 unique_name_in_owner = true
 wait_time = 2.0
 
+[node name="RaycastControl" type="Node2D" parent="."]
+unique_name_in_owner = true
+
+[node name="RaycastCollisionAvoider" type="RayCast2D" parent="RaycastControl"]
+unique_name_in_owner = true
+enabled = false
+target_position = Vector2(15, 0)
+collision_mask = 4
+
+[node name="RaycastTimer" type="Timer" parent="RaycastControl/RaycastCollisionAvoider"]
+autostart = true
+
 [connection signal="animation_finished" from="Spritesheet" to="." method="_on_spritesheet_animation_finished"]
 [connection signal="timeout" from="ShootTimer" to="." method="_on_shoot_timer_timeout"]
 [connection signal="timeout" from="DisplacementTimer" to="." method="_on_displacement_timer_timeout"]
+[connection signal="timeout" from="RaycastControl/RaycastCollisionAvoider/RaycastTimer" to="." method="_on_raycast_timer_timeout"]

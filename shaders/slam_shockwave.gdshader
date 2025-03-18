@@ -16,12 +16,12 @@ void fragment()
 	vec2 display = normalize(scaledUV - center) * force * mask; // Returns the direction from the center coord multiplied by the mask
 	// COLOR = vec4(SCREEN_UV - disp, 0.0, 1.0); // Maps the color to the UV, essentially creating a fixed gradient
 	COLOR = texture(SCREEN_TEXTURE, SCREEN_UV - display);
-	
+
 	// TODO - implement chromatic effect by offsetting r and b
 	//COLOR.r = texture(SCREEN_TEXTURE,vec2(SCREEN_UV.x + offset, SCREEN_UV.y) - display).r;
 	//COLOR.g = texture(SCREEN_TEXTURE,SCREEN_UV - display).g;
 	//COLOR.b = texture(SCREEN_TEXTURE,vec2(SCREEN_UV.x - offset, SCREEN_UV.y) - display).b;
-	
+
 	// COLOR = texture(TEXTURE, UV); // Displays the original texture without any modification
 	// COLOR = texture(TEXTURE, UV - vec2(10.5, 0.0)); // Displays the original texture without any modification
 	//COLOR.rgb = vec3(mask);

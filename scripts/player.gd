@@ -1,3 +1,4 @@
+class_name Player
 extends CharacterBody2D
 
 # const STARTING_HEALTH = 150
@@ -82,12 +83,15 @@ func _physics_process(delta: float) -> void:
 			%Spritesheet.play()
 		else: %Spritesheet.animation = "idle"
 	
-		var overlapping_mobs = %HurtBox.get_overlapping_bodies()
+		var overlapping_mobs = %PlayerCollider.get_overlapping_bodies()
 		
+		# TODO - refactor this to use signals etc.
 		if not overlapping_mobs.is_empty():
 			var total_damage = 0.0
 			
-			for m in overlapping_mobs: total_damage += clamp((m.damage - (armor / 10)), 0, m.damage) # Clamp the damage to 0 if it's negative
+			for m in overlapping_mobs: 
+				if m is Enemy:
+					total_damage += clamp((m.damage - (armor / 10)), 0, m.damage) # Clamp the damage to 0 if it's negative
 
 			#health -= total_damage * delta # Deal damage for each mob touching the player times delta so they don't explode
 			take_damage(total_damage * delta)
@@ -99,6 +103,7 @@ func _physics_process(delta: float) -> void:
 			# This should be illegal lmao
 			if "absorbing" in xp: xp.absorbing = true # Call the Absorb function on the XP so they fly towards the player
 			if not %XPPickupSound.playing: %XPPickupSound.play() # Play the XP sound but only if it's not currently playing to rpevent spam
+			# print_debug("Detected " + xp.name)
 
 		update_player_info_text()
 	# If the player is dead, play the death animation and emit the signal to the game controller.
@@ -232,3 +237,16 @@ func _on_spritesheet_animation_finished() -> void:
 		# print("Player died!")
 		emit_signal("_health_depleted")
 		%Spritesheet.stop()
+
+## Signals pickups to fly towards the player if they are experience. 
+func _on_pickup_radius_area_entered(area:Area2D) -> void:
+	# Experience orbs should fly to the player when they enter the player's pickup radius.
+	# print_debug("Found a " + area.name)
+	if area is ExperienceOrb:
+		area.absorb_xp(self)
+
+## Signals pickups to enter the player and apply their effect.
+func _on_player_collider_area_entered(area: Area2D) -> void:
+	# print_debug("Touched " + area.name)
+	if area is Pickup:
+		area.apply_pickup_to_player(self)

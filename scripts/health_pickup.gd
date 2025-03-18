@@ -1,21 +1,19 @@
-extends Area2D
+class_name HealthPickup
+extends Pickup
 
 const HEALTH_PICKUP_VAL = 0.15
-
 
 var speed = 250.0
 var spawn_speed = 100.0
 
 var spawn_pos
-var move_on_spawn = true
-
-var player
 
 func _ready() -> void:
-	player = GameController.player
+	name = "Floor Chicken"
+	value = HEALTH_PICKUP_VAL
 	# add_to_group("Pickups")
 
-
+## Initialize the health pickup with a [pos: Vector2] global position.
 func initialize(pos: Vector2) -> void:
 	# Need a separate initializtion for global_position because _ready might be called before the pos is set.
 	global_position = pos
@@ -35,12 +33,9 @@ func _physics_process(delta: float) -> void:
 		# global_position.move_toward(spawn_pos, spawn_speed * delta)
 		if global_position.distance_to(spawn_pos) < 1.0:
 			move_on_spawn = false
+			disable_monitoring()
 
-# Once we touch the player, destroy self and heal the player a fixed amount
-func _on_body_entered(body: Node2D) -> void:
-	if body == GameController.player:
-		body.heal_damage(HEALTH_PICKUP_VAL)		
-		# GameController.total_xp_gained += xp_value
-		# print_debug("Total XP Gained: " + str(GameController.total_xp_gained))
-		queue_free()
-	else: move_on_spawn = false
+## Heal the player for the specified amount.
+func apply_pickup_to_player(player: Player) -> void:
+	player.heal_damage(value)
+	queue_free()

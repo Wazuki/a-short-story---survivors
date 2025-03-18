@@ -103,13 +103,13 @@ texture_under = SubResource("AtlasTexture_onk5g")
 texture_progress = SubResource("AtlasTexture_dw51s")
 texture_progress_offset = Vector2(4, 3)
 
-[node name="HurtBox" type="Area2D" parent="."]
+[node name="PlayerCollider" type="Area2D" parent="."]
 unique_name_in_owner = true
 position = Vector2(-1, 0)
 collision_layer = 0
-collision_mask = 2
+collision_mask = 10
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerCollider"]
 position = Vector2(0, 0.5)
 shape = SubResource("CapsuleShape2D_ejt68")
 debug_color = Color(0.655827, 0.516913, 3.85046e-07, 0.42)
@@ -117,7 +117,7 @@ debug_color = Color(0.655827, 0.516913, 3.85046e-07, 0.42)
 [node name="PickupRadius" type="Area2D" parent="."]
 unique_name_in_owner = true
 collision_layer = 0
-collision_mask = 4
+collision_mask = 8
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PickupRadius"]
 shape = SubResource("CircleShape2D_lihhf")
@@ -161,3 +161,5 @@ stream = ExtResource("5_g5n55")
 volume_db = 10.0
 
 [connection signal="animation_finished" from="Spritesheet" to="." method="_on_spritesheet_animation_finished"]
+[connection signal="area_entered" from="PlayerCollider" to="." method="_on_player_collider_area_entered"]
+[connection signal="area_entered" from="PickupRadius" to="." method="_on_pickup_radius_area_entered"]

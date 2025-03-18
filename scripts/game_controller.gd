@@ -66,7 +66,7 @@ func _ready() -> void:
 		for o in q.get_active_objectives():
 			print_debug(o.description)
 
-
+	# get_node("/root/GameScene/Player/Audio/XPPickupSound").connect("finished", print_debug.bind("XP sound finished playing"))
 
 	# Move hte Game Controller node to be a child of the actual game scene.
 	# TODO - this is probably unnecessary.
@@ -139,7 +139,7 @@ func spawn_enemy() -> void:
 	var new_enemy = preload("res://prefabs/enemy_kinematic.tscn").instantiate()
 	new_enemy.global_position = mob_spawn_point.global_position 
 	add_child(new_enemy)
-	new_enemy.initialize() # Below functions moved to the enemy script!
+	#new_enemy.initialize() # Moved to the enemy's _ready()
 	
 	# Connect any important signals to the GameController from the new enemy.
 	new_enemy.damaged.connect(_on_enemy_damaged)

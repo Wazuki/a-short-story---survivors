@@ -113,7 +113,6 @@ _data = {
 [node name="GameScene" type="Node2D"]
 
 [node name="Level" parent="." instance=ExtResource("2_x5ify")]
-z_index = -99
 position = Vector2(0, 0)
 
 [node name="Player" parent="." instance=ExtResource("2_po0ka")]

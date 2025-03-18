@@ -67,11 +67,12 @@ func reset() -> void:
 # 3. Once the tween ends (the enemy is hit), find the next closest enemy and repeat.
 
 func _physics_process(_delta: float) -> void:
-	fire_lightning()
+	if has_overlapping_bodies():
+		fire_lightning()
 
 func fire_lightning() -> void:
 	# Check if an enemy is in range. If so, fire the lightning.
-	if ready_to_fire and has_overlapping_bodies():
+	if ready_to_fire:
 		begin_attack_sequence.emit() # Tell the listeners (Cooldown Panel et al) that we have started attacking.
 		ready_to_fire = false
 		%LightningSounds.play()
@@ -107,40 +108,6 @@ func spawn_lightning_stike(spawn_pos: Vector2) -> void:
 		get_tree().root.add_child(new_strike)
 		# get_node("/root/GameScene").add_child(new_strike)
 
-# Moved to lightning_bullet.gd
-# func jump_next_target() -> void:
-# 	# Check if we have any enemies in range of the target we just hit and tween to the next one. Otherwise reset the jump count.
-# 	if %JumpRange.has_overlapping_bodies() and current_chain < max_chains:
-# 		current_chain += 1
-		
-# 		# Get a new target randomly based on the overlapping bodies in the jump collider, but make sure we don't hit the same target(s)
-# 		var target = null
-# 		var bodies_in_range: Array = %JumpRange.get_overlapping_bodies()
-# 		bodies_in_range.shuffle()
-
-# 		# Cycle through the (now randomized) set of bodies we found until we find one we haevn't hit yet and make it a new target.
-# 		for b in bodies_in_range:
-# 			if hit_targets.has(b):
-# 				continue
-# 			else:
-# 				target = b
-# 				break
-
-# 		# If we still don't have a target it means there aren't any valid targets in range and we should reset the weapon cooldown and leave.
-# 		if target == null: 
-# 			fire_weapon()
-# 			return
-
-# 		# Now that we have a target, add it to the array so we don't hit it again this cycle.
-# 		hit_targets.append(target)
-
-# 		# print("Jump! " + str(current_chain))
-# 		lightning.look_at(target.global_position)
-# 		lightning.animate_lightning(lightning.global_position, target.global_position, j_speed)
-# 		damage_target(target)
-
-# 	else: # Reset the cooldown if we don't have anyone in range OR we ran out of current_chain
-# 		fire_weapon()
 
 # Check if we've reached the level allowing for a variety of bonus level-based effects.
 func is_final_chain_full_damage() -> bool: return level >= FINAL_CHAIN_FULL_DAMAGE_LEVEL

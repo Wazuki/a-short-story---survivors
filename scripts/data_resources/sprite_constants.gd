@@ -11,9 +11,18 @@ enum Z_INDEX {
     WALDOS = 20,
     INNER_WALDOS = 21,
     EXPERIENCE = 30,
+    HEALTH_PICKUP = 35,
     LIGHT_BLADE = 60,
     CHAIN_LIGHTNING = 80,
     PLAYER = 100,
     ENEMY = 100, 
     ARROW = 150,
     }
+
+## Collision layers use bit-masks, not integers.[br]
+enum COLLISION_LAYERS {
+    PLAYER = 000001,
+    ENEMY = 000010,
+    ENEMY_AVOIDANCE = 000100,
+    PICKUPS = 001000
+}

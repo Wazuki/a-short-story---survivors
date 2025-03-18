@@ -1,5 +1,6 @@
 class_name Enemy
 extends RigidBody2D
+# TODO - Refactor me
 
 const HEALTH_BAR_SCALE = 0.05
 const DISPLACEMENT_FRICTION = 120.0
@@ -18,10 +19,13 @@ var knockback_velocity: Vector2
 var knockback_friction: float = 400.0 # The rate at which knockback decays - should decay rapidly, like the enemy is quickly getting their footing back
 var slowed_speed: float = 0.0
 var slow_decay_rate: float = 5.0
+var avoidance_time: float
+var avoidance_dir: Vector2
 
 
 # Booleans
 var is_dead: bool = false
+var is_avoiding_obstacle: bool = false
 var has_health_bar: bool = false
 var is_shooting: bool = false
 var can_shoot: bool = true
@@ -89,9 +93,8 @@ const BOSS_ENEMY_STATS = {
 
 func _ready() -> void:
 	player = GameController.player
-	
+	initialize() # Set up the enemy stats.
 	$Spritesheet.play();
-
 
 
 func initialize() -> void:
@@ -156,7 +159,6 @@ func initialize() -> void:
 	# Set the scale of the enemy
 	%Spritesheet.scale = scale
 	%CollisionShape2D.scale = scale
-	# %AvoidanceArea.scale = scale
 	%HealthBar.scale = scale
 
 	%Spritesheet.animation = "walk"
@@ -184,6 +186,11 @@ func _physics_process(delta: float) -> void:
 	# 	#	var other = collision.get_collider()
 	# 	#	if other.has_method("apply_knockback"):
 	# 	#		other.apply_knockback(collision.get_normal(), 50)
+	elif not is_dead and is_avoiding_obstacle and avoidance_time > 0.0:
+		# Attempt to move in a random direction perpendicular to the obstacle for a second to avoid collisions. After the second, reset the flag and try again.
+		avoidance_time -= delta
+		velocity = avoidance_dir * speed * delta
+		move()
 	elif not is_dead && enemy_type != EnemyType.RANGED:
 		var direction = global_position.direction_to(player.global_position)
 		velocity = direction * speed * delta
@@ -261,7 +268,25 @@ func move() -> void:
 	%Spritesheet.play()
 
 	move_and_collide(velocity)
-	
+
+	# TODO - improve this. Either switch to a NavMesh or consider making the raycast better. Rightt now the random direction
+	# Causes them to just wiggle sometimes on longer obstacles.
+	# After moving, avoid collisions.
+	# If the Raycast is enabled, look at the player and see if we need to move to avoid them.
+	if %RaycastCollisionAvoider.enabled:
+		%RaycastControl.look_at(player.global_position)
+		if %RaycastCollisionAvoider.is_colliding():
+			is_avoiding_obstacle = true
+			# Rotate the avoidance pos to face what we're stuck on, then flip it perpendicular (-90 or +90 degrees/-pi/2 or +pi/2)
+			var collision_normal = %RaycastCollisionAvoider.get_collision_normal() # A normal is a vector that bounces straight off it 
+			var perp_dir = collision_normal.rotated(PI/2) if randf() < 0.5 else collision_normal.rotated(-PI/2)
+			avoidance_dir = perp_dir.normalized()
+			# avoidance_dir = %RaycastCollisionAvoider.target_position.rotated(%RaycastControl.global_rotation)
+			# avoidance_dir = avoidance_dir.rotated(PI/2) if randf() < 0.5 else avoidance_dir.rotated(-PI/2)
+			# avoidance_dir = global_position.direction_to(avoidance_dir)
+			avoidance_time = 0.5
+
+func check_if_obstacle_ahead() -> bool: return %RaycastCollisionAvoider.upda
 # Slow the enemy by a percentage of their speed
 func apply_slow(slow: float) -> void:
 	# Only apply slow if the enemy is not already slowed
@@ -333,3 +358,6 @@ func _on_shoot_timer_timeout() -> void:
 
 # func _on_displacement_timer_timeout() -> void:
 # 	displaced = false
+
+# Flip the raycast state.
+func _on_raycast_timer_timeout() -> void: %RaycastCollisionAvoider.enabled = !%RaycastCollisionAvoider.enabled
