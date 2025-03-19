@@ -6,6 +6,7 @@ const BASE_COOLDOWN = 1.5
 # const BASE_SLAMS = 1
 const SLOW_VALUE = 0.15
 const SHOCKWAVE_STRENGTH = 18
+const MINI_SLAM_SCALE = Vector2(0.65, 0.65)
 
 # Level up unlock consts
 const MINI_SLAM_LEVEL = 4
@@ -126,7 +127,9 @@ func spawn_mini_slams() -> void:
 		for s in range(MINI_SLAM_COUNT):
 			var new_slam = preload("res://prefabs/bullets/slam_bullet.tscn").instantiate()
 			new_slam.set_stats(damage/ 2, speed)
-			new_slam.scale = Vector2(0.65, 0.65)
+			# Scale the mini-slams from 0.25-0.65 (clamped) based on the current slam scale and a set minimum.
+			var mini_slam_scale: float = clampf(MINI_SLAM_SCALE.x * (slam_bullet.scale.x / weapon_scale.x), 0.25, MINI_SLAM_SCALE.x)
+			new_slam.scale = Vector2(mini_slam_scale, mini_slam_scale) # Mini-slams should be affected by the current slam size.
 			# new_slam.get_node("AnimatedSprite2D").modulate = Color(1, 0, 0, 1)
 			# new_slam.name = "Mini-Slam"
 			slam_bullet.add_child(new_slam)

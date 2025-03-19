@@ -2,10 +2,7 @@ extends Node
 
 ## Default values for the game.
 ## Tracks the z-index for all sprite layers
-var sprite_constants: SpriteConstants = preload("res://scripts/data_resources/sprite_constants.tres")
-
-## In game variables
-var tracked_variables :TrackedVariables = preload("res://scripts/data_resources/tracked_variables.tres")
+# var sprite_constants: SpriteConstants = preload("res://scripts/data/sprite_constants.tres")
 
 # TODO - clean this up some day will ya? It's gettin crowded!
 @onready var player = get_node("/root/GameScene/Player")
@@ -31,7 +28,6 @@ var tracked_variables :TrackedVariables = preload("res://scripts/data_resources/
 
 @onready var cooldown_container = get_node("/root/GameScene/UI/CooldownContainer")
 
-var quest: QuestResource = load("res://test_quest.tres")
 
 const BASE_DIFFICULTY_INCREASE_TIME = 60.0
 const BASE_ENEMY_SPAWN_TIME = 0.5
@@ -59,13 +55,6 @@ var touch_input_enabled: bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	var instance := quest.instantiate()
-	Questify.start_quest(instance)
-	for q in Questify.get_quests():
-		print_debug(q.name)
-		for o in q.get_active_objectives():
-			print_debug(o.description)
-
 	# get_node("/root/GameScene/Player/Audio/XPPickupSound").connect("finished", print_debug.bind("XP sound finished playing"))
 
 	# Move hte Game Controller node to be a child of the actual game scene.
@@ -167,10 +156,10 @@ func _on_enemy_spawn_timer_timeout() -> void:
 	enemy_spawn_timer.wait_time = enemy_spawn_time
 
 # Signals for tracking global player-saved variables.
-func _on_enemy_damaged(amount) -> void: tracked_variables.add_value(TrackedVariables.Type.DAMAGE, amount)
-func _on_enemy_health_depleted() -> void: tracked_variables.add_value(TrackedVariables.Type.KILLS, 1)
-func _on_player_gain_xp(amount) -> void: tracked_variables.add_value(TrackedVariables.Type.XP, amount)
-func _on_player_gain_level() -> void: tracked_variables.add_value(TrackedVariables.Type.LEVELS, 1)
+func _on_enemy_damaged(amount) -> void: DataManager.add_value("damage", amount)
+func _on_enemy_health_depleted() -> void: DataManager.add_value("kills", 1)
+func _on_player_gain_xp(amount) -> void: DataManager.add_value("experience", amount)
+func _on_player_gain_level() -> void: DataManager.add_value("levels", 1)
 
 func _on_enemy_difficulty_timer_timeout() -> void:
 	enemy_spawn_time = clamp(enemy_spawn_time - 0.1, 0.1, BASE_ENEMY_SPAWN_TIME)
@@ -345,45 +334,31 @@ func restart_game() -> void:
 	
 # Write the player's data to a file
 func save_game() -> void:
-	var save_data = ConfigFile.new()
-	# Save the player's preferences too!
-	save_data.set_value("Settings", "touch_input_enabled", touch_input_enabled)
-	save_data.set_value("Settings", "sound_volume", db_to_linear(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("Master"))))
-	save_data.set_value("Settings", "music_volume", db_to_linear(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("Music"))))
-	
-	# Save the player's stats
-	save_data.set_value("SaveData","enemies killed", tracked_variables.get_value(TrackedVariables.Type.KILLS))
-	save_data.set_value("SaveData","xp gained", tracked_variables.get_value(TrackedVariables.Type.XP))
-	save_data.set_value("SaveData","damage done", tracked_variables.get_value(TrackedVariables.Type.DAMAGE))
-	save_data.set_value("SaveData","levels gained", tracked_variables.get_value(TrackedVariables.Type.LEVELS))
-
-	save_data.save("user://save_game.cfg")
-	print_debug("Game saved!")
-
-	character_select_UI.check_unlock_requiremets()
+	DataManager.save_data_to_disk()
 
 # Load the player's data from a file
 func load_game() -> void:
-	var save_data = ConfigFile.new()
-	var error = save_data.load("user://save_game.cfg")
-	if error != OK: return
+	DataManager.load_data_from_disk()
+	# var save_data = ConfigFile.new()
+	# var error = save_data.load("user://save_game.cfg")
+	# if error != OK: return
 
-	# Load the player's preferences
-	touch_input_enabled = save_data.get_value("Settings", "touch_input_enabled", false)
-	$"/root/GameScene/UI/MainMenu".set_touch_input_button_state(touch_input_enabled)
-	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), linear_to_db(save_data.get_value("Settings", "sound_volume", 0.5)))
-	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Music"), linear_to_db(save_data.get_value("Settings", "music_volume", 0.5)))
+	# # Load the player's preferences
+	# touch_input_enabled = save_data.get_value("Settings", "touch_input_enabled", false)
+	# $"/root/GameScene/UI/MainMenu".set_touch_input_button_state(touch_input_enabled)
+	# AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), linear_to_db(save_data.get_value("Settings", "sound_volume", 0.5)))
+	# AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Music"), linear_to_db(save_data.get_value("Settings", "music_volume", 0.5)))
 
-	# Load the player's tracked variables from file and assign it to the tracked variable var
-	tracked_variables.set_value(TrackedVariables.Type.KILLS, save_data.get_value("SaveData","enemies killed", 0))
-	tracked_variables.set_value(TrackedVariables.Type.XP, save_data.get_value("SaveData","xp gained", 0))
-	tracked_variables.set_value(TrackedVariables.Type.DAMAGE, save_data.get_value("SaveData","damage done", 0))
-	tracked_variables.set_value(TrackedVariables.Type.LEVELS, save_data.get_value("SaveData","levels gained", 0))
+	# # Load the player's tracked variables from file and assign it to the tracked variable var
+	# tracked_variables.set_value(TrackedVariables.Type.KILLS, save_data.get_value("SaveData","enemies killed", 0))
+	# tracked_variables.set_value(TrackedVariables.Type.XP, save_data.get_value("SaveData","xp gained", 0))
+	# tracked_variables.set_value(TrackedVariables.Type.DAMAGE, save_data.get_value("SaveData","damage done", 0))
+	# tracked_variables.set_value(TrackedVariables.Type.LEVELS, save_data.get_value("SaveData","levels gained", 0))
 	
-	for v in tracked_variables.values:
-		var value = tracked_variables.values[v]
-		var value_name:String = TrackedVariables.Type.keys()[v]
-		print_debug(value_name + " " + str(value))
+	# for v in tracked_variables.values:
+	# 	var value = tracked_variables.values[v]
+	# 	var value_name:String = TrackedVariables.Type.keys()[v]
+	# 	print_debug(value_name + " " + str(value))
 
 	# total_xp_gained = save_data.get_value("SaveData","xp gained")
 	# total_damage_done = save_data.get_value("SaveData","damage done")
@@ -394,10 +369,8 @@ func load_game() -> void:
 
 func reset_game() -> void:
 	# Reset the player's stats and save the game
-	for v in tracked_variables.values: tracked_variables.set_value(v, 0) # Iterates through the tracked variables and zeroes them out.
-	save_game()
+	DataManager.reset_saved_data() # Handles game restting and re-saves the data.
 
-	character_select_UI.check_unlock_requiremets()
 	print_debug("Game reset!")
 
 # Go through the weapons and find the one that matches our type and return it.

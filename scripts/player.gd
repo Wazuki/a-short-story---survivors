@@ -47,7 +47,7 @@ func initialize(character: Character) -> void:
 	%Spritesheet.play()
 
 	# Set the player's z-index
-	z_index = GameController.sprite_constants.Z_INDEX.PLAYER
+	z_index = SpriteConstants.Z_INDEX.PLAYER
 	# weapon = character["weapon"]
 	# print_debug("Set character stats to " + str(character))
 

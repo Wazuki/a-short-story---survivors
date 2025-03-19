@@ -2,16 +2,22 @@ class_name CharacterSelectPanel extends Panel
 
 @export var icon: TextureRect 
 @export var name_text: RichTextLabel 
+@export var locked_char_shader_material: ShaderMaterial
+@export var locked_text_shader_material: ShaderMaterial
 
 var character: Character
 var clickable = false
 var selected = false
 signal activate_panel(panel)
 
+## Initializes the character selection panel for a [c: Character][br]
+## Sets the icon and text and connects the signals for locking and unlocking the character.
 func initialize(c: Character) -> void:
 	character = c
 	icon.texture = c.icon
 	name_text.text = c.character_name
+	c.locked.connect(lock_char)
+	c.unlocked.connect(unlock_char)
 
 func _process(delta: float) -> void:
 	# If the character isn't unlocked yet, animate the glitching text shader and swap out the character to the next one.
@@ -70,12 +76,13 @@ func _gui_input(event: InputEvent) -> void:
 			# print("Panel selected")
 			activate_panel.emit(self)
 
+## Deactivate the currently selected character panel and remove the shader.
 func deactivate_panel() -> void:
 	# Clear the shader material and deselect the panel.
 	selected = false
 	material = null
 
-# Remove the black shader from an unlocked character.
+## Remove the black shader from an unlocked character and make its panel clickable.
 func unlock_char() -> void:
 	if icon.material: icon.material = null
 	clickable = true
@@ -83,3 +90,10 @@ func unlock_char() -> void:
 	%CharacerNameText.text = character.character_name
 	%ScrambleTextTimer.stop()
 	# print_debug("Unlocked " + character.character_name)
+
+## Relocks the character from being selected and applies the shader materials back to the text and icon if applicable.
+func lock_char() -> void:
+	if icon.material == null: icon.material = locked_char_shader_material
+	if %CharacerNameText.material == null: %CharacerNameText.material = locked_text_shader_material
+	clickable = false
+	%ScrambleTextTimer.start()

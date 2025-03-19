@@ -1,5 +1,6 @@
+class_name UnlockableCharacters
 extends Resource
-class_name Unlockable_Characters
+
 
 # A list of unlockable characters in the game
 
@@ -16,9 +17,9 @@ func _init() -> void:
 	technician = Character.new()
 
 	valkyrie.set_stats("Valkyrie", 100, 1.0, 150, Weapon.Type.LIGHT_BLADE) # Default character unlock
-	tank.set_stats("Tank", 200, 5.0, 100, Weapon.Type.SLAM, TrackedVariables.Type.XP, 5000) # Tank needs 5000 XP to unlock
-	huntress.set_stats("Huntress", 75, 0.1, 200, Weapon.Type.ARROW, TrackedVariables.Type.KILLS, 1000) # Huntress requires 1000 enemies killed
-	technician.set_stats("Technician", 150, 3.0, 110, Weapon.Type.WALDOS, TrackedVariables.Type.DAMAGE, 10000) # Technician requires 10000 damage dealt
+	tank.set_stats("Tank", 200, 5.0, 100, Weapon.Type.SLAM) # Tank needs 5000 XP to unlock
+	huntress.set_stats("Huntress", 75, 0.1, 200, Weapon.Type.ARROW) # Huntress requires 1000 enemies killed
+	technician.set_stats("Technician", 150, 3.0, 110, Weapon.Type.WALDOS) # Technician requires 10000 damage dealt
 	
 	load_textures()
 	load_text()
@@ -38,10 +39,16 @@ func load_textures() -> void:
 
 func load_text() -> void:
 	# Style guide: Each character desc should be four lines and start with "A.." and end with a line break.
-	valkyrie.description = "An arranged marriage.\nA duel to the death.\nA blade of immense power.\nA new purpose.\n"
+	valkyrie.description = "\nAn arranged marriage.\nA duel to the death.\nA blade of immense power.\nA new purpose.\n"
 	tank.description = "TBD"
-	huntress.description = "A bow of both worlds.\nTBD"
-	technician.description = "A transhumanist cult.\nA dark secret discovered.\nA mass slaughter.\nA seach for redemption."
+	huntress.description = "\nA bow of both worlds.\nTBD"
+	technician.description = "\nA transhumanist cult.\nA dark secret discovered.\nA mass slaughter.\nA seach for redemption."
+
+	# Load the path to each character's quest.
+	valkyrie.unlock_quest_path = ""
+	tank.unlock_quest_path = "res://quests/unlock_tank.tres"
+	huntress.unlock_quest_path = "res://quests/unlock_huntress.tres"
+	technician.unlock_quest_path = "res://quests/unlock_technician.tres"
 
 
 # Returns all the unlockable characters

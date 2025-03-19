@@ -1,0 +1,68 @@
+[gd_resource type="Resource" script_class="QuestResource" load_steps=15 format=3 uid="uid://bu0it3rqkh436"]
+
+[ext_resource type="Script" uid="uid://d4gmb2nftapl5" path="res://addons/questify/scripts/model/quest_edge.gd" id="1_idut6"]
+[ext_resource type="Script" uid="uid://cyotfkardp6i" path="res://addons/questify/scripts/model/quest_condition.gd" id="2_6x7ot"]
+[ext_resource type="Script" uid="uid://c23wdreelkkg4" path="res://addons/questify/scripts/model/quest_objective.gd" id="3_mu8md"]
+[ext_resource type="Script" uid="uid://dtbofow3tdngk" path="res://addons/questify/scripts/model/quest_start.gd" id="4_b5a7t"]
+[ext_resource type="Script" uid="uid://650crvoj707i" path="res://addons/questify/scripts/model/quest_end.gd" id="5_ajpuh"]
+[ext_resource type="Script" uid="uid://b37aev4imc074" path="res://addons/questify/scripts/model/quest_node.gd" id="6_st132"]
+[ext_resource type="Script" uid="uid://bhqxygnm6kw4n" path="res://addons/questify/scripts/model/quest_resource.gd" id="7_hbbx0"]
+
+[sub_resource type="Resource" id="Resource_idut6"]
+script = ExtResource("2_6x7ot")
+type = "variable:>="
+key = "kills"
+id = "ClNtsykr_G"
+optional = false
+graph_editor_position = Vector2(480, 600)
+graph_editor_size = Vector2(377, 309)
+metadata/value = 1000.0
+
+[sub_resource type="Resource" id="Resource_6x7ot"]
+script = ExtResource("3_mu8md")
+description = "Slay 1000 foes."
+id = "elHXNzbxIv"
+optional = false
+graph_editor_position = Vector2(1120, 120)
+graph_editor_size = Vector2(460, 720)
+metadata/reward = "Mobilize Huntress."
+metadata/icon_path = "res://sprites/frames/huntress_icon.tres"
+
+[sub_resource type="Resource" id="Resource_mu8md"]
+script = ExtResource("1_idut6")
+from = SubResource("Resource_idut6")
+to = SubResource("Resource_6x7ot")
+edge_type = 1
+
+[sub_resource type="Resource" id="Resource_b5a7t"]
+script = ExtResource("4_b5a7t")
+name = "Unlock Huntress"
+description = "Unlock Huntress by slaying 1000 foes."
+id = "9WNZlyos1F"
+optional = false
+graph_editor_position = Vector2(480, 40)
+graph_editor_size = Vector2(280, 516)
+
+[sub_resource type="Resource" id="Resource_ajpuh"]
+script = ExtResource("1_idut6")
+from = SubResource("Resource_b5a7t")
+to = SubResource("Resource_6x7ot")
+edge_type = 0
+
+[sub_resource type="Resource" id="Resource_st132"]
+script = ExtResource("5_ajpuh")
+id = "X_C1KqWviH"
+optional = false
+graph_editor_position = Vector2(1760, 260)
+graph_editor_size = Vector2(141, 78)
+
+[sub_resource type="Resource" id="Resource_hbbx0"]
+script = ExtResource("1_idut6")
+from = SubResource("Resource_6x7ot")
+to = SubResource("Resource_st132")
+edge_type = 0
+
+[resource]
+script = ExtResource("7_hbbx0")
+nodes = Array[ExtResource("6_st132")]([SubResource("Resource_st132"), SubResource("Resource_6x7ot"), SubResource("Resource_idut6"), SubResource("Resource_b5a7t")])
+edges = Array[ExtResource("1_idut6")]([SubResource("Resource_mu8md"), SubResource("Resource_ajpuh"), SubResource("Resource_hbbx0")])

@@ -1,9 +1,20 @@
-[gd_scene load_steps=7 format=3 uid="uid://c5qvpq1g8icj5"]
+[gd_scene load_steps=9 format=3 uid="uid://c5qvpq1g8icj5"]
 
 [ext_resource type="Texture2D" uid="uid://bguee08c3f17c" path="res://sprites/frames/valkyrie_icon.tres" id="1_bnstv"]
 [ext_resource type="Script" uid="uid://deb08nf2a7unc" path="res://scripts/char_select_panel.gd" id="1_j5tua"]
-[ext_resource type="Shader" uid="uid://dmvjluaex67q5" path="res://shaders/white_outline_shader.tres" id="2_kiwgr"]
+[ext_resource type="Shader" uid="uid://c27flpnhtvhur" path="res://shaders/locked_character_shader.tres" id="2_kiwgr"]
 [ext_resource type="Shader" uid="uid://doefyn0q1qekn" path="res://shaders/locked_text_shader.gdshader" id="4_2x8sr"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_71gwd"]
+shader = ExtResource("2_kiwgr")
+shader_parameter/line_color = Color(1, 1, 1, 1)
+shader_parameter/line_thickness = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mtpuo"]
+shader = ExtResource("4_2x8sr")
+shader_parameter/time = 0.0
+shader_parameter/intensity = 1.0
+shader_parameter/random_shift = Vector2(0.1, 0.1)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_2x8sr"]
 shader = ExtResource("2_kiwgr")
@@ -34,6 +45,8 @@ size_flags_vertical = 3
 script = ExtResource("1_j5tua")
 icon = NodePath("MarginContainer/VBoxContainer/CharacterIcon")
 name_text = NodePath("MarginContainer/VBoxContainer/CharacerNameText")
+locked_char_shader_material = SubResource("ShaderMaterial_71gwd")
+locked_text_shader_material = SubResource("ShaderMaterial_mtpuo")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1

@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://c756hxrovtgc5"]
+[gd_scene load_steps=17 format=3 uid="uid://c756hxrovtgc5"]
 
 [ext_resource type="PackedScene" uid="uid://bivcmhjsdsyy2" path="res://prefabs/player.tscn" id="2_po0ka"]
 [ext_resource type="PackedScene" uid="uid://dmtmv04oyd6hl" path="res://prefabs/level.tscn" id="2_x5ify"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://clb7lgpy4ix3o" path="res://prefabs/level_up_ui.tscn" id="6_kdryc"]
 [ext_resource type="PackedScene" uid="uid://cqph8d6325sto" path="res://prefabs/main_menu.tscn" id="7_6e45b"]
 [ext_resource type="AudioStream" uid="uid://dax4rfyg1yk1a" path="res://sounds/music/Sketchbook 2024-12-21.ogg" id="7_7bn7d"]
+[ext_resource type="PackedScene" uid="uid://dfdjdnbqurvar" path="res://prefabs/progress_tracker.tscn" id="7_7vrjw"]
 [ext_resource type="Texture2D" uid="uid://cdawaub8gn4r1" path="res://sprites/wenrexa/Icons/24.png" id="7_uohvc"]
 [ext_resource type="PackedScene" uid="uid://remf34e7bwbp" path="res://prefabs/healthbar.tscn" id="9_bil8f"]
 [ext_resource type="Shader" uid="uid://b2qp0hi3o8ykm" path="res://shaders/slam_shockwave.gdshader" id="9_elxod"]
@@ -231,6 +232,10 @@ visible = false
 
 [node name="CharacterSelectUI" parent="UI" instance=ExtResource("5_navxo")]
 visible = false
+
+[node name="ProgressTrackerControl" parent="UI" node_paths=PackedStringArray("main_menu") instance=ExtResource("7_7vrjw")]
+visible = false
+main_menu = NodePath("../MainMenu")
 
 [node name="MainMenu" parent="UI" instance=ExtResource("7_6e45b")]
 

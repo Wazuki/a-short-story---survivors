@@ -1,3 +1,4 @@
+class_name MainMenu
 extends CanvasLayer
 
 var main_audio_bus_name := "Master"
@@ -78,3 +79,6 @@ func _on_resume_button_pressed() -> void:
 func _on_end_run_button_pressed() -> void:
 	%PauseMenu.visible = false
 	GameController.game_over()
+
+func connect_progress_tracked_button(callable: Callable) -> void:
+	%ProgressTrackerButton.pressed.connect(callable.bind(true))

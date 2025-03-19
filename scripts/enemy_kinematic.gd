@@ -4,6 +4,7 @@ extends RigidBody2D
 
 const HEALTH_BAR_SCALE = 0.05
 const DISPLACEMENT_FRICTION = 120.0
+const STUN_MODULATE_COLOR = "0000ff"
 
 var speed: float = 100.0
 var base_speed: float = 100.0
@@ -296,12 +297,17 @@ func apply_slow(slow: float) -> void:
 # 	if displaced: %DisplacementTimer.start()
 # 	else: %DisplacementTimer.stop()
 
+## Apply a stun to the enemy and start a timer based on the duration. Modulate the enemy to indicate they are stunned.
 func apply_stun(duration: float) -> void:
 	stunned = true
+	modulate = STUN_MODULATE_COLOR
 	var stun_timer = get_tree().create_timer(duration)
 	stun_timer.connect("timeout", remove_stun)
 
-func remove_stun() -> void: stunned = false
+## Clear the stun and reset the modulation back to normal (white).
+func remove_stun() -> void: 
+	stunned = false
+	modulate = Color.WHITE
 
 func take_damage(dam: float) -> void:
 	health -= dam
