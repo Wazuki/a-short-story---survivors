@@ -37,6 +37,7 @@ func _ready() -> void:
 	super._ready()
 	name = "Arrow"
 	weapon_type = Weapon.Type.ARROW
+	target_type = TargetType.HIGHEST_HP
 	description = "A single piercing projectile with moderate damage."
 	# weapon = preload("res://prefabs/weapon.tscn").instantiate()
 	# add_child(weapon)
@@ -49,8 +50,6 @@ func _physics_process(_delta: float) -> void:
 	arrow()
 		
 
-
-	
 	
 func reset() -> void: 
 	set_stats(BASE_DAMAGE, BASE_SPEED, BASE_COOLDOWN)
@@ -65,12 +64,12 @@ func reset() -> void:
 # Fire the weapon, using the a V2 target
 func arrow() -> void:
 	# new fire algo - set angle every time, removed needless if. If bullets aren't angling look here first!
-	if ready_to_fire and get_highest_hp_target() != Vector2.ZERO: # Check to see if player actually has target
-		spawn_arrow(get_highest_hp_target())
+	if ready_to_fire and highest_hp_enemy_in_range != null: # Check to see if player actually has target
+		spawn_arrow(highest_hp_enemy_in_range.global_position)
 		if double_shot and (randf() < double_shot_chance):
 			# Add a small delay before firing the second arrow
 			await get_tree().create_timer(0.25).timeout
-			spawn_arrow(get_closest_target(), SMALL_ARROW_SIZE) # Double-shot arrows should be a little smaller
+			spawn_arrow(enemies_in_range.values().pick_random().global_position, SMALL_ARROW_SIZE) # Double-shot arrows should be a little smaller
 
 		fire_weapon()
 
@@ -167,8 +166,6 @@ func get_level_up_text() -> String:
 				return "Signature: Arrows split on kill"
 	return "Error! If you got here notify someone who isn't me."
 
-func _on_body_entered(body:Node2D) -> void:
-	arrow()
 
 
 # Old level_up function

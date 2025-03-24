@@ -19,4 +19,5 @@ scale = Vector2(2, 2)
 unique_name_in_owner = true
 shape = SubResource("CircleShape2D_8et6y")
 
-[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="area_exited" from="." to="." method="_on_area_exited"]

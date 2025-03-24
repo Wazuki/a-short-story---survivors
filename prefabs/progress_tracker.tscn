@@ -62,7 +62,6 @@ vertical_alignment = 1
 [node name="TabBar" type="TabBar" parent="MarginContainer/Panel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 current_tab = 0
-tab_close_display_policy = 2
 tab_count = 2
 tab_0/title = "All"
 tab_0/tooltip = "Show all available unlocks."
@@ -120,10 +119,5 @@ layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.25
 
-[node name="QuestListPanel" type="Panel" parent="MarginContainer/Panel/MarginContainer/VBoxContainer"]
-visible = false
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
+[connection signal="tab_selected" from="MarginContainer/Panel/MarginContainer/VBoxContainer/TabBar" to="." method="_on_tab_bar_tab_selected"]
 [connection signal="pressed" from="MarginContainer/Panel/MarginContainer/VBoxContainer/BackButton" to="." method="_on_back_button_pressed"]

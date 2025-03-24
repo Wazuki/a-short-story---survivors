@@ -12,7 +12,7 @@ var lifetime: float ## Tracks lifetime of a projectile (if applicable)
 var lifetime_dependent: bool = false
 
 # Other Parameters
-var affected_bodies: Array[Node2D] # Array of bodies that the weapon is affecting. Used to avoid tons of physics calls.
+var affected_areas: Array[Area2D] # Array of bodies that the weapon is affecting. Used to avoid tons of physics calls.
 
 
 ## [b]Set the defaults for the spawned bullet.[/b][br]

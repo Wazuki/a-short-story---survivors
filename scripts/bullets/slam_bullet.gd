@@ -10,10 +10,10 @@ var is_mini_slam = false
 
 # Fire the weapon - if we hit something, return true so we fire the weapon and reset the timer.
 func slam(pos: Vector2) -> bool:
-	var overlapping_bodies = get_overlapping_bodies()
+	var overlapping_areas = get_overlapping_areas()
 	attack_origin = pos
 
-	if not overlapping_bodies.is_empty() || is_mini_slam: # Mini-slams should always fire whether there are enemies there or not.
+	if not overlapping_areas.is_empty() || is_mini_slam: # Mini-slams should always fire whether there are enemies there or not.
 		# Fire the weapon from here because it means we hit something.
 		GameController.slam.fire_weapon() # Weapon resets here as a result of the animation finishing. Should also prevent mini-slams from reseting the timer.
 		#reparent(get_node("/root/GameScene"))
@@ -27,7 +27,7 @@ func slam(pos: Vector2) -> bool:
 		%SlamSounds.play()
 
 		# Apply damage to all enemies in the area.
-		for enemy in overlapping_bodies:
+		for enemy in overlapping_areas:
 			deal_damage(enemy)
 
 		return true
@@ -38,11 +38,11 @@ func set_stats(dmg: float, spd: float) -> void:
 	$AnimatedSprite2D.speed_scale = spd
 
 
-func _on_body_entered(body: Node2D) -> void:
+func _on_area_entered(area: Node2D) -> void:
 	# If we hit an enemy, deal damage to them but only when the animation is playing (i.e., we're attacking)
-	if body != null && not body.is_dead and %AnimatedSprite2D.is_playing(): # If we're using masks property, it should ONLY be an enemy!
+	if area != null && not area.dead and %AnimatedSprite2D.is_playing(): # If we're using masks property, it should ONLY be an enemy!
 		# print("Slam bullet hit")
-		deal_damage(body)
+		deal_damage(area)
 
 func deal_damage(e : Node2D) -> void:
 		e.take_damage(damage)

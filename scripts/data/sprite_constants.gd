@@ -1,4 +1,4 @@
-extends Resource
+extends RefCounted
 class_name SpriteConstants ## Tracks the sprite
 
 #Be kind to yourself future me.

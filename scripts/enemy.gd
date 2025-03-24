@@ -1,289 +1,165 @@
-extends CharacterBody2D
+class_name Enemy
+extends Area2D
+# TODO - Refactor me
 
-var speed: float = 100.0
-var base_speed: float = 100.0
-var health: float = 3
-var damage: float = 1.0
-var xp_value: int
-var health_drop_chance: float = 0.0
-var enemy_range:float
+#############################
+####### REFACTOR AREA #######
+#############################
+const Stat = CharacterStats.Stat
+const AVOIDANCE_MAGNITUDE = 3 ## Magnitude to amplify the avoidance direction to add a little stronger avoidance movement.
+
+@onready var state_machine: StateMachine = %StateMachine
+@onready var animation_player = %Spritesheet ## "AnimationPlayer" for the enemy (currently [AnimatedSprite2D])
+@onready var death_sound = %DeathSound ## Plays the enemy's dying sound.
+
+var final_direction: Vector2 = Vector2.ZERO ## Final move direction for the enemy (the "output" of the movement component)
+var move_dir: Vector2 = Vector2.ZERO ## Primary move direction towards player (the "intent" of the movement component)
+var avoidance_dir: Vector2 = Vector2.ZERO ## Movement component for avoiding obstacles, enemies, etc.
+var avoidance_weight: float = 0.1
+var velocity: Vector2 = Vector2.ZERO ## Velocity [Vector2] of the enemy.
+var stats: EnemyStats
+var slowed: bool = false
+
+# Values inside the stat block.
+# var contact_damage: float
+# var attack_damage: float
+
+var player: Player
+
+signal damaged(damage: float)
+signal enemy_died(enemy: Enemy)
+signal health_depleted()
+
+#############################
+const HEALTH_BAR_SCALE = 0.05
+const DISPLACEMENT_FRICTION = 120.0
+const STUN_MODULATE_COLOR = "0000ff"
+
+
 
 var knockback_velocity: Vector2
 # var knockback_target: Vector2
 var knockback_friction: float = 400.0 # The rate at which knockback decays - should decay rapidly, like the enemy is quickly getting their footing back
 var slowed_speed: float = 0.0
 var slow_decay_rate: float = 5.0
+var avoidance_time: float
 
-# Booleans
-var is_dead: bool = false
-var has_health_bar: bool = false
-var is_shooting: bool = false
-var can_shoot: bool = true
+
 # var knocked_back: bool = false
+var displaced: bool = false
+var stunned: bool = false
+var shooting = false
+var dead = false
 
-var player
+# Signals
 
-# var enemy_types = ["basic", "elite", "boss", "ranged"]
-enum EnemyType { BASIC, ELITE, BOSS, RANGED }
-var enemy_type: EnemyType = EnemyType.BASIC
-
-var basic_enemy_spritesheet = preload("res://sprites/frames/basic_enemy.tres")
-var ranged_enemy_spritesheet = preload("res://sprites/frames/ranged_enemy.tres")
 
 var enemy_health_bar_background = preload("res://sprites/frames/enemy_health_bar_background.tres")
 var enemy_health_bar = preload("res://sprites/frames/enemy_health_bar_progress_texture.tres")
 
-const BASIC_ENEMY_STATS = {
-	"health": 2,
-	"speed": 50.0,
-	"damage": 1.0,
-	"xp_value": 2,
-	"scale": Vector2(0.5, 0.5)
-}
-
-const RANGED_ENEMY_STATS = {
-	"health": 25,
-	"speed": 50.0,
-	"damage": 12.0,
-	"range": 150.00,
-	"xp_value": 8,	
-	"scale": Vector2(0.75, 0.75),
-	"health_drop_chance": 0.1
-}
-
-const ELITE_ENEMY_STATS = {
-	"health": 40,
-	"speed": 75.0,
-	"damage": 2.5,
-	"xp_value": 15,
-	"scale": Vector2.ONE,
-	"health_drop_chance": 0.2
-}
-
-const BOSS_ENEMY_STATS = {
-	"health": 80,
-	"speed": 100.0,
-	"damage": 5.0,
-	"xp_value": 30,
-	"scale": Vector2(2, 2),
-	"health_drop_chance": 0.5
-}
-
-
-
-
 func _ready() -> void:
 	player = GameController.player
-	
-	$Spritesheet.play();
 
-
-
-func initialize() -> void:
+## Set up the enemy's stats based on the type from [EnemyStats.EnemyType]
+func initialize(statblock: EnemyStats) -> void:
 	# Set the stats based on the enemy type
+	stats = statblock.get_copy()
 
-	var enemy_count = GameController.total_enemies_spawned
+	# Retrieve the enemy's vitals from the statblock and set them all up properly.
+	name = stats.character_name
+	animation_player.sprite_frames = stats.spritesheet
+	scale = stats.enemy_scale
 
-	if enemy_count % 50 == 0:
-		enemy_type = EnemyType.BOSS
-	elif enemy_count % 20 == 0:
-		enemy_type = EnemyType.ELITE
-	elif enemy_count % 12 == 0:
-		enemy_type = EnemyType.RANGED
-	else:
-		enemy_type = EnemyType.BASIC
-
-	%Spritesheet.sprite_frames = basic_enemy_spritesheet
-
-	match enemy_type:
-		EnemyType.BASIC:
-			name = "Basic Enemy"
-			health = BASIC_ENEMY_STATS["health"]
-			speed = BASIC_ENEMY_STATS["speed"]
-			scale = BASIC_ENEMY_STATS["scale"]
-			damage = BASIC_ENEMY_STATS["damage"]
-			xp_value = BASIC_ENEMY_STATS["xp_value"]
-		EnemyType.RANGED:
-			name = "Ranged Enemy"
-			health = RANGED_ENEMY_STATS["health"]
-			speed = RANGED_ENEMY_STATS["speed"]
-			scale = RANGED_ENEMY_STATS["scale"]
-			damage = RANGED_ENEMY_STATS["damage"]
-			enemy_range = RANGED_ENEMY_STATS["range"]
-			health_drop_chance = RANGED_ENEMY_STATS["health_drop_chance"]
-			xp_value = RANGED_ENEMY_STATS["xp_value"]
-			%Spritesheet.sprite_frames = ranged_enemy_spritesheet
-		EnemyType.ELITE:
-			name = "Elite Enemy"
-			health = ELITE_ENEMY_STATS["health"]
-			speed = ELITE_ENEMY_STATS["speed"]
-			scale = ELITE_ENEMY_STATS["scale"]
-			damage = ELITE_ENEMY_STATS["damage"]
-			health_drop_chance = ELITE_ENEMY_STATS["health_drop_chance"]
-			xp_value = ELITE_ENEMY_STATS["xp_value"]
-		EnemyType.BOSS:
-			name = "Boss"
-			health = BOSS_ENEMY_STATS["health"]
-			speed = BOSS_ENEMY_STATS["speed"]
-			scale = BOSS_ENEMY_STATS["scale"]
-			damage = BOSS_ENEMY_STATS["damage"]
-			health_drop_chance = BOSS_ENEMY_STATS["health_drop_chance"]
-			xp_value = BOSS_ENEMY_STATS["xp_value"]
-			# Only bosses have health bars.
-			has_health_bar = true
-			%HealthBar.init_health(health)
-			%HealthBar.set_textures(enemy_health_bar_background, enemy_health_bar)
-			$HealthBar.visible = true
-
-	base_speed = speed
-	%Spritesheet.animation = "walk"
-	%Spritesheet.play()
+	# Initialize the state machine with the [AnimationNames.WALK] animation since all enemies start by pursuing the player.
+	state_machine.actor = self
+	state_machine.initialize(AnimationNames.WALK)
 
 
 func _physics_process(delta: float) -> void:
-
-	if knockback_velocity.length() > 0.1:
-		knockback_velocity = knockback_velocity.move_toward(Vector2.ZERO, knockback_friction * delta)
-		# print_debug("kb velocity: " + str(knockback_velocity))
-		velocity = knockback_velocity
-		#move_and_slide()
-
-		move_and_collide(velocity * delta)
-		#var collision = move_and_collide(velocity * delta)
-		#if collision:
-		#	var other = collision.get_collider()
-		#	if other.has_method("apply_knockback"):
-		#		other.apply_knockback(collision.get_normal(), 50)
-
-
-	elif not is_dead && enemy_type != EnemyType.RANGED:
-		var direction = global_position.direction_to(player.global_position)
-		velocity = direction * speed # Character body automatically applies delta
-
-		move()
-		# TODO - maybe revisit this later?
-		# Avoid collision with knocked back enemies
-		#for body in %AvoidanceArea.get_overlapping_bodies():
-		#	if body != self and body.has_method("apply_knockback") and body.knockback_velocity.length() > 0.1:
-		#		# Calculate a lateral push direciton perpendicular to the knockback dir
-		#		var direction_sign = 1 if randf() < 0.5 else -1
-		#		var push_dir = body.knockback_velocity.rotated(direction_sign * (PI / 2)).normalized()
-		#		velocity += push_dir * 50 
-	elif not is_dead && enemy_type == EnemyType.RANGED:
-		# Ranged movement
-		var direction = global_position.direction_to(player.global_position)
-
-		if not is_shooting:
-			if  global_position.distance_to(player.global_position) < enemy_range / 3:
-				# Move away from the player, they're too close
-				direction *= -1
-				velocity = direction * speed
-			elif not is_shooting and global_position.distance_to(player.global_position) >= enemy_range: # We should only move when we are not shooting and the player is not in our face
-				velocity = direction * speed
-		else: 
-			velocity = Vector2.ZERO
-
-
-		# Check if the player is within range. If so, shoot at them.
-		# Make sure the enemy will get to at least half range before shooting the player.
-		if global_position.distance_to(player.global_position) <= enemy_range and can_shoot  and global_position.distance_to(player.global_position) > enemy_range / 2:
-			# Shoot a projectile at the player.
-			is_shooting = true
-			can_shoot = false
-
-			# Flip the sprite to face the player when shooting.
-			if player.global_position.x < global_position.x:
-				$Spritesheet.flip_h = true
-			else:
-				$Spritesheet.flip_h = false
-
-			%Spritesheet.animation = "attack"
-			%Spritesheet.play()
-			# Will fire a projectile at the player at the end of the animation
-		else: move()
-		
-	# Finally, check if the enemy is slowed. If so, decrease the slow effect over time.
-	if speed < base_speed: speed = clampf(speed + slow_decay_rate * delta, 0, base_speed)
-
-
-
-#	elif not is_dead and knocked_back:
-#		# Move the enemy back based on the current velocity.
-#		velocity = -knockback_velocity * speed
-#		move_and_slide()
-#
-#		# TODO - fix knockback function. Still not quite right.
-#		if global_position.distance_to(knockback_target) < 1.0:
-#			knocked_back = false
-#			knockback_velocity = Vector2.ZERO
-#			knockback_target = Vector2.ZERO
+	# TODO - status effect functions. For now simply keep clamping speed if we are slowed.
+	if stats.get_stat(Stat.SPEED) < stats.base_speed: 
+		stats.set_stat(Stat.SPEED, clampf(stats.speed + slow_decay_rate * delta, 0, stats.base_speed))
 
 func move() -> void:
-	if is_shooting: return
+	if shooting or stunned: return
 
-	# Flip the sprite based on direction
-	if velocity.x < 0:
-		$Spritesheet.flip_h = true
-	elif velocity.x > 0:
-		$Spritesheet.flip_h = false
-	
-	if velocity == Vector2.ZERO: %Spritesheet.animation = "idle"
-	else: %Spritesheet.animation = "walk"
-	%Spritesheet.play()
+	global_position += velocity
 
-	move_and_slide()
-	
 # Slow the enemy by a percentage of their speed
 func apply_slow(slow: float) -> void:
 	# Only apply slow if the enemy is not already slowed
-	if speed == base_speed: speed *= (1.0 - slow)
+	var current_speed = stats.get_stat(Stat.SPEED)
+	if current_speed == stats.base_speed: stats.set_stat(Stat.SPEED, current_speed * (1.0 - slow))
 
+# func _is_displaced() -> void:
+# 	if displaced: %DisplacementTimer.start()
+# 	else: %DisplacementTimer.stop()
 
+## Apply a stun to the enemy and start a timer based on the duration. Modulate the enemy to indicate they are stunned.
+func apply_stun(duration: float) -> void:
+	stunned = true
+	modulate = STUN_MODULATE_COLOR
+	var stun_timer = get_tree().create_timer(duration)
+	stun_timer.connect("timeout", remove_stun)
+
+## Clear the stun and reset the modulation back to normal (white).
+func remove_stun() -> void: 
+	stunned = false
+	modulate = Color.WHITE
 
 func take_damage(dam: float) -> void:
-	health -= dam
-	GameController.total_damage_done += dam
-	
-	if has_health_bar: %HealthBar.health = health
+	stats.subtract_from_stat(Stat.HEALTH, dam)
+	emit_signal("damaged", dam)
 
-	if health <= 0 && not is_dead:
+	# Set the emit direction of the particles to tbe the direct opposite of incoming attack angle (i.e., from the player) with * -1
+	var emit_dir = global_position.direction_to(player.global_position) * -1
+	%GPUParticles2D.process_material.set_direction(Vector3(emit_dir.x, emit_dir.y, 0))
+	%GPUParticles2D.restart()
+	%GPUParticles2D.emitting = true
+
+	if stats.get_stat(Stat.HEALTH) <= 0:
+		dead = true
+		health_depleted.emit()
+		enemy_died.emit(self)
 		# Spawn an explosion of some kind? use call_deferred if you do
 		# Spawn an experience orb
-		GameController.spawn_experience_orb(global_position, xp_value)
-		if randf() < health_drop_chance: GameController.spawn_health_pickup(global_position)
-
-		# %CollisionShape2D.disabled = true
-		%CollisionShape2D.set_deferred("disabled", true)
-		# print_debug("We died at " + str(global_position.x) + "," + str(global_position.y))
-		$Spritesheet.animation = "death"
-		$Spritesheet.play()
-		%HealthBar.queue_free()
-		$DeathSound.play()
-		is_dead = true
+		GameController.spawn_experience_orb(global_position, stats.xp_value)
+		if randf() < stats.health_drop_chance: GameController.spawn_health_pickup(global_position)
 
 func apply_knockback(source: Vector2, strength: float) -> void:
 	# Calculate the direction from the knockback source to this enemy
 	var direction: Vector2 = (global_position - source).normalized()
-	knockback_velocity = direction * strength
+	# knockback_velocity = direction * strength
+	# apply_impulse(direction * strength)
 
-func _on_spritesheet_animation_finished() -> void:
-	if is_dead:
-		# GameController.stop_tracking_enemy(self)
-		GameController.total_enemies_killed += 1
-		# print_debug("Enemy died")
-		queue_free()
-	elif is_shooting:
-		is_shooting = false
-		%Spritesheet.animation = "walk"
-		%Spritesheet.play()
-		# Shoot a projectile at the player.
-		var projectile = preload("res://prefabs/bullets/enemy_bullet.tscn").instantiate()
-		projectile.global_position = global_position
-		projectile.initialize(player.global_position, damage)
-		get_parent().add_child(projectile)
-		%ShootSound.play()
-		%ShootTimer.start()
-		# print("Enemy shot at player")
+###################
+## Updates the enemy's move direction to the player's current position. Use sparringly.
+func update_move_dir() -> void: move_dir = global_position.direction_to(player.global_position)
 
-func _on_shoot_timer_timeout() -> void:
-	can_shoot = true
+## Helps enemies avoid each other by moving them slightly away from each other and interpolating an avoidance_dir with the move_dir[br]
+## TODO: Multi-enemy avoidance?
+func _on_enemy_avoidance_area_area_entered(other_enemy:Area2D) -> void:
+	if avoidance_dir == Vector2.ZERO: # Only update the avoidance if not currently avoiding another enemy.
+		avoidance_dir = global_position.direction_to(other_enemy.global_position) * -1 # Invert the direction so it's moving away from the enemy.
+		avoidance_dir *= AVOIDANCE_MAGNITUDE
+		avoidance_weight = 0.1 # We only want the enemies to avoid each other slightly.
+		# print_debug(name + " is avoiding " + other_enemy.name + " with an avoid_dir of " + str(avoidance_dir))
+
+
+## When touching the player transition to the IDLE state so the enemy just stands close to them and deals damage.
+func _on_body_entered(body:Node2D) -> void:
+	if body == GameController.player: 
+		state_machine.change_state(AnimationNames.IDLE)
+
+		## If we touch the player we should add a small avoidance direction away from the player so the player doesn't get FULLY mobbed			
+		# # Move away from the player (-1) times the magnitude and change the avoidance weight so they don't fully mob but also don't move too far away.
+		# avoidance_dir = global_position.direction_to(body.global_position) * -1
+		# avoidance_dir *= AVOIDANCE_MAGNITUDE
+		# avoidance_weight = 0.5
+
+
+## Once we stop touching the player we can transition to the walk state.
+func _on_body_exited(body:Node2D) -> void:
+	if body == GameController.player:
+		state_machine.change_state(AnimationNames.WALK)
+ 		#avoidance_dir = Vector2.ZERO # Reset the avoidance_dir if we stop touching the player

@@ -33,4 +33,5 @@ shape = SubResource("CircleShape2D_sl1hw")
 unique_name_in_owner = true
 stream = SubResource("AudioStreamRandomizer_0vnhp")
 
-[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="area_exited" from="." to="." method="_on_area_exited"]

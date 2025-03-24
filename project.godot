@@ -21,6 +21,7 @@ Signal_Debugger="*res://addons/SignalVisualizer/Debugger/SignalDebugger.gd"
 GameController="*res://scripts/game_controller.gd"
 Questify="*res://addons/questify/quest_manager.gd"
 DataManager="*res://scripts/data/data_manager.tscn"
+EnemyManager="*res://scripts/data/enemies/enemy_manager.gd"
 
 [display]
 
@@ -31,7 +32,7 @@ window/stretch/aspect="expand"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/SignalVisualizer/plugin.cfg", "res://addons/questify/plugin.cfg")
+enabled=PackedStringArray("res://addons/questify/plugin.cfg")
 
 [global_group]
 

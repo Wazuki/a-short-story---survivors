@@ -1,6 +1,6 @@
 extends Control
 
-var characters: Array[Character]
+var characters: Array[PlayerCharacterStats]
 # var character_dict_by_name = {}
 var panels_expanded = false
 
@@ -43,7 +43,7 @@ func init() -> void:
 		for x in 8 - characters.size():
 			# print_debug("Deploying bonus character " + str(x))
 			var char_panel = preload("res://prefabs/char_select_panel.tscn").instantiate()
-			var c: Character = Character.new()
+			var c: PlayerCharacterStats = PlayerCharacterStats.new()
 			c.set_stats("COMING SOON", 9999, 9999, 9999, Weapon.Type.SLAM)
 			c.icon = preload("res://sprites/frames/valkyrie_icon.tres")
 			
@@ -90,9 +90,9 @@ func display_character_info(panel: Panel) -> void:
 	%CharacterNameText.text = panel.character.character_name
 	# Concat a string of the character's description and then their stats (Health, Armor, Speed)
 	%CharacterInfoText.text = panel.character.description
-	%CharacterInfoText.text += "\n\nHealth: " + str(panel.character.get_stat_value(Character.Stat.HEALTH))
-	%CharacterInfoText.text += "\n\nArmor: " + str(panel.character.get_stat_value(Character.Stat.ARMOR))
-	%CharacterInfoText.text += "\n\nSpeed: " + str(panel.character.get_stat_value(Character.Stat.SPEED))
+	%CharacterInfoText.text += "\n\nHealth: " + str(panel.character.get_stat_value(PlayerCharacterStats.Stat.HEALTH))
+	%CharacterInfoText.text += "\n\nArmor: " + str(panel.character.get_stat_value(PlayerCharacterStats.Stat.ARMOR))
+	%CharacterInfoText.text += "\n\nSpeed: " + str(panel.character.get_stat_value(PlayerCharacterStats.Stat.SPEED))
 
 	# Assign the character's starting weapon information to the left panel.
 	var starting_weapon = GameController.get_weapon_by_type(panel.character.starting_weapon)

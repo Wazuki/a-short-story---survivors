@@ -47,6 +47,7 @@ func _ready() -> void:
 	super._ready()
 	name = "Chain Lightning"
 	weapon_type = Weapon.Type.CHAIN_LIGHTNING
+	target_type = TargetType.RANDOM
 	description = "A chaining electrical blast."
 	# reset()
 	lightning_bullet = preload("res://prefabs/bullets/chain_lightning_bullet.tscn")
@@ -67,18 +68,16 @@ func reset() -> void:
 # 3. Once the tween ends (the enemy is hit), find the next closest enemy and repeat.
 
 func _physics_process(_delta: float) -> void:
-	if has_overlapping_bodies():
+	if ready_to_fire and not enemies_in_range.is_empty():
 		fire_lightning()
 
 func fire_lightning() -> void:
-	# Check if an enemy is in range. If so, fire the lightning.
-	if ready_to_fire:
-		begin_attack_sequence.emit() # Tell the listeners (Cooldown Panel et al) that we have started attacking.
-		ready_to_fire = false
-		%LightningSounds.play()
-		# Spawn a new lightning bullet, set the position to ours, then jump to a random enemy to start the sequence.
-		var target = get_overlapping_bodies().pick_random()
-		spawn_new_lightning_bolt(target)
+	begin_attack_sequence.emit() # Tell the listeners (Cooldown Panel et al) that we have started attacking.
+	ready_to_fire = false
+	%LightningSounds.play()
+	# Spawn a new lightning bullet, set the position to ours, then jump to a random enemy to start the sequence.
+	var target = enemies_in_range.values().pick_random()
+	spawn_new_lightning_bolt(target)
 
 # TODO - refactor this to be more concise. This lightning spawning logic is rough.
 func spawn_new_lightning_bolt(target: Node2D) -> void:
@@ -181,7 +180,3 @@ func get_level_up_text() -> String:
 			6: return "Final chain deals full damage.\n\nMax Chains: 13"
 			7: return "Signature: Every fourth jump creates a damage field if possible.\n\nIncreased crit chance.\n\nMax Chains: 16"
 	return "Error! get_level_text() of Chain Lightning dropped out of switch!"
-
-
-func _on_body_entered(_body: Node2D) -> void:
-	fire_lightning()

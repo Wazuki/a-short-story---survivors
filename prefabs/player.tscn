@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://bivcmhjsdsyy2"]
+[gd_scene load_steps=26 format=3 uid="uid://bivcmhjsdsyy2"]
 
 [ext_resource type="Script" uid="uid://bnx6epykj7o3t" path="res://scripts/player.gd" id="1_py671"]
 [ext_resource type="SpriteFrames" uid="uid://bjaasfha8sw2h" path="res://sprites/frames/tank_sprite_frames.tres" id="2_a2ns6"]
@@ -14,6 +14,11 @@
 [ext_resource type="PackedScene" uid="uid://bdhnec2pb7ddj" path="res://prefabs/slam_weapon_controller.tscn" id="6_hllc1"]
 [ext_resource type="PackedScene" uid="uid://dl5cw6c7jx04m" path="res://prefabs/chain_lightning.tscn" id="8_llb5v"]
 [ext_resource type="PackedScene" uid="uid://bxbdgbhy2c1jt" path="res://prefabs/arrow_controller.tscn" id="8_xibyf"]
+[ext_resource type="Material" uid="uid://xckcfyu6x2u" path="res://shaders/flashing_color_material.tres" id="9_f2e50"]
+[ext_resource type="Script" uid="uid://cu5u44bi050m7" path="res://scripts/helpers/state_machine.gd" id="15_lulei"]
+[ext_resource type="Script" uid="uid://bq3nw52b2lr6f" path="res://scripts/helpers/player_idle.gd" id="16_edtk3"]
+[ext_resource type="Script" uid="uid://busgd24q0krbr" path="res://scripts/helpers/player_walk.gd" id="17_edtk3"]
+[ext_resource type="Script" uid="uid://j4uuxdv6hgw8" path="res://scripts/helpers/player_death.gd" id="18_q2wkl"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_px364"]
 radius = 150.0
@@ -34,12 +39,13 @@ region = Rect2(55, 118, 34, 5)
 [sub_resource type="CircleShape2D" id="CircleShape2D_lihhf"]
 radius = 40.0
 
-[node name="Player" type="CharacterBody2D"]
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("state_machine")]
 z_index = 100
 collision_layer = 5
 motion_mode = 1
 platform_on_leave = 2
 script = ExtResource("1_py671")
+state_machine = NodePath("StateMachine")
 
 [node name="Weapons" type="Node2D" parent="."]
 
@@ -73,8 +79,9 @@ shape = SubResource("RectangleShape2D_lihhf")
 [node name="Spritesheet" type="AnimatedSprite2D" parent="."]
 unique_name_in_owner = true
 texture_filter = 1
+material = ExtResource("9_f2e50")
 sprite_frames = ExtResource("2_a2ns6")
-animation = &"idle"
+animation = &"death"
 autoplay = "idle"
 
 [node name="HealthBar" parent="." instance=ExtResource("3_ydbw3")]
@@ -132,10 +139,9 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -34.0
-offset_top = -25.0
-offset_right = 34.0
-offset_bottom = -11.0
+offset_left = -100.0
+offset_top = -50.0
+offset_right = 100.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
@@ -143,6 +149,9 @@ size_flags_vertical = 4
 theme_override_font_sizes/normal_font_size = 12
 bbcode_enabled = true
 text = "[p align=center]Level up!"
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Audio" type="Node" parent="."]
 
@@ -160,6 +169,24 @@ unique_name_in_owner = true
 stream = ExtResource("5_g5n55")
 volume_db = 10.0
 
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("actor")]
+script = ExtResource("15_lulei")
+actor = NodePath("..")
+metadata/_custom_type_script = "uid://cu5u44bi050m7"
+
+[node name="PlayerIdle" type="Node" parent="StateMachine"]
+script = ExtResource("16_edtk3")
+metadata/_custom_type_script = "uid://bq3nw52b2lr6f"
+
+[node name="PlayerWalk" type="Node" parent="StateMachine"]
+script = ExtResource("17_edtk3")
+metadata/_custom_type_script = "uid://busgd24q0krbr"
+
+[node name="PlayerDeath" type="Node" parent="StateMachine"]
+script = ExtResource("18_q2wkl")
+metadata/_custom_type_script = "uid://j4uuxdv6hgw8"
+
 [connection signal="animation_finished" from="Spritesheet" to="." method="_on_spritesheet_animation_finished"]
 [connection signal="area_entered" from="PlayerCollider" to="." method="_on_player_collider_area_entered"]
+[connection signal="area_exited" from="PlayerCollider" to="." method="_on_player_collider_area_exited"]
 [connection signal="area_entered" from="PickupRadius" to="." method="_on_pickup_radius_area_entered"]

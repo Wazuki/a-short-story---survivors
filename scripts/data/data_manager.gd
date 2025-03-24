@@ -1,12 +1,14 @@
 extends Node
 
 var UNLOCKABLE_CHARACTER_DATA: UnlockableCharacters = load("res://scripts/data/unlockable_characters.tres")
-var characters: Array[Character]
+
+var characters: Array[PlayerCharacterStats]
 const QUEST_FOLDER = "res://quests/"
 
 var data = {}
 
 signal data_changed(key: String, value: Variant)
+signal data_reset
 signal updated_quests
 
 func _init():
@@ -158,6 +160,7 @@ func save_data_to_disk() -> void:
 func reset_saved_data() -> void:
 	# First, clear the data and the quests.
 	data.clear()
+	data_reset.emit()
 	Questify.clear()
 	# Reinstantiate all the available quests and start them.
 	instantiate_quests()

@@ -23,11 +23,14 @@ var overhaul_enabled: bool = false
 var expanding: bool = false
 var max_scale = Vector2(3,3)
 
+var inner_ring_enemies = {}
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	super._ready()
 	name = "Spinning Waldos"
 	weapon_type = Weapon.Type.WALDOS
+	target_type = TargetType.NONE
 	description = "Spinning waldos form an area of constant damage."
 	# weapon = preload("res://prefabs/weapon.tscn").instantiate()
 	# add_child(weapon)
@@ -46,6 +49,14 @@ func reset() -> void:
 	# make sure we hide the waldos since they're special when they reset.
 	%InnerRing.visible = false
 	visible = false
+
+func _process(delta: float) -> void:
+	super._process(delta)
+	# Prune the inner ring dict every n frames to remove dead references. TODO - maybe this should be its own derived weapon for ease of use? hmmm
+	if GameController.global_frame_count % ENEMY_CLEANUP_FRAME_OFFSET == 0 and not inner_ring_enemies.is_empty(): 
+		var cleaned_array = inner_ring_enemies.values().filter(is_instance_valid)
+		inner_ring_enemies.clear()
+		for e in cleaned_array: inner_ring_enemies.set(e.get_instance_id(), e)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta: float) -> void:
@@ -67,23 +78,30 @@ func _physics_process(delta: float) -> void:
 
 	%InnerRing.scale = Vector2(0.5, 0.5) # The inner ring should always be a fixed starting size.
 
-	if ready_to_fire:
-		var colliding_bodies = get_overlapping_bodies()
-		if colliding_bodies.size() > 0:
-			deal_damage(colliding_bodies)
-			fire_weapon()
+	# Deal damage to every
+	if ready_to_fire and not enemies_in_range.is_empty():
+		deal_damage(enemies_in_range.values())
+		fire_weapon()
 		# Check to see if the inner ring is enabled. If so, repeat the process.
-		if inner_ring_enabled:
-			colliding_bodies = %InnerRing.get_overlapping_bodies()
-			if colliding_bodies.size() > 0:
-				deal_damage(colliding_bodies)
-				# print_debug("Inner ring dealt damage")
-				# Probably unnessary but a safety check for weird corner cases
-				fire_weapon() # This just resets the timer/bool so firing twice doesn't have any real effect besides making sure we are firing every time we DO deal damage
-		
+		if inner_ring_enabled and not inner_ring_enemies.is_empty():
+			deal_damage(inner_ring_enemies.values()) # Pass the entire array of values (our actual enemies) into the adamage function.
+		# print_debug("Inner ring dealt damage")
+		# Probably unnessary but a safety check for weird corner cases
+		#fire_weapon()
 
-func deal_damage(colliding_bodies: Array[Node2D]) -> void:
-	for e in colliding_bodies:
+## Adds the enemy to the inner ring dict while within range.
+func _on_inner_ring_entered(area: Area2D) -> void:
+	if area is Enemy and inner_ring_enabled: inner_ring_enemies.set(area.get_instance_id(), area)
+
+## Removes the enemy from the inner ring dict when they leave the range.
+func _on_inner_ring_exited(area: Area2D) -> void:
+	if area is Enemy and inner_ring_enabled:
+		if inner_ring_enemies.has(area):
+			inner_ring_enemies.erase(area)
+
+## Deal damage to each enemy in range.
+func deal_damage(enemies: Array) -> void:
+	for e in enemies:
 		e.take_damage(damage)
 		if slow_enabled: e.apply_slow(SLOW_VALUE)
 

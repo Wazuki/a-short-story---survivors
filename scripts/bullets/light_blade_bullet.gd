@@ -33,20 +33,35 @@ var enemies_damaged_this_slash = []
 #	else:
 #		queue_free()
 
-
-func _on_body_entered(body:Node2D) -> void:
+func _on_area_entered(area:Area2D) -> void:
+	# print_debug("Enemy spotted!")
 	 # If we're using masks property, it should ONLY be an enemy!
-	if body != null && not body.is_dead && %Spritesheet.is_playing() && enemies_damaged_this_slash.find(body) == -1:
-		body.take_damage(damage)
+	if area != null && %Spritesheet.is_playing() && enemies_damaged_this_slash.find(area) == -1:
+		area.take_damage(damage)
 
 		# If we're on the last slash, perform a knockback.
 		if cause_knockback:
-			body.apply_knockback(GameController.player.global_position, knockback_strength)
+			area.apply_knockback(GameController.player.global_position, knockback_strength)
 			# body.knocked_back = true
 			# body.knockback_velocity = body.global_position.direction_to(GameController.player.global_position)
 			# body.knockback_target = body.knockback_strength * 5
 
-		enemies_damaged_this_slash.append(body)
+		enemies_damaged_this_slash.append(area)
+
+
+# func _on_body_entered(body:Node2D) -> void:
+# 	 # If we're using masks property, it should ONLY be an enemy!
+# 	if body != null && not body.is_dead && %Spritesheet.is_playing() && enemies_damaged_this_slash.find(body) == -1:
+# 		body.take_damage(damage)
+
+# 		# If we're on the last slash, perform a knockback.
+# 		if cause_knockback:
+# 			body.apply_knockback(GameController.player.global_position, knockback_strength)
+# 			# body.knocked_back = true
+# 			# body.knockback_velocity = body.global_position.direction_to(GameController.player.global_position)
+# 			# body.knockback_target = body.knockback_strength * 5
+
+# 		enemies_damaged_this_slash.append(body)
 
 func reset_damaged_enemies() -> void:
 	enemies_damaged_this_slash.clear()
@@ -64,4 +79,3 @@ func reset_animation() -> void:
 	%Spritesheet.animation = slash_animations[0]
 	# %Spritesheet.stop()
 	# print_debug("stopping animation")
-	

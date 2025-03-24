@@ -53,19 +53,24 @@ func jump_first_target(target: Node2D) -> void:
 	animate_lightning(global_position, target, jump_speed)
 
 func jump_to_next_target() -> void:
-	if %JumpRange.has_overlapping_bodies() and current_chain < max_chains:
+	if %JumpRange.has_overlapping_areas() and current_chain < max_chains:
 		current_chain += 1
 		
 		# Get a new target randomly based on the overlapping bodies in the jump collider, but make sure we don't hit the same target(s)
 		var target = null
-		var bodies_in_range: Array = %JumpRange.get_overlapping_bodies()
+		var areas_in_range: Array = %JumpRange.get_overlapping_areas()
 		# Check if we've hit any targets yet - they might be dead. If we haven't, just pick a random target. Otherwise, iterate.
-		if hit_targets.is_empty(): target = bodies_in_range.pick_random()
+		if hit_targets.is_empty():
+			# Before picking a random target we should make sure the target that we pick is valid.
+			while target == null and not areas_in_range.is_empty():
+				target = areas_in_range.pick_random()
+				if is_instance_valid(target): break # If our target is valid then we found one, jump out of the loop.
+				else: areas_in_range.erase(target) # Remove the dead reference from our collection and try again.
 		else:
-			bodies_in_range.shuffle()
+			areas_in_range.shuffle()
 
 			# Cycle through the (now randomized) set of bodies we found until we find one we haevn't hit yet and make it a new target.
-			for b in bodies_in_range:
+			for b in areas_in_range:
 				if hit_targets.has(b):
 					continue
 				else:
@@ -89,7 +94,7 @@ func jump_to_next_target() -> void:
 		# Make sure this bullet is: able to split and that this is an attack we should split on.
 		if can_split and GameController.chain_lightning.is_splitting_this_attack:
 			# print_debug("Attempting to arc!")
-			GameController.chain_lightning.spawn_chained_lightning_bolt(bodies_in_range.pick_random(), current_chain - 1, global_position) # Subtract 1 from the chain to account for the first jump
+			GameController.chain_lightning.spawn_chained_lightning_bolt(areas_in_range.pick_random(), current_chain - 1, global_position) # Subtract 1 from the chain to account for the first jump
 			can_split = false
 			# print_debug("Arced!")
 
@@ -103,25 +108,26 @@ func jump_to_next_target() -> void:
 	else:
 		end_lightning_sequence()
 
-# Through masking, we should only hit enemies with our abilities.
+## Deal damage to the target if it has not already been freed. Then t ry to jump to the next target.
 func damage_target() -> void:
 	var damage_mod
-	var enemy = current_jump_target as Enemy
+	if is_instance_valid(current_jump_target):
+		var enemy = current_jump_target as Enemy
 
-	# If we've reached the right level and we are on the final chain, it should deal full damage instead.
-	if (GameController.chain_lightning.is_final_chain_full_damage and current_chain == max_chains) or current_chain == 1: # The first strike should also deal full damage.
-		damage_mod = 1.0
-	else:
-		# Retrieve the proper modifier (defaulting to 1.0 if the key wasn't found) and apply damage to the target with the modifier
-		damage_mod = GameController.chain_lightning.get_chain_modifier(current_chain)
+		# If we've reached the right level and we are on the final chain, it should deal full damage instead.
+		if (GameController.chain_lightning.is_final_chain_full_damage and current_chain == max_chains) or current_chain == 1: # The first strike should also deal full damage.
+			damage_mod = 1.0
+		else:
+			# Retrieve the proper modifier (defaulting to 1.0 if the key wasn't found) and apply damage to the target with the modifier
+			damage_mod = GameController.chain_lightning.get_chain_modifier(current_chain)
 
-	var damage_result = GameController.chain_lightning.damage_calc()
+		var damage_result = GameController.chain_lightning.damage_calc()
 
-	# Before we deal damage we should make sure the target isn't dead!
-	if not enemy.is_dead: enemy.take_damage(damage_result * damage_mod)
+		# Before we deal damage we should make sure the target isn't dead!
+		if not enemy.dead: enemy.take_damage(damage_result * damage_mod)
 
-	if GameController.chain_lightning.is_stun_enabled(): enemy.apply_stun(GameController.chain_lightning.STUN_DURATION)
-	# After dealing damage, try to jump to the next target.
+		if GameController.chain_lightning.is_stun_enabled(): enemy.apply_stun(GameController.chain_lightning.STUN_DURATION)
+		# After dealing damage, try to jump to the next target.
 	jump_to_next_target()
 
 func end_lightning_sequence() -> void:

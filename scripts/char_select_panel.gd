@@ -5,14 +5,14 @@ class_name CharacterSelectPanel extends Panel
 @export var locked_char_shader_material: ShaderMaterial
 @export var locked_text_shader_material: ShaderMaterial
 
-var character: Character
+var character: PlayerCharacterStats
 var clickable = false
 var selected = false
 signal activate_panel(panel)
 
 ## Initializes the character selection panel for a [c: Character][br]
 ## Sets the icon and text and connects the signals for locking and unlocking the character.
-func initialize(c: Character) -> void:
+func initialize(c: PlayerCharacterStats) -> void:
 	character = c
 	icon.texture = c.icon
 	name_text.text = c.character_name

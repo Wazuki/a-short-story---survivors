@@ -1,15 +1,16 @@
 extends Node
 
-## Default values for the game.
-## Tracks the z-index for all sprite layers
-# var sprite_constants: SpriteConstants = preload("res://scripts/data/sprite_constants.tres")
+#############################
+####### REFACTOR AREA #######
+#############################
+var global_frame_count = 0 ## Tracks the total frames elapsed for anything that is calling something every [i]n[/i] frames.
 
 # TODO - clean this up some day will ya? It's gettin crowded!
 @onready var player = get_node("/root/GameScene/Player")
 @onready var player_health_bar = get_node("/root/GameScene/UI/PlayerHealthBar")
 @onready var level_up_UI = get_node("/root/GameScene/UI/LevelUpUI")
 @onready var character_select_UI = get_node("/root/GameScene/UI/CharacterSelectUI")
-@onready var tilemap: TileMapLayer = get_node("/root/GameScene/Level")
+# @onready var tilemap: TileMapLayer = get_node("/root/GameScene/Level")
 
 @onready var energy_sword = get_node ("/root/GameScene/Player/Weapons/EnergySword")
 @onready var spreadfire = get_node("/root/GameScene/Player/Weapons/Spreadfire")
@@ -19,9 +20,9 @@ extends Node
 @onready var waldos = get_node("/root/GameScene/Player/Weapons/Waldos")
 @onready var chain_lightning = get_node("/root/GameScene/Player/Weapons/ChainLightning") as ChainLightning
 
-@onready var mob_spawn_point: PathFollow2D = get_node("/root/GameScene/Player/MobSpawnPath/MobSpawnPoint")
-@onready var enemy_spawn_timer: Timer = get_node("/root/GameScene/EnemySpawnTimer")
-@onready var enemy_difficulty_timer: Timer = get_node("/root/GameScene/EnemySpawnTimer/EnemyDifficultyTimer")
+# @onready var mob_spawn_point: PathFollow2D = get_node("/root/GameScene/Player/MobSpawnPath/MobSpawnPoint")
+#@onready var enemy_spawn_timer: Timer = get_node("/root/GameScene/EnemySpawnTimer")
+#@onready var enemy_difficulty_timer: Timer = get_node("/root/GameScene/EnemySpawnTimer/EnemyDifficultyTimer")
 
 @onready var game_over_UI: PanelContainer = get_node("/root/GameScene/UI/GameOverUI")
 @onready var pause_button: Button = get_node("/root/GameScene/UI/PauseButton")
@@ -29,16 +30,11 @@ extends Node
 @onready var cooldown_container = get_node("/root/GameScene/UI/CooldownContainer")
 
 
-const BASE_DIFFICULTY_INCREASE_TIME = 60.0
-const BASE_ENEMY_SPAWN_TIME = 0.5
-var enemy_spawn_time = BASE_ENEMY_SPAWN_TIME
-
 var game_time_elapsed: float = 0.0
 
 var total_enemies_spawned: int = 0
-var game_started: bool = false
+var game_active: bool = false
 var weapons = []
-var difficulty = 0
 # var enemies: Array[Node2D]
 # var spawned_xp: Array[Node2D]
 
@@ -47,7 +43,8 @@ var difficulty = 0
 # var total_xp_gained: int = 0
 # var total_damage_done: float = 0.0
 
-
+signal game_started
+signal game_ended
 
 var start_button_pressed = true
 
@@ -61,13 +58,11 @@ func _ready() -> void:
 	# TODO - this is probably unnecessary.
 	get_node("/root").call_deferred("remove_child",self)
 	get_node("/root/GameScene").call_deferred("add_child", self)
-	enemy_spawn_timer.connect("timeout", _on_enemy_spawn_timer_timeout)
-	enemy_difficulty_timer.connect("timeout", _on_enemy_difficulty_timer_timeout)
 	
 	# Player connected signals.
 	player.connect("gained_xp", _on_player_gain_xp) # Called when the player gains xp.
 	player.connect("gained_level", _on_player_gain_level) # Called when the player gains a level.
-	player.connect("_health_depleted", game_over) # When the player dies
+	#player.connect("_health_depleted", game_over) # When the player dies
 	player.connect("_health_changed", update_player_info_text) # When the player's health changes (but not zero)
 	
 	
@@ -96,7 +91,8 @@ func _ready() -> void:
 	pause_game()
 
 func _process(delta: float) -> void:
-	if game_started: 
+	global_frame_count += 1
+	if game_active: 
 		game_time_elapsed += delta
 
 		# Update game time on the UI.
@@ -113,58 +109,12 @@ func update_time_passed_label() -> void:
 	if minutes >= 5: # 5 minutes is the max time for a game
 		game_over()
 
-func spawn_enemy() -> void:
 
-	total_enemies_spawned += 1
-
-	# Spawn a basic enemy. Every 20 enemies, spawn an elite. Every 50, spawn a boss.
-
-	# Randomly find a tile on the tilemap to spawn enemy (so we don't spawn outside the map)
-	mob_spawn_point.progress_ratio = randf()
-	while(is_point_on_tilemap(tilemap.to_local(mob_spawn_point.global_position))): # We want the global pos converted to a local pos relative ot the tilemap
-		mob_spawn_point.progress_ratio = randf()
-
-
-	var new_enemy = preload("res://prefabs/enemy_kinematic.tscn").instantiate()
-	new_enemy.global_position = mob_spawn_point.global_position 
-	add_child(new_enemy)
-	#new_enemy.initialize() # Moved to the enemy's _ready()
-	
-	# Connect any important signals to the GameController from the new enemy.
-	new_enemy.damaged.connect(_on_enemy_damaged)
-	new_enemy.health_depleted.connect(_on_enemy_health_depleted)
-
-	# Initialize the enemy as an elite or boss if the total enemies spawned is a multiple of 20 or 50
-	#if total_enemies_spawned % 50 == 0:
-	#	new_enemy.initialize(new_enemy.EnemyType.BOSS)
-	#elif total_enemies_spawned % 20 == 0:
-	#	new_enemy.initialize(new_enemy.EnemyType.ELITE)
-	#else:
-	#	new_enemy.initialize(new_enemy.EnemyType.BASIC)
-
-	# enemies.append(new_enemy)
-
-func _on_enemy_spawn_timer_timeout() -> void:
-	spawn_enemy()
-
-	# Spawn extra enemies based on the difficulty
-	var extra_enemy_count = difficulty
-	while extra_enemy_count > 0:
-		spawn_enemy()
-		extra_enemy_count -= 1
-
-	enemy_spawn_timer.wait_time = enemy_spawn_time
 
 # Signals for tracking global player-saved variables.
-func _on_enemy_damaged(amount) -> void: DataManager.add_value("damage", amount)
-func _on_enemy_health_depleted() -> void: DataManager.add_value("kills", 1)
 func _on_player_gain_xp(amount) -> void: DataManager.add_value("experience", amount)
 func _on_player_gain_level() -> void: DataManager.add_value("levels", 1)
 
-func _on_enemy_difficulty_timer_timeout() -> void:
-	enemy_spawn_time = clamp(enemy_spawn_time - 0.1, 0.1, BASE_ENEMY_SPAWN_TIME)
-	difficulty += 1
-	# print_debug("Difficulty: " + str(difficulty))
 
 func update_player_info_text(health: float, max_health: float) -> void:
 	player_health_bar.health = health
@@ -172,14 +122,6 @@ func update_player_info_text(health: float, max_health: float) -> void:
 
 	#player_health_bar.max_value = max_health
 	#player_health_bar.value = health
-
-func is_point_on_tilemap(pos: Vector2) -> bool:
-	
-	var map_pos = tilemap.local_to_map(pos)
-	var cell = tilemap.get_cell_tile_data(map_pos)
-	# print_debug("Cell: " + str(cell))
-	return cell == null # If the cell is null we're off the map - return true, go back to the loop, and try again.
-	# return false # We want this to return false in the end because the loop will run until we find a cell that is ON the map. True continues the loop!
 
 func spawn_experience_orb(pos: Vector2, value: int) -> void:
 	var xp_orb = preload("res://prefabs/experience_orb.tscn").instantiate()
@@ -203,20 +145,14 @@ func start_game() -> void:
 
 	for w in weapons:
 		w.reset()
-	
-	# Reset the enemy spawn timer and start it.
-	enemy_spawn_timer.wait_time = BASE_ENEMY_SPAWN_TIME
-	enemy_spawn_timer.start()
-	# Reset the enemy difficulty timer as well.
-	enemy_difficulty_timer.wait_time = BASE_DIFFICULTY_INCREASE_TIME
-	enemy_difficulty_timer.start()
 
 	game_time_elapsed = 0.0
 	# display_level_up()
 	# Display the character select screen
 	character_select_UI.visible = true
+	game_started.emit()
 
-func select_character(character: Character) -> void:
+func select_character(character: PlayerCharacterStats) -> void:
 	# Hide the select character UI and start the game after setting the player's stats
 	character_select_UI.visible = false
 	player.initialize(character)
@@ -241,7 +177,7 @@ func select_character(character: Character) -> void:
 
 
 	unpause_game()
-	game_started = true
+	game_active = true
 	# print_debug("Selected " + character)
 
 # Create a new cooldown panel and instantiate it, then connect the weapon firing signal to resetting the cooldown panel's timer
@@ -301,20 +237,16 @@ func apply_shockwave_displacement(origin: Vector2, strength: float) -> void:
 	
 func game_over() -> void:
 	#Pause the game, destroy all enemies, then show the game over UI 
+	game_ended.emit()
 	save_game()
 	pause_game()
-	game_started = false
+	game_active = false
 	game_over_UI.visible = true
 
 func restart_game() -> void:
 	# Hide the game over UI and return the player to the main menu.
 	# print_debug("restart")
 	game_over_UI.visible = false	
-	difficulty = 0
-
-	# Destroy all enemies
-	for e in get_tree().get_nodes_in_group("Enemies"):
-		e.queue_free()
 
 	# Don't forget to destroy any pickups (health/XP)
 	for p in get_tree().get_nodes_in_group("Pickups"):
@@ -339,33 +271,6 @@ func save_game() -> void:
 # Load the player's data from a file
 func load_game() -> void:
 	DataManager.load_data_from_disk()
-	# var save_data = ConfigFile.new()
-	# var error = save_data.load("user://save_game.cfg")
-	# if error != OK: return
-
-	# # Load the player's preferences
-	# touch_input_enabled = save_data.get_value("Settings", "touch_input_enabled", false)
-	# $"/root/GameScene/UI/MainMenu".set_touch_input_button_state(touch_input_enabled)
-	# AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), linear_to_db(save_data.get_value("Settings", "sound_volume", 0.5)))
-	# AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Music"), linear_to_db(save_data.get_value("Settings", "music_volume", 0.5)))
-
-	# # Load the player's tracked variables from file and assign it to the tracked variable var
-	# tracked_variables.set_value(TrackedVariables.Type.KILLS, save_data.get_value("SaveData","enemies killed", 0))
-	# tracked_variables.set_value(TrackedVariables.Type.XP, save_data.get_value("SaveData","xp gained", 0))
-	# tracked_variables.set_value(TrackedVariables.Type.DAMAGE, save_data.get_value("SaveData","damage done", 0))
-	# tracked_variables.set_value(TrackedVariables.Type.LEVELS, save_data.get_value("SaveData","levels gained", 0))
-	
-	# for v in tracked_variables.values:
-	# 	var value = tracked_variables.values[v]
-	# 	var value_name:String = TrackedVariables.Type.keys()[v]
-	# 	print_debug(value_name + " " + str(value))
-
-	# total_xp_gained = save_data.get_value("SaveData","xp gained")
-	# total_damage_done = save_data.get_value("SaveData","damage done")
-	# print_debug("Game loaded!")
-	# print_debug("Enemies killed: " + str(total_enemies_killed))
-	# print_debug("XP gained: " + str(total_xp_gained))
-	# print_debug("Damage done: " + str(total_damage_done))
 
 func reset_game() -> void:
 	# Reset the player's stats and save the game

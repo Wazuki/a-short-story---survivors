@@ -1,6 +1,11 @@
 class_name Player
 extends CharacterBody2D
 
+const PRUNE_DICT_FRAME_OFFSET = 30
+var shader_flicker_speed = 0.0
+var enemies_touching = {}
+var enemies_touching_last_frame: int
+var total_contact_damage: float = 0.0
 # const STARTING_HEALTH = 150
 # const STARTING_SPEED = 300
 const STARTING_TIL_NEXT_LEVEL = 5
@@ -19,7 +24,9 @@ var level_up_text_reset_pos
 var total_level_ups = 0
 # var enemy_damage_rate = 5.0
 
+@export var state_machine: StateMachine
 @onready var player_info_text : RichTextLabel = get_node("/root/GameScene/UI/PlayerInfoContainer/Panel/MarginContainer/PlayerInfoText")
+@onready var animation_player: AnimatedSprite2D = %Spritesheet
 
 signal gained_xp(amount)
 signal gained_level
@@ -28,12 +35,14 @@ signal _health_depleted
 
 func _ready() -> void:
 	level_up_text_reset_pos = %LevelUpText.position
+	state_machine.initialize(AnimationNames.IDLE) # Initialize the state machine with the IDLE animation since the player starts with no input.
 
-func initialize(character: Character) -> void:
-	health = character.get_stat_value(Character.Stat.HEALTH)
+func initialize(character: PlayerCharacterStats) -> void:
+	health = character.get_stat_value(PlayerCharacterStats.Stat.HEALTH)
 	max_health = health
-	speed = character.get_stat_value(Character.Stat.SPEED)
-	armor = character.get_stat_value(Character.Stat.ARMOR)
+	speed = character.get_stat_value(PlayerCharacterStats.Stat.SPEED)
+	armor = character.get_stat_value(PlayerCharacterStats.Stat.ARMOR)
+	level_up_text = character.level_up_text
 	%Spritesheet.sprite_frames = character.spritesheet
 
 	experience = 0
@@ -42,9 +51,9 @@ func initialize(character: Character) -> void:
 	# Don't forget to reset the UI!
 	adjust_health_bar()
 	update_player_info_text()
-
-	%Spritesheet.animation = "idle"
-	%Spritesheet.play()
+	
+	# Set the state machine to our idle animation (for respawns/resets etc.)
+	state_machine.change_state(AnimationNames.IDLE)
 
 	# Set the player's z-index
 	z_index = SpriteConstants.Z_INDEX.PLAYER
@@ -54,68 +63,43 @@ func initialize(character: Character) -> void:
 func _physics_process(delta: float) -> void:
 	if Input.is_action_just_released("give_xp"): gain_experience(10)
 	if Input.is_action_just_released("level"): gain_experience(30)
-	if Input.is_action_just_released("difficulty_increase"): GameController.difficulty += 5
+	if Input.is_action_just_released("difficulty_increase"): EnemyManager.enemy_difficulty += 5
 	if Input.is_action_pressed("time_cheat"): Engine.time_scale = 5.0
 	elif Input.is_action_just_released("time_cheat"): Engine.time_scale = 1.0
 	#GetVector() turns movement into 2D direction
 
- 	# If the player is alive, move them based on input. This is also where we will fire weapons, gain XP, etc.
-	if health > 0:
-		if GameController.touch_input_enabled && Input.is_action_pressed("touch"):
-			# honk honk
-			# var direction = global_position.direction_to(InputEventScreenTouch.position)
-			var direction = global_position.direction_to(get_global_mouse_position())
-			velocity = direction * speed
-		else:
-			var direction = Input.get_vector("move_left", "move_right", "move_up", "move_down")
-			velocity = direction * speed
-		
-		move_and_slide() # Automatically moves character based on velocity. Applies delta automatically
-		
-		# If the player is moving, play the walk animation. Otherwise, play the idle animation. Flip the sprite based on direction.
+	update_player_info_text()
 
-		if velocity.length() > 0:
-			%Spritesheet.animation = "walk"
-			if velocity.x < 0:
-				%Spritesheet.flip_h = true
-			elif velocity.x > 0:
-				%Spritesheet.flip_h = false
-			%Spritesheet.play()
-		else: %Spritesheet.animation = "idle"
+	# Deal damage to the player if any enemies are touching the player.
+	if not enemies_touching.is_empty():
+		shader_flicker_speed = 8.0
+		%Spritesheet.material.set_shader_parameter("speed", shader_flicker_speed) # Set the player's "being damaged" shader speed 
+		# If our enemy dict hasn't changed since last frame then just deal the same damage again rather than iterate.
+		if enemies_touching_last_frame != enemies_touching.size(): 
+			total_contact_damage = 0
+			for e in enemies_touching: total_contact_damage += enemies_touching[e].stats.contact_damage # Remember that the enemy dict is { ID, enemy } so we need to use the key
+			enemies_touching_last_frame = enemies_touching.size()
+		# Deal damage to the player.
+		take_damage(total_contact_damage * delta)
+	else: # Reset the shader flicker speed (ONLY if it's not 0.0 to prevent a lot of calls to the material)
+		if shader_flicker_speed != 0.0:
+			shader_flicker_speed = 0.0
+			%Spritesheet.material.set_shader_parameter("speed", shader_flicker_speed)
+			total_contact_damage = 0.0
+			enemies_touching_last_frame = 0
 	
-		var overlapping_mobs = %PlayerCollider.get_overlapping_bodies()
-		
-		# TODO - refactor this to use signals etc.
-		if not overlapping_mobs.is_empty():
-			var total_damage = 0.0
-			
-			for m in overlapping_mobs: 
-				if m is Enemy:
-					total_damage += clamp((m.damage - (armor / 10)), 0, m.damage) # Clamp the damage to 0 if it's negative
+	# Prune the enemies touching dict of invalid instances (about once every second at physics 30 FPS)
+	if not enemies_touching.is_empty() and GameController.global_frame_count % PRUNE_DICT_FRAME_OFFSET == 0:
+		var enemies_left = enemies_touching.values().filter(is_instance_valid)
+		enemies_touching.clear()
+		for e in enemies_left: enemies_touching.set(e.get_instance_id(), e) # Reset the dict after clear with the { ID, enemy } data
 
-			#health -= total_damage * delta # Deal damage for each mob touching the player times delta so they don't explode
-			take_damage(total_damage * delta)
-			# Firing weapons moved to each weapon function to make them independent of the player.
-			
-		var xp_to_absorb = %PickupRadius.get_overlapping_areas()
-		# print_debug("There are " + str(xp_to_absorb.size()) + " xp in range!")
-		for xp in xp_to_absorb:
-			# This should be illegal lmao
-			if "absorbing" in xp: xp.absorbing = true # Call the Absorb function on the XP so they fly towards the player
-			if not %XPPickupSound.playing: %XPPickupSound.play() # Play the XP sound but only if it's not currently playing to rpevent spam
-			# print_debug("Detected " + xp.name)
 
-		update_player_info_text()
-	# If the player is dead, play the death animation and emit the signal to the game controller.
-	else:
-		#  Kill the player at zero health.
-		# emit_signal("_health_depleted")
-		%Spritesheet.animation = "death"
-		%Spritesheet.play()
 
 func take_damage(damage: float) -> void:
 	health -= damage
 	adjust_health_bar()
+	if health <= 0: _health_depleted.emit()
 
 # Heal the player by a percentage of max health, clamped by max health
 func heal_damage(heal: float) -> void:
@@ -124,37 +108,6 @@ func heal_damage(heal: float) -> void:
 
 func adjust_health_bar() -> void:
 	emit_signal("_health_changed", health, max_health)
-
-# TODO - Weapon-managed ranges with variable ranges.
-func get_target() -> Vector2:
-	# Return the first mob that overlaps the weapon range collider - TODO: adjustable range?
-	var enemies_in_range: Array[Node2D] = %WeaponRange.get_overlapping_bodies()
-	if not enemies_in_range.is_empty():
-		return enemies_in_range[0].global_position
-	return Vector2.ZERO # Return zero if no enemies within range.
-
-func get_closest_target() -> Vector2:
-	# Return the closest mob that overlaps the weapon range collider - TODO: adjustable range?
-	var enemies_in_range: Array[Node2D] = %WeaponRange.get_overlapping_bodies()
-	if not enemies_in_range.is_empty():
-		var closest_enemy = enemies_in_range[0]
-		for e in enemies_in_range:
-			if e.global_position.distance_to(global_position) < closest_enemy.global_position.distance_to(global_position):
-				closest_enemy = e
-		# print("Closest enemy is " + closest_enemy.name)
-		return closest_enemy.global_position
-	return Vector2.ZERO
-
-func get_highest_hp_target() -> Vector2:
-	# Returns the highest HP enemy in range.
-	var enemies_in_range: Array[Node2D] = %WeaponRange.get_overlapping_bodies()
-	if not enemies_in_range.is_empty():
-		var highest_hp_enemy = enemies_in_range[0]
-		for e in enemies_in_range:
-			if e.health > highest_hp_enemy.health:
-				highest_hp_enemy = e
-		return highest_hp_enemy.global_position
-	return Vector2.ZERO
 
 func gain_experience(xp: float) -> void:
 	# If the player gets enough XP, level up!
@@ -193,6 +146,7 @@ func tween_xp_bar() -> void:
 
 
 func show_level_up_text() -> void:
+	%LevelUpText.text = level_up_text
 	%LevelUpText.visible = true
 	var tween = %LevelUpText.create_tween()
 
@@ -230,23 +184,32 @@ func update_player_info_text() -> void:
 	player_info_text.text = text
 
 
-func _on_spritesheet_animation_finished() -> void:
-	# Tell the UI we're dead
-	# print_debug("Our animation is " + %Spritesheet.animation)
-	if %Spritesheet.animation == "death":
-		# print("Player died!")
-		emit_signal("_health_depleted")
-		%Spritesheet.stop()
+# func _on_spritesheet_animation_finished() -> void:
+# 	# Tell the UI we're dead
+# 	# print_debug("Our animation is " + %Spritesheet.animation)
+# 	if %Spritesheet.animation == "death":
+# 		# print("Player died!")
+# 		emit_signal("_health_depleted")
+# 		%Spritesheet.stop()
 
 ## Signals pickups to fly towards the player if they are experience. 
 func _on_pickup_radius_area_entered(area:Area2D) -> void:
 	# Experience orbs should fly to the player when they enter the player's pickup radius.
-	# print_debug("Found a " + area.name)
 	if area is ExperienceOrb:
 		area.absorb_xp(self)
 
-## Signals pickups to enter the player and apply their effect.
+## Signals pickups to enter the player and apply their effect. 
+## Enemies should be added to the enemies_touching array to deal damage to the player on the physics tick.
 func _on_player_collider_area_entered(area: Area2D) -> void:
-	# print_debug("Touched " + area.name)
 	if area is Pickup:
 		area.apply_pickup_to_player(self)
+	elif area is Enemy:
+		# Apply damage to player
+		enemies_touching.set(area.get_instance_id(), area)
+	## TODO - change enemies to Area2D and apply their touching signals here?
+	# elif area is Enemy:
+	# 	touching_enemies.append(area)
+
+## Remove the leaving area from the enemies_touching collection if they were an enemy
+func _on_player_collider_area_exited(area:Area2D) -> void:
+	if area is Enemy and enemies_touching.has(area.get_instance_id()): enemies_touching.erase(area.get_instance_id())

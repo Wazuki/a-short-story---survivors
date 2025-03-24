@@ -4,17 +4,17 @@ extends Resource
 
 # A list of unlockable characters in the game
 
-var valkyrie: Character
-var tank: Character 
-var huntress: Character
-var technician: Character
+var valkyrie: PlayerCharacterStats
+var tank: PlayerCharacterStats 
+var huntress: PlayerCharacterStats
+var technician: PlayerCharacterStats
 
 # Name, Health, Armor, Speed, Starting Weapon,  Unlock Variable, Unlock Var Value for new characters
 func _init() -> void:
-	valkyrie = Character.new()
-	tank = Character.new()
-	huntress = Character.new()
-	technician = Character.new()
+	valkyrie = PlayerCharacterStats.new()
+	tank = PlayerCharacterStats.new()
+	huntress = PlayerCharacterStats.new()
+	technician = PlayerCharacterStats.new()
 
 	valkyrie.set_stats("Valkyrie", 100, 1.0, 150, Weapon.Type.LIGHT_BLADE) # Default character unlock
 	tank.set_stats("Tank", 200, 5.0, 100, Weapon.Type.SLAM) # Tank needs 5000 XP to unlock
@@ -50,10 +50,16 @@ func load_text() -> void:
 	huntress.unlock_quest_path = "res://quests/unlock_huntress.tres"
 	technician.unlock_quest_path = "res://quests/unlock_technician.tres"
 
+	# Set each character's level up text (BBCode supported)
+	valkyrie.level_up_text = "[color=white]My power grows.[/color]"
+	tank.level_up_text = "[color=red][b]..hm.[/b][/color]"
+	huntress.level_up_text = "[color=green]The hunt continues.[/color]"
+	technician.level_up_text = "[color=gray]Operational breathrough.[/color]"
+
 
 # Returns all the unlockable characters
-func get_all_chars() -> Array[Character]:
-	var chars: Array[Character]
+func get_all_chars() -> Array[PlayerCharacterStats]:
+	var chars: Array[PlayerCharacterStats]
 
 	chars.append(valkyrie)
 	chars.append(tank)

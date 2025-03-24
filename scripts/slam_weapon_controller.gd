@@ -79,32 +79,33 @@ func _physics_process(_delta: float) -> void:
 	if GameController.player.velocity.length() == 0: slam_bullet.scale = weapon_scale
 	else: slam_bullet.scale = slam_bullet.scale.move_toward(weapon_min_scale, weapon_reduction_scale * _delta) # move_towards returns a vector2 - doesn't actually assign it, doi
 
-	slam()
+	if ready_to_fire and not enemies_in_range.is_empty(): slam()
 
+
+## TODO!!! MAybe tween the animation so it "spreads" outward?! GENIUS
 func slam() -> void:
-	if ready_to_fire and not get_overlapping_bodies().is_empty(): #&& not targeting:
-		begin_attack_sequence.emit() # Tell the listeners (Cooldown Panel et al) that we have started attacking.
-		# Could be moved to the end of the weapon timer, but shouldn't matter since we end up back here as a result of the timer being reset.
-		# Reset the bullet back to its original position so it lines up to the player's position. 
-		slam_bullet.set_as_top_level(false)
-		slam_bullet.set_stats(damage, speed)
-		slam_bullet.global_position = global_position
-		# slam_bullet.reparent(self)
-		# slam_bullet.scale = scale
-		# Only put the weapon on cooldown if we hit something.
-		if slam_bullet.slam(global_position): 
-			if level >= OVERHAUL_ENABLED_LEVEL: 
-				shockwave_anim_player.play("Shockwave")
-				GameController.apply_shockwave_displacement(slam_bullet.attack_origin, SHOCKWAVE_STRENGTH)
-				#max_shockwave_time = shockwave_anim_player.current_animation_length
-				#shockwave_time = 0.0
-			# weapon.fire_weapon() #  - slam_bullet.get_child(0).sprite_frames.get_frame_texture("default", 9).get_size()) - returns the size of the sprite frame
-		# print_debug("Global Pos: " + str(global_position) + " Local Pos: " + str(to_local(GameController.player.global_position)))
-		# Spawn slams!
-		#slam_count = 0
-		#spawn_next_slam()
-		# slam()
-		#$NextSlamTimer.start()
+	begin_attack_sequence.emit() # Tell the listeners (Cooldown Panel et al) that we have started attacking.
+	# Could be moved to the end of the weapon timer, but shouldn't matter since we end up back here as a result of the timer being reset.
+	# Reset the bullet back to its original position so it lines up to the player's position. 
+	slam_bullet.set_as_top_level(false)
+	slam_bullet.set_stats(damage, speed)
+	slam_bullet.global_position = global_position
+	# slam_bullet.reparent(self)
+	# slam_bullet.scale = scale
+	# Only put the weapon on cooldown if we hit something.
+	if slam_bullet.slam(global_position): 
+		if level >= OVERHAUL_ENABLED_LEVEL: 
+			shockwave_anim_player.play("Shockwave")
+			GameController.apply_shockwave_displacement(slam_bullet.attack_origin, SHOCKWAVE_STRENGTH)
+			#max_shockwave_time = shockwave_anim_player.current_animation_length
+			#shockwave_time = 0.0
+		# weapon.fire_weapon() #  - slam_bullet.get_child(0).sprite_frames.get_frame_texture("default", 9).get_size()) - returns the size of the sprite frame
+	# print_debug("Global Pos: " + str(global_position) + " Local Pos: " + str(to_local(GameController.player.global_position)))
+	# Spawn slams!
+	#slam_count = 0
+	#spawn_next_slam()
+	# slam()
+	#$NextSlamTimer.start()
 
 
 func spawn_mini_slams() -> void:
@@ -210,8 +211,6 @@ func get_level_up_text() -> String:
 func is_slow_enabled() -> bool:
 	return level >= SLOW_ENABLED_LEVEL
 
-func _on_body_entered(_body: Node2D) -> void:
-	slam()
 
 # # Handles timing and spawning swords whenever the Weapon timer expires, called on physics process
 # func spawn_next_slam() -> void:

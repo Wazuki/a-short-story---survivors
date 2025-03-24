@@ -1,0 +1,22 @@
+[gd_resource type="Resource" load_steps=3 format=3 uid="uid://boaf138km87q2"]
+
+[ext_resource type="Script" uid="uid://dssmfse8dhswk" path="res://scripts/data/enemies/boss_enemy_stats.gd" id="1_da4b3"]
+[ext_resource type="SpriteFrames" uid="uid://drpsnnuwf674n" path="res://sprites/frames/basic_enemy.tres" id="2_14mnk"]
+
+[resource]
+script = ExtResource("1_da4b3")
+xp_value = 30
+enemy_scale = Vector2(2, 2)
+health_drop_chance = 0.5
+contact_damage = 5.0
+attack_damage = 0.0
+character_name = "Boss Enemy"
+description = ""
+spritesheet = ExtResource("2_14mnk")
+stats = {
+0: 0,
+1: 0,
+2: 0,
+3: 0
+}
+metadata/_custom_type_script = "uid://8b58aesqa6kd"

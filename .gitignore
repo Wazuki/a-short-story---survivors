@@ -1,6 +1,3 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
-
-# Ignore any builds in the web folder as they take up a lot of space.
-/builds/**/*.zip
