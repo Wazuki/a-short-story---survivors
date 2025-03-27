@@ -1,0 +1,99 @@
+[gd_scene load_steps=5 format=3 uid="uid://dldh638n3k2vd"]
+
+[ext_resource type="Script" uid="uid://cujrdwyrt6nom" path="res://scripts/ui/cooldown_panel.gd" id="1_84shc"]
+[ext_resource type="Texture2D" uid="uid://cvdqnpg7gow3s" path="res://assets/UI/icons/chain_lightning_icon.tres" id="2_n26es"]
+[ext_resource type="Shader" uid="uid://i6u8nkquwumv" path="res://assets/shaders/blinking_text_shader.tres" id="3_n26es"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_finpa"]
+shader = ExtResource("3_n26es")
+shader_parameter/blink_color = Color(1, 0.784314, 0.341176, 1)
+shader_parameter/blink_speed = 5.0
+
+[node name="CooldownPanel" type="Panel"]
+texture_filter = 1
+custom_minimum_size = Vector2(200, 0)
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -100.0
+offset_right = 100.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_horizontal = 4
+size_flags_vertical = 3
+script = ExtResource("1_84shc")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="TopContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Icon" type="TextureRect" parent="MarginContainer/VBoxContainer/TopContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+texture = ExtResource("2_n26es")
+expand_mode = 3
+stretch_mode = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/TopContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="NameText" type="RichTextLabel" parent="MarginContainer/VBoxContainer/TopContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+theme_override_font_sizes/normal_font_size = 14
+text = "Chain Lightning"
+scroll_active = false
+vertical_alignment = 1
+
+[node name="LevelText" type="RichTextLabel" parent="MarginContainer/VBoxContainer/TopContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_font_sizes/normal_font_size = 14
+text = "Level: 7"
+scroll_active = false
+vertical_alignment = 3
+
+[node name="CooldownProgressBar" type="ProgressBar" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.4
+step = 0.001
+value = 100.0
+
+[node name="FiringText" type="RichTextLabel" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+visible = false
+material = SubResource("ShaderMaterial_finpa")
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.4
+text = "FIRING"
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1

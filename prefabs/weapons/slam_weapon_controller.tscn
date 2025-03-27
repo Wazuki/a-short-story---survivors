@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://bdhnec2pb7ddj"]
+
+[ext_resource type="Script" uid="uid://iambbmuvno82" path="res://scripts/weapons/slam_weapon_controller.gd" id="1_1h75d"]
+[ext_resource type="PackedScene" uid="uid://dec2xuk5l87n3" path="res://prefabs/bullets/slam_bullet.tscn" id="2_mjgu4"]
+[ext_resource type="PackedScene" uid="uid://4x7awsvvkmgg" path="res://prefabs/weapons/slam_shockwave.tscn" id="3_faydy"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_8et6y"]
+radius = 48.0
+
+[node name="SlamWeaponController" type="Area2D"]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1_1h75d")
+
+[node name="SlamBullet" parent="." instance=ExtResource("2_mjgu4")]
+unique_name_in_owner = true
+scale = Vector2(2, 2)
+
+[node name="WeaponRange" type="CollisionShape2D" parent="."]
+unique_name_in_owner = true
+shape = SubResource("CircleShape2D_8et6y")
+
+[node name="SlamShockwave" parent="." instance=ExtResource("3_faydy")]
+unique_name_in_owner = true
+mouse_filter = 2
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="area_exited" from="." to="." method="_on_area_exited"]

@@ -1,7 +1,7 @@
 [gd_scene load_steps=18 format=3 uid="uid://bo0obxyme762a"]
 
 [ext_resource type="Script" uid="uid://dop5ck237q020" path="res://scripts/bullets/light_blade_bullet.gd" id="1_xaeed"]
-[ext_resource type="Texture2D" uid="uid://cx7x17rr3hc5b" path="res://sprites/effects/light sword sprites.png" id="2_x1500"]
+[ext_resource type="Texture2D" uid="uid://cx7x17rr3hc5b" path="res://assets/sprites/weapons/light sword sprites.png" id="2_x1500"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_g0pxj"]
 atlas = ExtResource("2_x1500")

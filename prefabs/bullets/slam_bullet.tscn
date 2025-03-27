@@ -1,11 +1,11 @@
 [gd_scene load_steps=24 format=3 uid="uid://dec2xuk5l87n3"]
 
 [ext_resource type="Script" uid="uid://bxfe1b7hl3gd7" path="res://scripts/bullets/slam_bullet.gd" id="1_kdetb"]
-[ext_resource type="Texture2D" uid="uid://cfh5j288p8pxm" path="res://sprites/effects/slam sprites.png" id="1_wcjeg"]
-[ext_resource type="AudioStream" uid="uid://cigxx40o1qwv0" path="res://sounds/slam/rock_impact_heavy_slam_01.wav" id="3_r8dad"]
-[ext_resource type="AudioStream" uid="uid://bshjjlma2gtsm" path="res://sounds/slam/rock_impact_heavy_slam_02.wav" id="4_y7822"]
-[ext_resource type="AudioStream" uid="uid://bi60xnh10aswj" path="res://sounds/slam/rock_impact_heavy_slam_03.wav" id="5_ml8p4"]
-[ext_resource type="AudioStream" uid="uid://bbet27ibqj7s8" path="res://sounds/slam/rock_impact_heavy_slam_04.wav" id="6_7hbr0"]
+[ext_resource type="Texture2D" uid="uid://cfh5j288p8pxm" path="res://assets/sprites/weapons/slam sprites.png" id="1_wcjeg"]
+[ext_resource type="AudioStream" uid="uid://cigxx40o1qwv0" path="res://assets/audio/slam/rock_impact_heavy_slam_01.wav" id="3_r8dad"]
+[ext_resource type="AudioStream" uid="uid://bshjjlma2gtsm" path="res://assets/audio/slam/rock_impact_heavy_slam_02.wav" id="4_y7822"]
+[ext_resource type="AudioStream" uid="uid://bi60xnh10aswj" path="res://assets/audio/slam/rock_impact_heavy_slam_03.wav" id="5_ml8p4"]
+[ext_resource type="AudioStream" uid="uid://bbet27ibqj7s8" path="res://assets/audio/slam/rock_impact_heavy_slam_04.wav" id="6_7hbr0"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3lu01"]
 atlas = ExtResource("1_wcjeg")

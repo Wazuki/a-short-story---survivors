@@ -11,17 +11,17 @@ config_version=5
 [application]
 
 config/name="A Short Story - Survivors"
-run/main_scene="res://prefabs/game_scene.tscn"
+run/main_scene="res://scenes/game_scene.tscn"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [autoload]
 
-Signal_Debugger="*res://addons/SignalVisualizer/Debugger/SignalDebugger.gd"
-GameController="*res://scripts/game_controller.gd"
 Questify="*res://addons/questify/quest_manager.gd"
-DataManager="*res://scripts/data/data_manager.tscn"
-EnemyManager="*res://scripts/data/enemies/enemy_manager.gd"
+Signal_Debugger="*res://addons/SignalVisualizer/Debugger/SignalDebugger.gd"
+EnemyManager="*res://scripts/core/enemy_manager.gd"
+GameController="*res://scripts/core/game_controller.gd"
+DataManager="*res://scripts/core/data_manager.gd"
 
 [display]
 
@@ -42,8 +42,8 @@ Projectiles=""
 
 [gui]
 
-theme/custom="res://theme by azagaya/sci-fi-theme.tres"
-theme/custom_font="res://theme by azagaya/Pixel Square 10.ttf"
+theme/custom="res://assets/UI/sci-fi-theme.tres"
+theme/custom_font="res://assets/Pixel Square 10.ttf"
 
 [input]
 

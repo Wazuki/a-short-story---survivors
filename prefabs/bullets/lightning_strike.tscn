@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://dqhqi15ijtkdy"]
 
 [ext_resource type="Script" uid="uid://b70gqnhi46qvb" path="res://scripts/bullets/lightning_strike.gd" id="1_ahstv"]
-[ext_resource type="SpriteFrames" uid="uid://588ht2syw7wa" path="res://sprites/frames/lightning_strike_bullet.tres" id="1_ssu8q"]
+[ext_resource type="SpriteFrames" uid="uid://588ht2syw7wa" path="res://assets/sprites/weapons/chain_lightning/lightning_strike/lightning_strike_bullet.tres" id="1_ssu8q"]
 [ext_resource type="Script" uid="uid://ckyjakxlmwq5h" path="res://scripts/helpers/random_anim_on_spawn.gd" id="3_ahstv"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_o638a"]

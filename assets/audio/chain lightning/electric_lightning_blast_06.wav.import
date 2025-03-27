@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://c35xhqj6ajt0o"
+path="res://.godot/imported/electric_lightning_blast_06.wav-4c0ff04ac8e7134f490f0f9ae9db3df8.sample"
+
+[deps]
+
+source_file="res://assets/audio/chain lightning/electric_lightning_blast_06.wav"
+dest_files=["res://.godot/imported/electric_lightning_blast_06.wav-4c0ff04ac8e7134f490f0f9ae9db3df8.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

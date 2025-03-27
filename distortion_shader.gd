@@ -1,8 +1,9 @@
 extends ColorRect
 
-@export var node: Node2D # Which node to apply shader to
+@export var node: Node2D
 @onready var camera := get_viewport().get_camera_2d()
 
+## TODO - Fix this so it actually works properly. Was broken recently and kind of ehh now.
 func set_distortion_center(world_position: Vector2) -> void:
 	if camera == null: camera = Camera2D.new()
 
@@ -11,7 +12,7 @@ func set_distortion_center(world_position: Vector2) -> void:
 
 	# Get the camera's center pos (accounts for smoothing and limits)
 	var camera_center = camera.get_screen_center_position()
-
+	
 	# Calculate screen position (normalize from 0.0 - 1.0)
 	var screen_position: Vector2 = ((world_position - camera_center) * camera.zoom + viewport_size / 2) # Convert world pos to screen coords, then apply camera zoom and center the offset
 

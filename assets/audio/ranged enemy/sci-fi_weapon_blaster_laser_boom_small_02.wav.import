@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://cecnc2bgd4mfk"
+path="res://.godot/imported/sci-fi_weapon_blaster_laser_boom_small_02.wav-3ad59b926d4e626c02eeacba6b4cf6cd.sample"
+
+[deps]
+
+source_file="res://assets/audio/ranged enemy/sci-fi_weapon_blaster_laser_boom_small_02.wav"
+dest_files=["res://.godot/imported/sci-fi_weapon_blaster_laser_boom_small_02.wav-3ad59b926d4e626c02eeacba6b4cf6cd.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

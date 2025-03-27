@@ -1,12 +1,14 @@
 class_name Bullet extends Area2D
 
-# Required parameters of all bullets
-var damage: float
-var starting_pos: Vector2 ## Our starting pos
-var original_z_index: int ## Sprite's layer on the z-index (Ordering)
 
-# Optional parameters
+var weapon: Weapon ## The weapon that spawned this bullet
+# Weapon-derived attributes
+var damage: float
 var speed: float ## Some bullets don't move
+var starting_pos: Vector2 ## Our starting pos
+# var original_z_index: int ## Sprite's layer on the z-index (Ordering)
+
+# Instantiated Attirbutes
 var target_node: Node2D ## May have a target for an effect
 var lifetime: float ## Tracks lifetime of a projectile (if applicable)
 var lifetime_dependent: bool = false
@@ -18,17 +20,20 @@ var affected_areas: Array[Area2D] # Array of bodies that the weapon is affecting
 ## [b]Set the defaults for the spawned bullet.[/b][br]
 ## [b]Required:[/b] [code]damage: float, spawn position:Vector2, z-index: SpriteConstants.Z_INDEX[/code] [br]
 ## [b]Optional:[/b] [code]speed: float, target: Node2D, lifetime: float[/code][br]
-func initialize(dmg: float, pos: Vector2, layer_index: int, spd: float = 0.0, target: Node2D = null, projectile_lifetime: float = 0.0, is_lifetime_dependent = false) -> void:
-	damage = dmg
+func initialize(spawning_weapon: Weapon, pos: Vector2, sprite_z_index: int, target: Node2D = null, projectile_lifetime: float = 0.0, is_lifetime_dependent = false) -> void:
+	weapon = spawning_weapon
+
+	# Weapon-derived attributes
+	damage = weapon.damage
+	speed = weapon.speed
+
+	# Instantiated attributes
 	starting_pos = pos
 	global_position = starting_pos
-	speed = spd
-	original_z_index = layer_index
-	z_index = original_z_index
+	z_index = sprite_z_index
 	target_node = target
-	lifetime = projectile_lifetime # On Lifetime end, Queue_Fre with timer automatically? Function
+	lifetime = projectile_lifetime # Automatically destroys self after this time if lifetime_dependent
 	lifetime_dependent = is_lifetime_dependent
-
 
 func _ready() -> void:
 	if lifetime_dependent: enable_timer_expiration()

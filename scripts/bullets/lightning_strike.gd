@@ -8,11 +8,11 @@ var damage_timer = 0.0
 
 ## Spawns a lightning strike at target Vector2.[br]
 ## [b]Required:[/b] [code]damage: float, spawn_position: Vector2, lifetime: float, damage_cooldown:float[/code]
-func initialize_strike(dmg, spawn_pos: Vector2, strike_lifetime: float, dmg_cooldown: float) -> void:
+func initialize_strike(spawning_weapon: Weapon, spawn_pos: Vector2, strike_lifetime: float, dmg_cooldown: float) -> void:
 	# Call the super constructors to initialize these vars
 	# Will automatically set up the timer and kill the aoe after the duration because we set lifetime dependent to true.
-	super.initialize(dmg, spawn_pos, SpriteConstants.Z_INDEX.LIGHTNING_STRIKE, 0.0, null, strike_lifetime, true)
-	
+	super.initialize(spawning_weapon, spawn_pos, SpriteConstants.Z_INDEX.LIGHTNING_STRIKE, null, strike_lifetime, true)
+	#(spawning_weapon: Weapon, pos: Vector2, sprite_z_index: int, target: Node2D = null, projectile_lifetime: float = 0.0, is_lifetime_dependent = false)
 	# Set the damage timer (handles when we deal damage) and the cooldown (reset value for damage_timer)
 	damage_cooldown = dmg_cooldown
 	damage_timer = damage_cooldown

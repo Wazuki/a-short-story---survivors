@@ -1,0 +1,27 @@
+[gd_scene load_steps=3 format=3 uid="uid://clb7lgpy4ix3o"]
+
+[ext_resource type="Script" uid="uid://2fk6xtnjnchf" path="res://scripts/ui/level_up_ui.gd" id="2_0x4o0"]
+[ext_resource type="PackedScene" uid="uid://bqtbeeisrsdix" path="res://prefabs/ui/level_up_container.tscn" id="3_fr2nm"]
+
+[node name="LevelUpUI" type="Control"]
+texture_filter = 1
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_0x4o0")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LevelUpContainer" parent="PanelContainer" instance=ExtResource("3_fr2nm")]
+custom_minimum_size = Vector2(100, 600)
+layout_mode = 2
+theme = null

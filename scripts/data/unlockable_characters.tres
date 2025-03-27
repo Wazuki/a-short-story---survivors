@@ -1,7 +1,0 @@
-[gd_resource type="Resource" script_class="Unlockable_Characters" load_steps=2 format=3 uid="uid://c50cbaasnrlio"]
-
-[ext_resource type="Script" uid="uid://cq10p01741lyp" path="res://scripts/data/unlockable_characters.gd" id="1_4vfxc"]
-
-[resource]
-script = ExtResource("1_4vfxc")
-metadata/_custom_type_script = "uid://cq10p01741lyp"

@@ -1,0 +1,68 @@
+[gd_resource type="Resource" script_class="QuestResource" load_steps=15 format=3 uid="uid://bhwoj02gatkhm"]
+
+[ext_resource type="Script" uid="uid://d4gmb2nftapl5" path="res://addons/questify/scripts/model/quest_edge.gd" id="1_ipt66"]
+[ext_resource type="Script" uid="uid://c23wdreelkkg4" path="res://addons/questify/scripts/model/quest_objective.gd" id="2_pibqp"]
+[ext_resource type="Script" uid="uid://650crvoj707i" path="res://addons/questify/scripts/model/quest_end.gd" id="3_qm8nf"]
+[ext_resource type="Script" uid="uid://dtbofow3tdngk" path="res://addons/questify/scripts/model/quest_start.gd" id="4_h3onb"]
+[ext_resource type="Script" uid="uid://cyotfkardp6i" path="res://addons/questify/scripts/model/quest_condition.gd" id="5_kb1ys"]
+[ext_resource type="Script" uid="uid://b37aev4imc074" path="res://addons/questify/scripts/model/quest_node.gd" id="6_p0dlr"]
+[ext_resource type="Script" uid="uid://bhqxygnm6kw4n" path="res://addons/questify/scripts/model/quest_resource.gd" id="7_xhjgb"]
+
+[sub_resource type="Resource" id="Resource_iu2ru"]
+script = ExtResource("2_pibqp")
+description = "Die five times."
+id = "k6XTrRhHHR"
+optional = false
+graph_editor_position = Vector2(540, 40)
+graph_editor_size = Vector2(500, 720)
+metadata/icon_path = "res://assets/sprites/characters/technician/technician_icon.tres"
+metadata/reward = "Mobilize Magister."
+
+[sub_resource type="Resource" id="Resource_idl5t"]
+script = ExtResource("3_qm8nf")
+id = "beccGbuUQG"
+optional = false
+graph_editor_position = Vector2(1200, 40)
+graph_editor_size = Vector2(141, 78)
+
+[sub_resource type="Resource" id="Resource_2bqoy"]
+script = ExtResource("1_ipt66")
+from = SubResource("Resource_iu2ru")
+to = SubResource("Resource_idl5t")
+edge_type = 0
+
+[sub_resource type="Resource" id="Resource_y7rdf"]
+script = ExtResource("4_h3onb")
+name = "Unlock Magister"
+description = "Holds the requirements for unlocking the character \"Magister\"."
+id = "VXlD530eEg"
+optional = false
+graph_editor_position = Vector2(0, -120)
+graph_editor_size = Vector2(280, 516)
+
+[sub_resource type="Resource" id="Resource_nhun4"]
+script = ExtResource("1_ipt66")
+from = SubResource("Resource_y7rdf")
+to = SubResource("Resource_iu2ru")
+edge_type = 0
+
+[sub_resource type="Resource" id="Resource_su0v0"]
+script = ExtResource("5_kb1ys")
+type = "variable:>="
+key = "player_deaths"
+id = "9ZouQZk1Fx"
+optional = false
+graph_editor_position = Vector2(-20, 440)
+graph_editor_size = Vector2(377, 309)
+metadata/value = 5.0
+
+[sub_resource type="Resource" id="Resource_os7x7"]
+script = ExtResource("1_ipt66")
+from = SubResource("Resource_su0v0")
+to = SubResource("Resource_iu2ru")
+edge_type = 1
+
+[resource]
+script = ExtResource("7_xhjgb")
+nodes = Array[ExtResource("6_p0dlr")]([SubResource("Resource_idl5t"), SubResource("Resource_iu2ru"), SubResource("Resource_y7rdf"), SubResource("Resource_su0v0")])
+edges = Array[ExtResource("1_ipt66")]([SubResource("Resource_2bqoy"), SubResource("Resource_nhun4"), SubResource("Resource_os7x7")])

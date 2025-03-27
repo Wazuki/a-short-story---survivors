@@ -1,8 +1,0 @@
-[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://xckcfyu6x2u"]
-
-[ext_resource type="Shader" uid="uid://cpocwwuqqac75" path="res://shaders/flashing_color_shader.tres" id="1_j3ak6"]
-
-[resource]
-shader = ExtResource("1_j3ak6")
-shader_parameter/ColorParameter = Color(1, 0, 0, 1)
-shader_parameter/speed = 0.0
