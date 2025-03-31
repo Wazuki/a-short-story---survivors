@@ -26,6 +26,7 @@ func enter(_previous_state_path: String = "", _data := {}) -> void:
 func attack() -> void:
 	# If the attack animation just ended then we should attack and start the cooldown timer.
 	if enemy.animation_player.animation == ATTACK: # Safety check to make sure we're attacking.
+		enemy.play_attack_sound()
 		enemy.spawn_projectile(target_pos)
 		attack_cooldown_timer.start()
 		enemy.attacking = true

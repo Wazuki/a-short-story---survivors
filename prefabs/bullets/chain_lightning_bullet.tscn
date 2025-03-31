@@ -6,7 +6,19 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_6hnyf"]
 radius = 75.0
 
-[node name="Lightning" type="Sprite2D" groups=["Projectiles"]]
+[node name="LightningBullet" type="Area2D" groups=["Projectiles"]]
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+script = ExtResource("2_faf23")
+
+[node name="JumpRange" type="CollisionShape2D" parent="."]
+unique_name_in_owner = true
+shape = SubResource("CircleShape2D_6hnyf")
+debug_color = Color(0.730697, 0.472891, 0, 0.42)
+
+[node name="LightningSprite" type="Sprite2D" parent="."]
+unique_name_in_owner = true
 z_index = 80
 z_as_relative = false
 texture_filter = 1
@@ -16,13 +28,3 @@ centered = false
 offset = Vector2(0, -6)
 region_enabled = true
 region_rect = Rect2(0, 0, 0, 12)
-script = ExtResource("2_faf23")
-
-[node name="JumpRange" type="Area2D" parent="."]
-unique_name_in_owner = true
-collision_layer = 0
-collision_mask = 2
-
-[node name="JumpRangeCollider" type="CollisionShape2D" parent="JumpRange"]
-shape = SubResource("CircleShape2D_6hnyf")
-debug_color = Color(0.730697, 0.472891, 0, 0.42)

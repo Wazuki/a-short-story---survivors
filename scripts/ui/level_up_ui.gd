@@ -21,8 +21,8 @@ func _ready() -> void:
 func show_level_up_screen() -> void:
 	GameController.pause_game()
 
-	var weapons = GameController.weapons.duplicate()
-	weapons.shuffle()
+	var weapon_data = WeaponManager.weapon_data.values().duplicate() # Make sure to duplicate the array because we don't want to directly affect it.
+	weapon_data.shuffle()
 	var level_up_options = []
 	# print_debug("Weapons has " + str(weapons.size()) + " Compared to the base: " + str(GameController.weapons.size()))
 
@@ -32,13 +32,14 @@ func show_level_up_screen() -> void:
 	
 	# Cycle through each of the available weapons - if they're valid level up options, add them to the options array.
 	while level_up_options.size() < MAX_LEVEL_UP_OPTIONS:
-		if weapons.is_empty(): break
-		var weapon = weapons.pop_front() # Pick a random weapon from the list of weapons
+		if weapon_data.is_empty(): break
+		var current_data = weapon_data.pop_front() as WeaponData # Pick a random weapon from the list of weapons
 		# If the weapon is at max level, it's not a valid option - remove it from the array and try again.
-		# print_debug("Array size: " + str(weapons.size()))
-		if weapon.level >= MAX_WEAPON_LEVEL: 
-			continue
-		else: level_up_options.append(weapon)
+		if WeaponManager.is_weapon_valid_level_up_option(current_data.weapon_type): level_up_options.append(current_data)
+		else: continue
+		# if weapon.level >= MAX_WEAPON_LEVEL: 
+		# 	continue
+		# else: level_up_options.append(weapon)
 
 	# Now that we have the array, if it's smaller than the MAX_LEVEL_UP_OPTIONS, add a few extra options.
 	while level_up_options.size() < MAX_LEVEL_UP_OPTIONS:
@@ -66,7 +67,9 @@ func show_level_up_screen() -> void:
 			level_up_choice.set_level_up_information_string(option, level_up_text)
 		else:
 			# Set up the level up choice for the weapon.
-			level_up_text = option.get_level_up_text()
+			var level = WeaponManager.get_weapon_level(option.weapon_type)
+			level_up_text = "Level " + str(level+1) + "\n" # Add one to the level here because we are showing player the future level, not current.
+			level_up_text += option.get_level_up_text(level)
 			icon = option.icon
 			level_up_choice.set_level_up_information(option, level_up_text)
 

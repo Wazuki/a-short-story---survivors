@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="BulletData" load_steps=3 format=3 uid="uid://cmqcxhxjfropd"]
+
+[ext_resource type="PackedScene" uid="uid://dec2xuk5l87n3" path="res://prefabs/bullets/slam_bullet.tscn" id="1_4bg4l"]
+[ext_resource type="Script" uid="uid://cv36dt247myo1" path="res://data/weapons/bullets/bullet_data.gd" id="2_wqkg2"]
+
+[resource]
+script = ExtResource("2_wqkg2")
+name = "Mini Slam Bullet"
+damage_modifier = 0.5
+damage_cooldown = 0.0
+speed = 0.0
+lifetime = 0.0
+bullet_scene = ExtResource("1_4bg4l")

@@ -22,6 +22,7 @@ Signal_Debugger="*res://addons/SignalVisualizer/Debugger/SignalDebugger.gd"
 EnemyManager="*res://scripts/core/enemy_manager.gd"
 GameController="*res://scripts/core/game_controller.gd"
 DataManager="*res://scripts/core/data_manager.gd"
+WeaponManager="*res://scripts/core/weapon_manager.gd"
 
 [display]
 
@@ -39,6 +40,7 @@ enabled=PackedStringArray("res://addons/questify/plugin.cfg")
 Pickups="Anything that can be picked up by the player"
 Enemies="Enemies that have spawned"
 Projectiles=""
+Obstacles="Walkable surfaces to bake the navmesh."
 
 [gui]
 

@@ -5,10 +5,11 @@ extends Area2D
 #############################
 ####### REFACTOR AREA #######
 #############################
-const Stat = CharacterStats.Stat
+#const Stat = CharacterStats.Stat
 const AVOIDANCE_MAGNITUDE = 3 ## Magnitude to amplify the avoidance direction to add a little stronger avoidance movement.
 
-@onready var state_machine: StateMachine = %StateMachine
+@onready var nav_agent: NavigationAgent2D = %NavigationAgent2D ## Navigation agent for walking on the navmesh.
+@onready var state_machine: StateMachine = %StateMachine ## State machine for handling any enemy states.
 @onready var animation_player = %Spritesheet ## "AnimationPlayer" for the enemy (currently [AnimatedSprite2D])
 @onready var death_sound = %DeathSound ## Plays the enemy's dying sound.
 
@@ -87,23 +88,19 @@ func initialize(statblock: EnemyStats) -> void:
 	else: # Prune the attack state since we're not an attacker.
 		state_machine.states[AnimationNames.ATTACK].queue_free() # Remove the attack state from enemies that don't attack.
 		state_machine.states.erase(AnimationNames.ATTACK) # Don't forget to free up the space in the dictionary.
-	# TODO - probably a better way to do this but for now it'll work for our purposes. See you soon, futur Ky.
+	# TODO - probably a better way to do this but for now it'll work for our purposes. See you soon, future Ky.
 
 func _physics_process(delta: float) -> void:
 	# TODO - status effect functions. For now simply keep clamping speed if we are slowed.
-	if stats.get_stat(Stat.SPEED) < stats.base_speed: 
-		stats.set_stat(Stat.SPEED, clampf(stats.speed + slow_decay_rate * delta, 0, stats.base_speed))
+	if stats.get_stat(CharacterStats.Stat.SPEED) < stats.base_speed: 
+		stats.set_stat(CharacterStats.Stat.SPEED, clampf(stats.speed + slow_decay_rate * delta, 0, stats.base_speed))
 
-func move() -> void:
-	if attacking or stunned: return
-
-	global_position += velocity
 
 # Slow the enemy by a percentage of their speed
 func apply_slow(slow: float) -> void:
 	# Only apply slow if the enemy is not already slowed
-	var current_speed = stats.get_stat(Stat.SPEED)
-	if current_speed == stats.base_speed: stats.set_stat(Stat.SPEED, current_speed * (1.0 - slow))
+	var current_speed = stats.get_stat(CharacterStats.Stat.SPEED)
+	if current_speed == stats.base_speed: stats.set_stat(CharacterStats.Stat.SPEED, current_speed * (1.0 - slow))
 
 # func _is_displaced() -> void:
 # 	if displaced: %DisplacementTimer.start()
@@ -122,7 +119,7 @@ func remove_stun() -> void:
 	modulate = Color.WHITE
 
 func take_damage(dam: float) -> void:
-	stats.subtract_from_stat(Stat.HEALTH, dam)
+	stats.subtract_from_stat(CharacterStats.Stat.HEALTH, dam)
 	emit_signal("damaged", dam)
 
 	# Set the emit direction of the particles to tbe the direct opposite of incoming attack angle (i.e., from the player) with * -1
@@ -131,7 +128,7 @@ func take_damage(dam: float) -> void:
 	%GPUParticles2D.restart()
 	%GPUParticles2D.emitting = true
 
-	if stats.get_stat(Stat.HEALTH) <= 0:
+	if stats.get_stat(CharacterStats.Stat.HEALTH) <= 0:
 		dead = true
 		health_depleted.emit()
 		enemy_died.emit(self)
@@ -159,9 +156,17 @@ func spawn_projectile(target_pos: Vector2) -> void:
 	add_child(projectile)
 	projectile.top_level = true
 	
+## Handles the enemy movement based on a velocity already adjusted for delta.
+func move() -> void:
+	if attacking or stunned: return
+
+	global_position += velocity
 
 ## Updates the enemy's move direction to the player's current position. Use sparringly.
-func update_move_dir() -> void: move_dir = global_position.direction_to(player.global_position)
+func update_move_dir() -> void: 
+	nav_agent.target_position = player.global_position
+	var next_point = nav_agent.get_next_path_position()
+	move_dir = (next_point - global_position).normalized()
 
 ## Helps enemies avoid each other by moving them slightly away from each other and interpolating an avoidance_dir with the move_dir[br]
 ## TODO: Multi-enemy avoidance?
@@ -197,3 +202,6 @@ func _on_attack_range_body_entered(body:Node2D) -> void:
 ## When the player exits, mark the player as no longer in range.
 func _on_attack_range_body_exited(body: Node2D) -> void:
 	if body is Player: player_in_range = false
+
+## Play an attack sound from the attack sound randomizer audiostream.
+func play_attack_sound() -> void: %AttackSounds.play()

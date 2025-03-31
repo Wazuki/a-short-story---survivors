@@ -1,11 +1,11 @@
 extends Weapon
 
-const BASE_DAMAGE = 5
-# const BASE_SPEED = 1.0
-const BASE_COOLDOWN = 1.0
-const BASE_SLASHES = 2
-const BASE_SCALE = Vector2.ONE
-const FINAL_SLASH_DAMAGE_MOD = 1.5
+# const BASE_DAMAGE = 5
+# # const BASE_SPEED = 1.0
+# const BASE_COOLDOWN = 1.0
+# const BASE_SLASHES = 2
+# const BASE_SCALE = Vector2.ONE
+# const FINAL_SLASH_DAMAGE_MOD = 1.5
 
 # Level up stats
 # const LEVEL_UP_DAMAGE = 1.2
@@ -15,45 +15,36 @@ const FINAL_SLASH_DAMAGE_MOD = 1.5
 # const LEVEL_UP_SCALE = 1.03
 # const MAX_SLASHES = 3
 
-@onready var spritesheet: AnimatedSprite2D = get_child(0).get_child(0)
-
-var slashes: int = 2
-var overhaul_enabled: bool = false
-var weapon_scale: Vector2
+var light_blade_bullet: Bullet
+var slashes: int
 var final_slash_scale: Vector2
+var final_slash_damage_mod: float
 var current_slash: int = 0
 var currently_slashing: bool = false
+
+## Initialize the weapon statistics before being added to the scene tree.
+func initialize(data: WeaponData) -> void:
+	super.initialize(data)
+	# Call any remaining specific intialization below.
+	slashes = data.initial_slashes
+	weapon_scale = Vector2(data.initial_scale, data.initial_scale)
+	final_slash_scale = Vector2(data.final_slash_scale, data.final_slash_scale)
+	final_slash_damage_mod = data.final_slash_damage_mod
+	# Instantiate the main bullet for the weappon since this is a melee weapon.
+	light_blade_bullet = instantiate_bullet_by_key(SceneKey.BULLET, global_position, SpriteConstants.Z_INDEX.LIGHT_BLADE)
+	
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	super._ready()
-	name = "Light Sword"
-	weapon_type = Type.LIGHT_BLADE
-	target_type = TargetType.CLOSEST
-	description = "Two quick sword slashes."
-	icon = preload("res://assets/UI/icons/light_blade_icon.tres")
-	# weapon = preload("res://prefabs/weapon.tscn").instantiate()
-	# add_child(weapon)
-	# reset()
-	# spritesheet.connect("animation_finished", %LightBlade.damage_enemies_in_slash)
-	spritesheet.connect("animation_finished", end_slash)
-
-func reset() -> void:
-	set_stats(BASE_DAMAGE, 1.0, BASE_COOLDOWN)
-	reset_timer()
-	slashes = BASE_SLASHES
-	current_slash = 0
-	currently_slashing = false
-	weapon_scale = BASE_SCALE
-	final_slash_scale = BASE_SCALE
-	overhaul_enabled = false
-	
-	first_level_up = true
-	# %LightBlade.connect_spritesheet_signal(slash)
+	# Now that we're in the scene tree, add the light blade bullet as a child of our weapon.
+	add_child(light_blade_bullet)
+	#light_blade_bullet.get_child("Spritesheet").connect("animation_finished", end_slash)
+	#spritesheet.connect("animation_finished", end_slash)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(_delta: float) -> void:
-	super._process(_delta)
+	#super._physics_process(_delta)
 	slash()
 
 func slash() -> void:
@@ -71,16 +62,16 @@ func slash() -> void:
 			# Set the damage based on the current slash and play the correct sound
 			if current_slash == 3: 
 				%BigSlash.play()
-				%LightBlade.damage = damage * FINAL_SLASH_DAMAGE_MOD
-				%LightBlade.scale = final_slash_scale
-				if overhaul_enabled: %LightBlade.cause_knockback = true # In theory, this will only ever be called at level 7 so no need to change it otherwise since it'llb e false from previous calls
+				light_blade_bullet.damage = damage * final_slash_damage_mod
+				light_blade_bullet.scale = final_slash_scale
+				if is_overhaul_enabled(): light_blade_bullet.cause_knockback = true # In theory, this will only ever be called at level 7 so no need to change it otherwise since it'llb e false from previous calls
 			else: 
 				%Slash.play()
-				%LightBlade.damage = damage
-				%LightBlade.scale = weapon_scale
-				%LightBlade.cause_knockback = false
+				light_blade_bullet.damage = damage
+				light_blade_bullet.scale = weapon_scale
+				light_blade_bullet.cause_knockback = false
 
-			%LightBlade.play_slash_animation(current_slash)
+			light_blade_bullet.play_slash_animation(current_slash)
 			# %LightBlade.damage_enemies_in_slash()
 			# print_debug("Slash " + str(current_slash))
 
@@ -90,13 +81,13 @@ func slash() -> void:
 
 func end_slash() -> void: 
 	currently_slashing = false
-	%LightBlade.reset_damaged_enemies()
+	light_blade_bullet.reset_damaged_enemies()
 	# If we are currently on the last attack chain, reset the weapon.
 	if current_slash >= slashes: reset_attack_chain()
 
 func reset_attack_chain() -> void:
 	# Reset the timer and the slash count.
-	%LightBlade.reset_animation()
+	light_blade_bullet.reset_animation()
 	fire_weapon()
 	current_slash = 0
 	# print_debug("Resetting slash")
@@ -108,36 +99,32 @@ func reset_attack_chain() -> void:
 
 func level_up() -> void:
 	# Call the weapon's level up function, then finalize any others that aren't in weapon (projectiles, lifetime, etc)
-	if first_level_up:
-		first_level_up = false
-	else:
-		level += 1
-		match level:
-			2:
-				# Level 2: ~10% damage increase, attack speed increase
-				damage *= 1.1
-				cooldown *= 0.9
-			3:
-				# Level 3: Increased size?
-				weapon_scale *= 1.1
-				final_slash_scale *= 1.1
-			4:
-				# Level 4: ~10% damage increase
-				damage *= 1.1
-
-			5:
-				# Level 5: Third slash deals extra damage
-				slashes = 3
-			6:
-				# Level 6: Reduce cooldown between slashes or extend reach on last slam?
-				cooldown *= 9
-				final_slash_scale *= 1.5
-			7:
-				# Level 7: Last slash gets extra effect: knockback
-				# Level up UI handles checking if the weapon is a levle up option. Duh.
-				overhaul_enabled = true
-				
 	super.level_up()
+	level += 1
+	match level:
+		2:
+			# Level 2: ~10% damage increase, attack speed increase
+			damage *= 1.1
+			cooldown *= 0.9
+		3:
+			# Level 3: Increased size?
+			weapon_scale *= 1.1
+			final_slash_scale *= 1.1
+		4:
+			# Level 4: ~10% damage increase
+			damage *= 1.1
+
+		5:
+			# Level 5: Third slash deals extra damage
+			slashes = 3
+		6:
+			# Level 6: Reduce cooldown between slashes or extend reach on last slam?
+			cooldown *= 9
+			final_slash_scale *= 1.5
+		7:
+			# Level 7: Last slash gets extra effect: knockback
+			# Level up UI handles checking if the weapon is a levle up option. Duh.
+			pass
 	fire_weapon()
 
 # Upgrade Plan
@@ -148,21 +135,3 @@ func level_up() -> void:
 # Level 5: Third slash with windup? deals extra damage
 # Level 6: Reduce cooldown between slashes or extend reach on last slam?
 # Level 7: Last slash gets extra effect (knockback? crit chance? buff?)
-
-func get_level_up_text() -> String:
-	if first_level_up: return description
-	else:
-		match level + 1:
-			2:
-				return "Increased damage and attack speed."
-			3:
-				return "Increased size."
-			4:
-				return "Increased damage and attack speed."	
-			5:
-				return "Third slash that deals bonus damage."
-			6:
-				return "Increase size of third slash."
-			7:
-				return "Signature: Cause knockback with third slash."
-	return "Error! get_level_text() of Light Blade dropped out of switch!"

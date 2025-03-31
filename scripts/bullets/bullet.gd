@@ -1,42 +1,59 @@
 class_name Bullet extends Area2D
 
-
 var weapon: Weapon ## The weapon that spawned this bullet
+var bullet_name: String
 # Weapon-derived attributes
 var damage: float
-var speed: float ## Some bullets don't move
+var damage_modifier: float = 1.0 ## The damage modifier for this bullet. Used for scaling damage with a variety of effects.
+var damage_cooldown: float = 0.0 ## How often the bullet will deal damage to the target if applicable.
+var speed: float ## Uses the bullet's own speed instead of the weapon speed as they may serve different functions.
 var starting_pos: Vector2 ## Our starting pos
 # var original_z_index: int ## Sprite's layer on the z-index (Ordering)
 
 # Instantiated Attirbutes
 var target_node: Node2D ## May have a target for an effect
-var lifetime: float ## Tracks lifetime of a projectile (if applicable)
-var lifetime_dependent: bool = false
+var lifetime: float = 0.0 ## Tracks lifetime of a projectile (if applicable). 0 = no lifetime dependency
+# var lifetime_dependent: bool = false
 
 # Other Parameters
-var affected_areas: Array[Area2D] # Array of bodies that the weapon is affecting. Used to avoid tons of physics calls.
+var affected_areas: Dictionary ## Dictionary [<instance ID, Enemy>] of bodies that the weapon is affecting. Used to avoid tons of physics calls.
 
 
-## [b]Set the defaults for the spawned bullet.[/b][br]
-## [b]Required:[/b] [code]damage: float, spawn position:Vector2, z-index: SpriteConstants.Z_INDEX[/code] [br]
-## [b]Optional:[/b] [code]speed: float, target: Node2D, lifetime: float[/code][br]
-func initialize(spawning_weapon: Weapon, pos: Vector2, sprite_z_index: int, target: Node2D = null, projectile_lifetime: float = 0.0, is_lifetime_dependent = false) -> void:
+## [b]Set the static config for the spawned bullet.[/b][br]
+## [b]Required:[/b] [code]spawning_weapon: Weapon, data: BulletData spawn position:Vector2, z-index: SpriteConstants.Z_INDEX[/code] [br]
+## [b]Optional:[/b] [code]target: Node2D[/code][br]
+func initialize(spawning_weapon: Weapon, data: BulletData, spawn_pos: Vector2, sprite_z_index: int, target: Node2D = null) -> void:
 	weapon = spawning_weapon
 
 	# Weapon-derived attributes
 	damage = weapon.damage
-	speed = weapon.speed
-
+	# BulletData attributes
+	bullet_name = data.name
+	damage_modifier = data.damage_modifier
+	damage_cooldown = data.damage_cooldown
+	speed = data.speed 
+	lifetime = data.lifetime # Automatically destroys self after this time if lifetime_dependent
 	# Instantiated attributes
-	starting_pos = pos
+	starting_pos = spawn_pos
 	global_position = starting_pos
 	z_index = sprite_z_index
 	target_node = target
-	lifetime = projectile_lifetime # Automatically destroys self after this time if lifetime_dependent
-	lifetime_dependent = is_lifetime_dependent
+
 
 func _ready() -> void:
-	if lifetime_dependent: enable_timer_expiration()
+	name = bullet_name # Name assignment requires the node to be in the scene tree
+	if lifetime > 0.0: enable_timer_expiration()
+
+	# if bullet_name: print_debug("Loaded " + name)
+	# else: print_debug("Loaded " + name + " which had no bullet name.")
+
+## Deal damage to a target based on the damage modifier of the bullet and the damage of the weapon.[br]
+## Includes a check to make sure the target is currently a valid instance.
+func damage_target(target: Variant) -> bool:
+	if is_instance_valid(target) and not target.dead:
+		target.take_damage(weapon.damage_calc() * damage_modifier)
+		return true
+	return false
 
 ## Automatically kill self on call_deferred() with a timer option, like in instantiate (timer_die = false)
 func enable_timer_expiration() -> void:

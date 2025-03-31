@@ -31,7 +31,10 @@ func _on_level_up_button_pressed() -> void:
 				GameController.player.health += GameController.level_up_UI.LEVEL_UP_HEALTH_VAL
 			"speed":
 				GameController.player.speed += GameController.level_up_UI.LEVEL_UP_SPEED_VAL
-	else: level_up_option.call("level_up") # In theory this works because of godot weirdness. I think
+	else: 
+		# Tell the weapon manager to level up the right weapon based on the weapon's type.
+		WeaponManager.level_up_weapon(level_up_option.weapon_type)
+		#level_up_option.call("level_up") # In theory this works because of godot weirdness. I think
 	# Call the Level Up UI to finalize leveling.
 	GameController.level_up_UI.finalize_level_up()
 

@@ -1,0 +1,35 @@
+[gd_resource type="Resource" load_steps=7 format=3 uid="uid://bc762v57pkix3"]
+
+[ext_resource type="Resource" uid="uid://dikqkml4wkd8l" path="res://data/weapons/bullets/arrow_bullet_data.tres" id="1_c4m3h"]
+[ext_resource type="Texture2D" uid="uid://dla2ldgy6t6yf" path="res://assets/UI/icons/arrow_icon.tres" id="1_j718u"]
+[ext_resource type="Script" uid="uid://besfugoahx8v7" path="res://data/weapons/weapon_scene_map.gd" id="2_haslj"]
+[ext_resource type="Script" uid="uid://blur3auqr1auc" path="res://data/weapons/arrow_data.gd" id="2_ydbtc"]
+[ext_resource type="PackedScene" uid="uid://bxbdgbhy2c1jt" path="res://prefabs/weapons/arrow_controller.tscn" id="3_ydbtc"]
+
+[sub_resource type="Resource" id="Resource_2ljtd"]
+script = ExtResource("2_haslj")
+bullet_scene = ExtResource("1_c4m3h")
+secondary_bullet_scene = ExtResource("1_c4m3h")
+metadata/_custom_type_script = "uid://besfugoahx8v7"
+
+[resource]
+script = ExtResource("2_ydbtc")
+max_range = 750.0
+pierce = 1
+pierce_increase_mod = 2
+double_shot_chance = 0.25
+mini_arrow_scale = Vector2(0.5, 0.5)
+name = "Arrow"
+description = " single piercing projectile with moderate damage."
+icon = ExtResource("1_j718u")
+level_up_texts = Array[String](["Increased projectile speed and gain small damage bonus.", "Improved cooldown.", "Improved piercing.", "Chance for double shot.", "Chance for critical hit.", "Signature: Arrows split on kill."])
+weapon_type = 3
+target_type = 2
+damage = 50.0
+weapon_range = 250.0
+speed = 500.0
+cooldown = 2.0
+crit_chance = 0.0
+crit_mod = 0.0
+weapon_scene = ExtResource("3_ydbtc")
+bullet_scene_map = SubResource("Resource_2ljtd")

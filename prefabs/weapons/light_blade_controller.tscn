@@ -1,7 +1,6 @@
-[gd_scene load_steps=15 format=3 uid="uid://b31dds1jg253h"]
+[gd_scene load_steps=14 format=3 uid="uid://b31dds1jg253h"]
 
 [ext_resource type="Script" uid="uid://cene1ujmvlgf6" path="res://scripts/weapons/light_blade_controller.gd" id="1_yhd0t"]
-[ext_resource type="PackedScene" uid="uid://bo0obxyme762a" path="res://prefabs/bullets/light_blade_bullet.tscn" id="2_8q4o0"]
 [ext_resource type="AudioStream" uid="uid://bo8inyjlpv8rw" path="res://assets/audio/light blade/whoosh_swish_high_fast_01.wav" id="3_dygc8"]
 [ext_resource type="AudioStream" uid="uid://b8ys860dgsqmj" path="res://assets/audio/light blade/whoosh_swish_high_fast_02.wav" id="4_k2nit"]
 [ext_resource type="AudioStream" uid="uid://bu8ms4nsls5rv" path="res://assets/audio/light blade/whoosh_swish_high_fast_03.wav" id="5_jutbq"]
@@ -34,9 +33,6 @@ radius = 50.0
 collision_layer = 0
 collision_mask = 2
 script = ExtResource("1_yhd0t")
-
-[node name="LightBlade" parent="." instance=ExtResource("2_8q4o0")]
-unique_name_in_owner = true
 
 [node name="Slash" type="AudioStreamPlayer2D" parent="."]
 unique_name_in_owner = true

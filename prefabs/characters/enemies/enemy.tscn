@@ -48,9 +48,9 @@ gravity = Vector3(0, 0, 0)
 damping_min = 100.0
 damping_max = 800.0
 scale_max = 2.0
-color = Color(0.101961, 0.54902, 0.360784, 1)
+color = Color(0.533333, 0.0313726, 0.0313726, 1)
 color_ramp = SubResource("GradientTexture1D_8drnm")
-hue_variation_min = -0.25
+hue_variation_min = -2.23517e-08
 hue_variation_max = -2.23517e-08
 
 [node name="Enemy" type="Area2D" groups=["Enemies"]]
@@ -103,7 +103,7 @@ shape = SubResource("CircleShape2D_xkwav")
 unique_name_in_owner = true
 stream = ExtResource("4_o7c7e")
 
-[node name="AttackSound" type="AudioStreamPlayer2D" parent="."]
+[node name="AttackSounds" type="AudioStreamPlayer2D" parent="."]
 unique_name_in_owner = true
 stream = SubResource("AudioStreamRandomizer_h6a0t")
 
@@ -142,6 +142,13 @@ one_shot = true
 explosiveness = 1.0
 randomness = 0.5
 process_material = SubResource("ParticleProcessMaterial_hoy00")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+unique_name_in_owner = true
+avoidance_enabled = true
+radius = 4.0
+neighbor_distance = 10.0
+max_neighbors = 5
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="body_exited" from="." to="." method="_on_body_exited"]

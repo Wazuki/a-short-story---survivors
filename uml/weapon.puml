@@ -17,6 +17,19 @@ package "Combat"
 {
 	Weapon <|-- Area2D
 	Bullet <|-- Area2D
+	
+	class WeaponManager
+	{
+		weapon_data: Dictionary
+		arive_weapons: Array[Weapon]
+		get_weapon_data(weapon_type: Weapon.Type) -> WeaponData
+		create_weapon(weapon_type: WeaponEnums.Type) -> Weapon
+		get_active_weapons() -> Array[Weapon]
+		clear_weapons() -> void
+		create_cooldown_panel(weapon: Weapon) -> void
+		reset() -> void
+		get_weapon_data_by_type(t: WeaponEnums.Type) -> WeaponData
+	}
 
 	class Weapon
 	{
@@ -29,9 +42,11 @@ package "Combat"
 		const ENEMY_CLEANUP_FRAME_OFFSET = 15
 
 		--Descriptive Elements--
-		weapon_type: Type
+		name: String
 		description: String
 		icon: AtlasTexture
+		level_up_texts: Array[String]
+		
 
 		--Weapon Stats--
 		level: int
@@ -42,8 +57,9 @@ package "Combat"
 		crit_mod: float
 
 		--Targeting Logic--
+		weapon_type: Type
 		ready_to_fire: bool
-		target_type = TargetType.NONE
+		target_type: TargetType
 
 		--UI Elements--
 		cooldown_timer: Timer
@@ -60,12 +76,14 @@ package "Combat"
 		first_level_up: bool = true
 
 		==Functions==
+		initialize(data: WeaponData) -> void
 		_ready() -> void
 		_process(delta: float) -> void
 		level_up() -> void
 		reset_timer() -> void
 		fire_weapon() -> void
-		set_stats(base_damage: float, base_speed: float, base_cooldown: float) -> void
+		get_level_up_texts() -> Array[String]
+		'set_stats(base_damage: float, base_speed: float, base_cooldown: float) -> void
 
 		--Targeting Functions--
 		get_closest_target() -> void
@@ -109,27 +127,27 @@ package "Combat"
 		--Required--
 		damage: float
 		starting_pos: Vector2
-
+		sprite_z_index: SpriteConstants.Z_INDEX
 
 		--Optional Variables--
-		speed: float
+		'speed: float
 		target_node: Node2D
 		lifetime: float
-		lifetime_dependent: bool = false
+		'lifetime_dependent: bool = false
 
 		--Other Parameters--
 		affected_areas: Array[Area2D]
 
 		==Functions==
 		_ready() -> void
-		initialize(spawning_weapon: Weapon, pos: Vector2, sprite_z_index: int, target: Node2D = null, projectile_lifetime: float = 0.0, is_lifetime_dependent = false) -> void
+		initialize(spawning_weapon: Weapon, data: BulletData, spawn_pos: Vector2, sprite_z_index: int, target: Node2D = null) -> void
 		enable_timer_expiration() -> void
 
 		--Signals Functions--
 		destroy_self_on_timer_timeout() -> void
 	}
 	note left of Bullet::_ready
-		Automatically deploys a timer to destroy the bullet at the end of its lifetime if lifetime_dependent = true
+		Automatically deploys a timer to destroy the bullet at the end of its lifetime if lifetime > 0.0
 	end note
 
 	Bullet <|-- ArrowBullet
@@ -141,8 +159,24 @@ package "Combat"
 }
 
 
+'Relationships
+WeaponManager --> WeaponData: loads >>
+WeaponManager --> Weapon: instantiates >>
+Weapon --> WeaponData: uses >>
+Weapon --> Bullet: spawns >>
+WeaponData --> BulletData: has >>
+Bullet -> BulletData: intitializes from >>
 
+'Notes for role clarification.
+note right of WeaponManager
+	Loads all WeaponData at runtime from disk.
+	Creates weapons for the player.
+end note
 
+note right of Bullet
+	Some bullets may override initialize()
+	or use secondary setup menthods.
+end note
 'Player --> Weapon: equips
 'Weapon --> Bullet: spawns
 

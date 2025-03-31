@@ -1,4 +1,5 @@
-extends Sprite2D
+class_name LightningBullet
+extends Bullet
 
 # var damage: float
 var jump_speed: float
@@ -11,12 +12,10 @@ var current_jump_target: Enemy
 
 signal jumping_ended
 
- # current_chain starts at 1 instead of 0 because we are only spawning a lightning if we have a target, i.e. this IS chain 1
-func initiailize(speed: float, max_jumps: int, cur_chain:int = 1, splittable: bool = false) -> void:
-	# damage = dmg
+func set_spawn_state(chain_speed: float, max_jumps: int, cur_chain:int = 1, splittable: bool = false) -> void:
 	current_chain = cur_chain
 	can_split = splittable
-	jump_speed = speed
+	jump_speed = chain_speed
 	max_chains = max_jumps
 
 func interpolate(length, duration = 0.1):
@@ -37,13 +36,13 @@ func animate_lightning(start_pos: Vector2, target: Node2D, duration: float):
 	var tween = get_tree().create_tween()
 	# Animate the lightning stretching -> animate the pos back while shrinking the lightning
 	# Rect2: (x (repeats texture horizontal), y (repeats texture vertical), w (controls width), h (controls height))
-	tween.tween_property(self, "region_rect", Rect2(0, 0, distance, 12), duration).set_ease(Tween.EASE_OUT) # Animates the rect, stretching the lightnig out
-	tween.tween_property(self, "global_position", jump_pos, duration).set_ease(Tween.EASE_OUT) # Animates the global pos shift
+	tween.tween_property(%LightningSprite, "region_rect", Rect2(0, 0, distance, 12), duration).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD) # Animates the rect, stretching the lightnig out
+	tween.tween_property(self, "global_position", jump_pos, duration).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD) # Animates the global pos shift
 	tween.set_parallel(true) # The tween right BEFORE set_parallel() also becomes parallel!
-	tween.tween_property(self, "region_rect", Rect2(0, 0, 0, 12), duration).set_ease(Tween.EASE_OUT) # Animates the rect to shrink the lightning
+	tween.tween_property(%LightningSprite, "region_rect", Rect2(0, 0, 0, 12), duration).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD) # Animates the rect to shrink the lightning
 	#await get_tree().create_timer(duration).timeout
 	
-	tween.finished.connect(damage_target) # Damage the target then jump to the next one
+	tween.finished.connect(deal_chain_damage) # Damage the target then jump to the next one
 
 func jump_first_target(target: Node2D) -> void:
 	current_jump_target = target
@@ -53,12 +52,12 @@ func jump_first_target(target: Node2D) -> void:
 	animate_lightning(global_position, target, jump_speed)
 
 func jump_to_next_target() -> void:
-	if %JumpRange.has_overlapping_areas() and current_chain < max_chains:
+	if has_overlapping_areas() and current_chain < max_chains:
 		current_chain += 1
 		
 		# Get a new target randomly based on the overlapping bodies in the jump collider, but make sure we don't hit the same target(s)
 		var target = null
-		var areas_in_range: Array = %JumpRange.get_overlapping_areas()
+		var areas_in_range: Array = get_overlapping_areas()
 		# Check if we've hit any targets yet - they might be dead. If we haven't, just pick a random target. Otherwise, iterate.
 		if hit_targets.is_empty():
 			# Before picking a random target we should make sure the target that we pick is valid.
@@ -92,16 +91,16 @@ func jump_to_next_target() -> void:
 
 		# Now that we've done all that, if we are of the level where we can arc, try to arc.
 		# Make sure this bullet is: able to split and that this is an attack we should split on.
-		if can_split and GameController.chain_lightning.is_splitting_this_attack:
+		if can_split and weapon.is_splitting_this_attack():
 			# print_debug("Attempting to arc!")
-			GameController.chain_lightning.spawn_chained_lightning_bolt(areas_in_range.pick_random(), current_chain - 1, global_position) # Subtract 1 from the chain to account for the first jump
+			weapon.spawn_chained_lightning_bolt(areas_in_range.pick_random(), current_chain - 1, global_position) # Subtract 1 from the chain to account for the first jump
 			can_split = false
 			# print_debug("Arced!")
 
 		# Finally, if the overhaul is enabled and we are on a chain that is a multiple of 4, spawn a strike.
-		var modulus = GameController.chain_lightning.STRIKE_MODULUS		
-		if GameController.chain_lightning.is_overhaul_enabled() and current_chain % modulus == 0: 
-			GameController.chain_lightning.spawn_lightning_stike(target.global_position)
+		var modulus = weapon.strike_modulus	
+		if weapon.is_overhaul_enabled() and current_chain % modulus == 0: 
+			weapon.spawn_lightning_stike(target.global_position)
 			# print_debug("Spawned lightning aoe!")
 
 
@@ -109,25 +108,26 @@ func jump_to_next_target() -> void:
 		end_lightning_sequence()
 
 ## Deal damage to the target if it has not already been freed. Then t ry to jump to the next target.
-func damage_target() -> void:
-	var damage_mod
-	if is_instance_valid(current_jump_target):
-		var enemy = current_jump_target as Enemy
+func deal_chain_damage() -> void:
+	#var enemy = current_jump_target as Enemy
+	damage_modifier = weapon.calculcate_chain_modifier(current_chain)
+	damage_target(current_jump_target)
+	# if is_instance_valid(current_jump_target):
+	# 	var enemy = current_jump_target as Enemy
 
-		# If we've reached the right level and we are on the final chain, it should deal full damage instead.
-		if (GameController.chain_lightning.is_final_chain_full_damage and current_chain == max_chains) or current_chain == 1: # The first strike should also deal full damage.
-			damage_mod = 1.0
-		else:
-			# Retrieve the proper modifier (defaulting to 1.0 if the key wasn't found) and apply damage to the target with the modifier
-			damage_mod = GameController.chain_lightning.get_chain_modifier(current_chain)
+	# 	# If we've reached the right level and we are on the final chain, it should deal full damage instead.
+	# 	if (weapon.is_final_chain_full_damage() and current_chain == max_chains) or current_chain == 1: # The first strike should also deal full damage.
+	# 		damage_mod = 1.0
+	# 	else:
+	# 		# Retrieve the proper modifier (defaulting to 1.0 if the key wasn't found) and apply damage to the target with the modifier
+	# 		damage_mod = weapon.get_chain_modifier(current_chain)
 
-		var damage_result = GameController.chain_lightning.damage_calc()
+	# 	var damage_result = weapon.damage_calc()
 
-		# Before we deal damage we should make sure the target isn't dead!
-		if not enemy.dead: enemy.take_damage(damage_result * damage_mod)
-
-		if GameController.chain_lightning.is_stun_enabled(): enemy.apply_stun(GameController.chain_lightning.STUN_DURATION)
-		# After dealing damage, try to jump to the next target.
+	# 	# Before we deal damage we should make sure the target isn't dead!
+	# 	if not enemy.dead: enemy.take_damage(damage_result * damage_mod)
+	if weapon.is_stun_enabled() and is_instance_valid(current_jump_target): current_jump_target.apply_stun(weapon.stun_duration)
+	# After dealing damage, try to jump to the next target.
 	jump_to_next_target()
 
 func end_lightning_sequence() -> void:

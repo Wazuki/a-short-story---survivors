@@ -1,7 +1,7 @@
 extends Node
 # Manager class for tracking enemies and telling weapons to discard tracked enemies from their respective collections.
 
-var enemy_database: EnemyDatabase = load("res://data/characters/enemies/enemy_database.tres") ## Enemy database that handles enemy vital statistics and data.
+var enemy_database: EnemyDatabase = preload("res://data/characters/enemies/enemy_database.tres") ## Enemy database that handles enemy vital statistics and data.
 @onready var tile_map_layer: TileMapLayer = get_node("/root/GameScene/Level")
 var mob_spawn_point: PathFollow2D
 
@@ -72,6 +72,7 @@ func spawn_enemy() -> void:
 
 	# Finally, add add the enemy to the spawned_enemies container.
 	spawned_enemies.set(new_enemy.get_instance_id(), new_enemy)
+	#print_debug("New enemy speed: " + str(new_enemy.stats.get_stat(CharacterStats.Stat.SPEED)))
 
 func _on_enemy_spawn_timer_timeout() -> void:
 	spawn_enemy()

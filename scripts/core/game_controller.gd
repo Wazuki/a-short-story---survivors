@@ -14,11 +14,11 @@ var global_frame_count = 0 ## Tracks the total frames elapsed for anything that 
 
 # @onready var energy_sword = get_node ("/root/GameScene/Player/Weapons/EnergySword")
 # @onready var spreadfire = get_node("/root/GameScene/Player/Weapons/Spreadfire")
-@onready var slam = get_node("/root/GameScene/Player/Weapons/SlamWeaponController")
-@onready var light_blade = get_node("/root/GameScene/Player/Weapons/LightBladeController")
-@onready var arrow = get_node("/root/GameScene/Player/Weapons/ArrowController")
-@onready var waldos = get_node("/root/GameScene/Player/Weapons/Waldos")
-@onready var chain_lightning = get_node("/root/GameScene/Player/Weapons/ChainLightning") as ChainLightning
+# @onready var slam = get_node("/root/GameScene/Player/Weapons/SlamWeaponController")
+# @onready var light_blade = get_node("/root/GameScene/Player/Weapons/LightBladeController")
+# @onready var arrow = get_node("/root/GameScene/Player/Weapons/ArrowController")
+# @onready var waldos = get_node("/root/GameScene/Player/Weapons/Waldos")
+# @onready var chain_lightning = get_node("/root/GameScene/Player/Weapons/ChainLightning") as ChainLightning
 
 # @onready var mob_spawn_point: PathFollow2D = get_node("/root/GameScene/Player/MobSpawnPath/MobSpawnPoint")
 #@onready var enemy_spawn_timer: Timer = get_node("/root/GameScene/EnemySpawnTimer")
@@ -27,14 +27,14 @@ var global_frame_count = 0 ## Tracks the total frames elapsed for anything that 
 @onready var game_over_UI: PanelContainer = get_node("/root/GameScene/UI/GameOverUI")
 @onready var pause_button: Button = get_node("/root/GameScene/UI/PauseButton")
 
-@onready var cooldown_container = get_node("/root/GameScene/UI/CooldownContainer")
+
 
 
 var game_time_elapsed: float = 0.0
 
 var total_enemies_spawned: int = 0
 var game_active: bool = false
-var weapons = []
+# var weapons = []
 # var enemies: Array[Node2D]
 # var spawned_xp: Array[Node2D]
 
@@ -74,16 +74,16 @@ func _ready() -> void:
 	# Add all weapons to the weapons array
 	# weapons.append(energy_sword)
 	# weapons.append(spreadfire)
-	weapons.append(slam)
-	weapons.append(light_blade)
-	weapons.append(arrow)
-	weapons.append(waldos)
-	weapons.append(chain_lightning)
-	slam.create_cooldown_panel.connect(create_cooldown_panel.bind(slam))
-	light_blade.create_cooldown_panel.connect(create_cooldown_panel.bind(light_blade))
-	arrow.create_cooldown_panel.connect(create_cooldown_panel.bind(arrow))
-	waldos.create_cooldown_panel.connect(create_cooldown_panel.bind(waldos))
-	chain_lightning.create_cooldown_panel.connect(create_cooldown_panel.bind(chain_lightning))
+	#weapons.append(slam)
+	#weapons.append(light_blade)
+	#weapons.append(arrow)
+	#weapons.append(waldos)
+	#weapons.append(chain_lightning)
+	#slam.create_cooldown_panel.connect(create_cooldown_panel.bind(slam))
+	#light_blade.create_cooldown_panel.connect(create_cooldown_panel.bind(light_blade))
+	#arrow.create_cooldown_panel.connect(create_cooldown_panel.bind(arrow))
+	#waldos.create_cooldown_panel.connect(create_cooldown_panel.bind(waldos))
+	#chain_lightning.create_cooldown_panel.connect(create_cooldown_panel.bind(chain_lightning))
 
 	load_game()
 	# Initialize the character select UI to properly set the weapons in the Dict
@@ -143,8 +143,8 @@ func spawn_health_pickup(pos: Vector2) -> void:
 func start_game() -> void:
 	total_enemies_spawned = 0
 
-	for w in weapons:
-		w.reset()
+	# for w in weapons:
+	# 	w.reset()
 
 	game_time_elapsed = 0.0
 	# display_level_up()
@@ -158,19 +158,21 @@ func select_character(character: PlayerCharacterStats) -> void:
 	player.initialize(character)
 	player_health_bar.init_health(player.health) # Initialize the player's health bar - sets all the values to max health.
 
-	# TODO - Improve the functionality of the initial weapon gaining via the Weapon enum. Prefer instantiating new instance maybe.
-	match character.starting_weapon:
-		Weapon.Type.LIGHT_BLADE:
-			light_blade.level_up()
-		Weapon.Type.CHAIN_LIGHTNING:
-			chain_lightning.level_up()
-		Weapon.Type.SLAM:
-			slam.level_up()
-		Weapon.Type.ARROW:
-			arrow.level_up()
-		Weapon.Type.WALDOS:
-			waldos.level_up()
-			waldos.visible = true	
+
+	WeaponManager.create_weapon(character.starting_weapon) # Create the weapon based on the character's starting weapon.
+	# # TODO - Improve the functionality of the initial weapon gaining via the Weapon enum. Prefer instantiating new instance maybe.
+	# match character.starting_weapon:
+	# 	Weapon.Type.LIGHT_BLADE:
+	# 		light_blade.level_up()
+	# 	Weapon.Type.CHAIN_LIGHTNING:
+	# 		chain_lightning.level_up()
+	# 	Weapon.Type.SLAM:
+	# 		slam.level_up()
+	# 	Weapon.Type.ARROW:
+	# 		arrow.level_up()
+	# 	Weapon.Type.WALDOS:
+	# 		waldos.level_up()
+	# 		waldos.visible = true	
 
 	#character["weapon"].level_up() # Don't need to ask the array since we have a ref already.
 	#character["weapon"].visible = true # Make sure the weapon is visiible (required for some weapons)
@@ -180,14 +182,7 @@ func select_character(character: PlayerCharacterStats) -> void:
 	game_active = true
 	# print_debug("Selected " + character)
 
-# Create a new cooldown panel and instantiate it, then connect the weapon firing signal to resetting the cooldown panel's timer
-func create_cooldown_panel(weapon: Weapon) -> void:
-	var new_panel = preload("res://prefabs/ui/cooldown_panel.tscn").instantiate()
-	new_panel.initialize(weapon.icon, weapon.name, weapon.cooldown)
-	weapon.fire.connect(new_panel.reset_cooldown)
-	weapon.gained_level.connect(new_panel.update_level_text)
-	weapon.begin_attack_sequence.connect(new_panel.begin_attack_sequence)
-	cooldown_container.add_child(new_panel)
+
 
 func display_level_up() -> void:
 	level_up_UI.show_level_up_screen()
@@ -256,9 +251,9 @@ func restart_game() -> void:
 	for p in get_tree().get_nodes_in_group("Projectiles"):
 		p.queue_free()
 	
-	# Destroy all cooldown panels.
-	for c in cooldown_container.get_children():
-		c.queue_free()
+	# # Destroy all cooldown panels.
+	# for c in cooldown_container.get_children():
+	# 	c.queue_free()
 	
 	get_node("/root/GameScene/UI/MainMenu/MainMenu").visible = true
 
@@ -277,9 +272,3 @@ func reset_game() -> void:
 	DataManager.reset_saved_data() # Handles game restting and re-saves the data.
 
 	print_debug("Game reset!")
-
-# Go through the weapons and find the one that matches our type and return it.
-func get_weapon_by_type(t: Weapon.Type) -> Weapon:
-	for w in weapons: if w.weapon_type == t: return w
-	print_debug(Weapon.Type.keys()[t] + " was not found in the weapon array.")
-	return null

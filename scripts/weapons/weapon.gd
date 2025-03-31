@@ -1,38 +1,50 @@
-## Every weapon that overrides [func _process] or [func _on_area_entered] MUST call the super for those first.
+## Every weapon that overrides [func initialize(data)], [func _process] or [func _on_area_entered] MUST call the super for those first.
 class_name  Weapon
 extends Area2D
 
+# Quick access enums:
+const SceneKey = WeaponEnums.SceneKey # Assigns the WeaponEnums enum for quick access.
+const Type = WeaponEnums.Type # Assigns the WeaponData enum for quick access.
+const TargetType = WeaponEnums.TargetType # Assigns the WeaponData enum for quick access.
+#const Stat = CharacterStats.Stat # Assigns the CharacterStats enum for quick access.
 
-enum Type { SLAM, LIGHT_BLADE, WALDOS, ARROW, CHAIN_LIGHTNING}
-enum TargetType { NONE, CLOSEST, HIGHEST_HP, RANDOM }
+# Other offset constants
+const FRAME_UPDATE_OFFSET = 6 ## The number of frames between each targeting update.
+#const ENEMY_CLEANUP_FRAME_OFFSET = 15 ## The number of frames between each enemy cleanup.
 
-const Stat = CharacterStats.Stat # Assigns the CharacterStats enum for quick access.
-const FRAME_UPDATE_OFFSET = 6
-const ENEMY_CLEANUP_FRAME_OFFSET = 15
-
-# Variables to keep track of what our closest targets are for that type of weapon.
-var highest_hp_enemy_in_range: Enemy = null
-var closest_enemy: Enemy = null
-
-var enemies_in_range = {} ## An [int]-[Enemy] dictionary that tracks enemies in our colliders. Use [method get_instance_id()] to get the instance ID.
-
-var weapon_type: Type
+# Descriptive elements
 var description: String
 var icon: AtlasTexture
+var level_up_texts: Array[String] = [] ## The text for each level up (Max 7)
 
-var level: int
-var damage: float
-var speed: float
-var cooldown: float
-
-var crit_chance: float
-var crit_mod: float
-
-var cooldown_timer: Timer
-var ready_to_fire: bool
-
+# Enumerated Statistics
+var weapon_type: Type ## The type of weapon based on the Weapon Type enum.
 var target_type = TargetType.NONE ## Determines the targeting logic for the weapon.
 
+# Calculated Weapon statistics
+var level: int = 1 ## The level of the weapon. Used for leveling up and determining the weapon's stats.
+var damage: float ## The damage of the weapon.
+var speed: float ## The speed of the weapon (attack speed, lightning jump speed, etc.)
+var cooldown: float ## The cooldown of the weapon (how often it can attack)
+var crit_chance: float ## The base critical chance of the weapon.
+var crit_mod: float ## The base critical damage modifier of the weapon.
+var weapon_scale: Vector2 = Vector2.ONE ## The scale of the weapon. Used for scaling the weapon's size.
+
+# UI Elements
+var cooldown_timer: Timer
+var ready_to_fire: bool
+var cooldown_panel
+
+# Targeting Data - Variables to keep track of what our closest targets are for that type of weapon.
+@export var collision_shape: CollisionShape2D ## The collision shape of the weapon, used to determine the weapon's range.
+var highest_hp_enemy_in_range: Enemy = null
+var closest_enemy: Enemy = null
+var enemies_in_range = {} ## An [int]-[Enemy] dictionary that tracks enemies in our colliders. Use [method get_instance_id()] to get the instance ID.
+
+# Packed scenes
+var bullet_scenes: Dictionary = {} ## Dictionary of packed scenes for the weapon. Should be scene name, packed scene.
+
+## Deprecated. Will be tied into the new weapon data system.
 var first_level_up: bool = true:
 	get:
 		return first_level_up
@@ -41,7 +53,7 @@ var first_level_up: bool = true:
 		if not first_level_up: create_cooldown_panel.emit() # Emit the signal only if we are now false - theoretically should only be called once?
 
 
-var cooldown_panel
+
 signal fire
 signal critical_hit
 signal create_cooldown_panel
@@ -50,11 +62,33 @@ signal gained_level(value)
 
 const OVERHAUL_LEVEL = 7
 
+## Initialize the weapon with the data from the WeaponData resource.[br]
+## Must be called [b]BEFORE[/b] the weapon is added to the scene tree.
+func initialize(data: WeaponData) -> void:
+	# Initialize the weapon with the data from the WeaponData resource.
+	name = data.name
+	weapon_type = data.weapon_type as Type
+	description = data.description
+	icon = data.icon
+	level_up_texts = data.level_up_texts
+
+	damage = data.damage
+	speed = data.speed
+	cooldown = data.cooldown
+	crit_chance = data.crit_chance
+	crit_mod = data.crit_mod
+
+	target_type = data.target_type as TargetType
+	bullet_scenes = data.bullet_scene_map.to_dict()
+	
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	# Create the weapon timer programmatically.
 	cooldown_timer = Timer.new()
 	cooldown_timer.one_shot = true
+	cooldown_timer.wait_time = cooldown
+	cooldown_timer.autostart = true # Star the timer automatically (for use with instantiation)
 	cooldown_timer.connect("timeout", _on_weapon_timer_timeout)
 	
 	# Connect the signal remove_enemy(enemy) to our remove_enemy function
@@ -63,28 +97,42 @@ func _ready() -> void:
 	
 	add_child(cooldown_timer)
 	# cooldown_timer.wait_time = cooldown
-	
-	crit_chance = 0
-	crit_mod = 0
-	
+
 	ready_to_fire = false
+
+## Return a new bullet instanced based on the passed scene key. The bullet will return pre-initialized.
+func instantiate_bullet_by_key(key: SceneKey, spawn_pos: Vector2, index: SpriteConstants.Z_INDEX, target_node: Node2D = null) -> Bullet:
+	# Returns a new bullet instance based on the key.
+	if bullet_scenes.has(key):
+		var new_bullet = bullet_scenes[key].bullet_scene.instantiate() as Bullet
+		new_bullet.initialize(self, bullet_scenes[key], spawn_pos, index, target_node)
+		return new_bullet
+	else:
+		print_debug("Bullet scene not found for: ", str(key))
+	return null
+
+# ## Return the level up texts from the weapon data. This is used for the level up GUI.
+# func get_level_up_texts(new_level: int) -> String:
+# 	if level_up_texts.size() > 0: return level_up_texts[new_level]
+# 	else:
+# 		print_debug("No level up texts found for weapon: ", name)
+# 		return ""
 
 func level_up() -> void: gained_level.emit(level)
 
-# Updates the target based on the targetting type. Requires any overriding derived classes to call super._process!()
+## Updates the target based on the targetting type. Requires any overriding derived classes to call super._process!()
 func _process(_delta: float) -> void:
 	if GameController.global_frame_count % FRAME_UPDATE_OFFSET == 0:
 		if target_type == TargetType.CLOSEST: get_closest_target()
 		elif target_type == TargetType.HIGHEST_HP: get_highest_hp_target()
 
 	# Cleans up the enemies_in_range array every so often to clear out dead enemies. TODO - consider signals.
-	if GameController.global_frame_count % ENEMY_CLEANUP_FRAME_OFFSET == 0 and not enemies_in_range.is_empty(): 
+	if GameController.global_frame_count % WeaponManager.ENEMY_CLEANUP_FRAME_OFFSET == 0 and not enemies_in_range.is_empty(): 
 		var cleaned_keys = enemies_in_range.values().filter(is_instance_valid)
 		enemies_in_range.clear()
 		for e in cleaned_keys:
 			enemies_in_range.set(e.get_instance_id(), e)
 		
-
 
 ## Returns the target closest to our position based on the enemies_in_range Dictionary.
 func get_closest_target() -> void:
@@ -101,7 +149,7 @@ func get_highest_hp_target() -> void:
 	if not enemies_in_range.is_empty():
 		if highest_hp_enemy_in_range == null: highest_hp_enemy_in_range = enemies_in_range.values().pick_random() # If we don't have a highest hp enemy anymore set to a random enemy.
 		for enemy_ID in enemies_in_range:
-			if enemies_in_range[enemy_ID].stats.get_stat(Stat.HEALTH) > highest_hp_enemy_in_range.stats.get_stat(Stat.HEALTH):
+			if enemies_in_range[enemy_ID].stats.get_stat(CharacterStats.Stat.HEALTH) > highest_hp_enemy_in_range.stats.get_stat(CharacterStats.Stat.HEALTH):
 				highest_hp_enemy_in_range = enemies_in_range[enemy_ID]
 
 ## When the enemy enters range, add them to the [enemies_in_range] dictionary. Then, if we target by HP, sort the dictionary by max HP.
@@ -113,7 +161,7 @@ func _on_area_entered(area:Area2D) -> void:
 				highest_hp_enemy_in_range = area
 			else:
 				# Get the HP of the current enemy. If this new enemy's HP is greater, they're the new highest HP enemy.
-				if area.stats.get_stat(Stat.HEALTH) > highest_hp_enemy_in_range.stats.get_stat(Stat.HEALTH):
+				if area.stats.get_stat(CharacterStats.Stat.HEALTH) > highest_hp_enemy_in_range.stats.get_stat(CharacterStats.Stat.HEALTH):
 					highest_hp_enemy_in_range = area
 
 		
@@ -170,6 +218,7 @@ func fire_weapon() -> void:
 		fire.emit()
 	# print_debug("fire")
 
+## Deprecated. Will be tied into the new weapon data system.
 func set_stats(base_damage: float, base_speed: float, base_cooldown: float) -> void:
 	level = 1
 	damage = base_damage

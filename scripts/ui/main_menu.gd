@@ -21,7 +21,7 @@ func _on_start_button_pressed() -> void:
 	GameController.start_game()
 
 func _on_options_button_pressed() -> void:
-	if GameController.game_started:
+	if GameController.game_active:
 		%PauseMenu.visible = false
 	else:
 		%MainMenu.visible = false
@@ -46,7 +46,7 @@ func _on_music_slider_drag_ended(_value_changed:bool) -> void:
 func _on_close_options_window_button_pressed() -> void:
 	%OptionsMenu.visible = false
 
-	if GameController.game_started:
+	if GameController.game_active:
 		%PauseMenu.visible = true
 	else:
 		%MainMenu.visible = true
