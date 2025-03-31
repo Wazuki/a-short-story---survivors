@@ -1,0 +1,173 @@
+[gd_scene load_steps=4 format=3 uid="uid://cfdtpyse3s0tr"]
+
+[ext_resource type="Script" uid="uid://b28cermtcuqwc" path="res://scripts/ui/character_select_ui.gd" id="1_rvfjh"]
+[ext_resource type="Texture2D" uid="uid://bguee08c3f17c" path="res://assets/sprites/characters/valkyrie/valkyrie_icon.tres" id="2_5ueb4"]
+[ext_resource type="Texture2D" uid="uid://cvdqnpg7gow3s" path="res://assets/UI/icons/chain_lightning_icon.tres" id="13_swf5l"]
+
+[node name="CharacterSelectUI" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_rvfjh")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"FullScreenMenuMagin"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="WeaponInfoPanel" type="Panel" parent="MarginContainer/HBoxContainer/Control"]
+unique_name_in_owner = true
+layout_mode = 2
+offset_left = 4.0
+offset_right = 305.0
+offset_bottom = 980.0
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/Control/WeaponInfoPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/Control/WeaponInfoPanel/MarginContainer"]
+layout_mode = 2
+
+[node name="TitleText" type="RichTextLabel" parent="MarginContainer/HBoxContainer/Control/WeaponInfoPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.15
+theme_override_font_sizes/normal_font_size = 30
+text = "Starting Weapon"
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="WeaponIcon" type="TextureRect" parent="MarginContainer/HBoxContainer/Control/WeaponInfoPanel/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+texture = ExtResource("13_swf5l")
+expand_mode = 4
+stretch_mode = 5
+
+[node name="WeaponInfoText" type="RichTextLabel" parent="MarginContainer/HBoxContainer/Control/WeaponInfoPanel/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+text = "Chain lightning description
+
+zap zap zap"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CharacterPanelContainer" type="GridContainer" parent="MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
+columns = 4
+
+[node name="Control2" type="Control" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CharacterInfoPanel" type="Panel" parent="MarginContainer/HBoxContainer/Control2"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/Control2/CharacterInfoPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/Control2/CharacterInfoPanel/MarginContainer"]
+layout_mode = 2
+
+[node name="CharacterIcon" type="TextureRect" parent="MarginContainer/HBoxContainer/Control2/CharacterInfoPanel/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+texture = ExtResource("2_5ueb4")
+expand_mode = 4
+stretch_mode = 5
+
+[node name="CharacterNameText" type="RichTextLabel" parent="MarginContainer/HBoxContainer/Control2/CharacterInfoPanel/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.15
+theme_override_font_sizes/normal_font_size = 36
+text = "Valkyrie"
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CharacterInfoText" type="RichTextLabel" parent="MarginContainer/HBoxContainer/Control2/CharacterInfoPanel/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+text = "An arranged marriage.
+A duel to the death.
+A blade of immense power.
+A new purpose.
+
+Health: 100
+Armor: 10
+Speed: 10
+
+Starting Weapon"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SelectCharacterButton" type="Button" parent="MarginContainer/HBoxContainer/Control2/CharacterInfoPanel/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.15
+text = "DEPLOY"
+
+[node name="BackButton" type="Button" parent="MarginContainer/HBoxContainer/Control2/CharacterInfoPanel/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+self_modulate = Color(0.989563, 0, 0.0372825, 1)
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.15
+text = "ABORT"
+
+[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/Control2/CharacterInfoPanel/MarginContainer/VBoxContainer/SelectCharacterButton" to="." method="_on_select_character_button_pressed"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/Control2/CharacterInfoPanel/MarginContainer/VBoxContainer/BackButton" to="." method="_on_back_button_pressed"]

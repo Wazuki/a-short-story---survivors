@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="BulletData" load_steps=3 format=3 uid="uid://d23lp3py7rh3a"]
+
+[ext_resource type="PackedScene" uid="uid://dqhqi15ijtkdy" path="res://prefabs/bullets/lightning_strike.tscn" id="1_36lk1"]
+[ext_resource type="Script" uid="uid://cv36dt247myo1" path="res://data/weapons/bullets/bullet_data.gd" id="1_imwwj"]
+
+[resource]
+script = ExtResource("1_imwwj")
+name = "Chain Lightning Strike"
+damage_modifier = 0.5
+damage_cooldown = 0.5
+speed = 0.0
+lifetime = 2.5
+bullet_scene = ExtResource("1_36lk1")
+metadata/_custom_type_script = "uid://cv36dt247myo1"

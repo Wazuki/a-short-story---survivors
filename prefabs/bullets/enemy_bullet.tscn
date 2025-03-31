@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=3 uid="uid://vdpcbf0b1fs3"]
+
+[ext_resource type="Script" uid="uid://de7as8dm5mn6l" path="res://scripts/bullets/enemy_bullet.gd" id="1_0ltxw"]
+[ext_resource type="SpriteFrames" uid="uid://b3v3bnngfeq2w" path="res://prefabs/bullets/enemy_bullet.tres" id="1_3i85r"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ki63i"]
+radius = 12.0
+
+[node name="EnemyBullet" type="Area2D" groups=["Projectiles"]]
+texture_filter = 1
+scale = Vector2(0.75, 0.75)
+collision_layer = 0
+collision_mask = 4
+script = ExtResource("1_0ltxw")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -3)
+sprite_frames = ExtResource("1_3i85r")
+autoplay = "default"
+frame_progress = 0.933202
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_ki63i")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

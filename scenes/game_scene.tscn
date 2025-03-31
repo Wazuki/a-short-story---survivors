@@ -1,0 +1,187 @@
+[gd_scene load_steps=11 format=3 uid="uid://c756hxrovtgc5"]
+
+[ext_resource type="PackedScene" uid="uid://bivcmhjsdsyy2" path="res://scenes/characters/player.tscn" id="2_po0ka"]
+[ext_resource type="PackedScene" uid="uid://dmtmv04oyd6hl" path="res://scenes/world/level.tscn" id="2_x5ify"]
+[ext_resource type="PackedScene" uid="uid://2mcqwy0rar2b" path="res://scenes/main_camera.tscn" id="3_qmrv4"]
+[ext_resource type="PackedScene" uid="uid://cfdtpyse3s0tr" path="res://scenes/ui/character_select_ui.tscn" id="5_navxo"]
+[ext_resource type="PackedScene" uid="uid://clb7lgpy4ix3o" path="res://scenes/ui/level_up_ui.tscn" id="6_kdryc"]
+[ext_resource type="PackedScene" uid="uid://cqph8d6325sto" path="res://scenes/ui/main_menu.tscn" id="7_6e45b"]
+[ext_resource type="AudioStream" uid="uid://dax4rfyg1yk1a" path="res://assets/audio/music/Sketchbook 2024-12-21.ogg" id="7_7bn7d"]
+[ext_resource type="PackedScene" uid="uid://dfdjdnbqurvar" path="res://scenes/ui/progress_tracker.tscn" id="7_7vrjw"]
+[ext_resource type="Texture2D" uid="uid://cdawaub8gn4r1" path="res://unused_assets/wenrexa/Icons/24.png" id="7_uohvc"]
+[ext_resource type="PackedScene" uid="uid://remf34e7bwbp" path="res://prefabs/ui/healthbar.tscn" id="9_bil8f"]
+
+[node name="GameScene" type="Node2D"]
+
+[node name="Level" parent="." instance=ExtResource("2_x5ify")]
+position = Vector2(0, 0)
+
+[node name="Player" parent="." instance=ExtResource("2_po0ka")]
+unique_name_in_owner = true
+z_index = 1
+position = Vector2(964, 540)
+
+[node name="MainCamera" parent="." node_paths=PackedStringArray("target") instance=ExtResource("3_qmrv4")]
+position = Vector2(964, 540)
+target = NodePath("../Player")
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="PlayerHealthBar" parent="UI" instance=ExtResource("9_bil8f")]
+offset_left = -781.0
+offset_top = -522.0
+offset_right = 155.0
+offset_bottom = -397.0
+
+[node name="GameTimeLabel" type="RichTextLabel" parent="UI"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -100.0
+offset_top = 22.0
+offset_right = 100.0
+offset_bottom = 62.0
+grow_horizontal = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_font_sizes/normal_font_size = 48
+bbcode_enabled = true
+text = "[p align=\"center\"]0:00"
+scroll_active = false
+
+[node name="CooldownContainer" type="HBoxContainer" parent="UI"]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -129.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_vertical = 8
+alignment = 1
+
+[node name="PlayerInfoContainer" type="PanelContainer" parent="UI"]
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 171.0
+offset_bottom = 212.0
+
+[node name="Panel" type="Panel" parent="UI/PlayerInfoContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/PlayerInfoContainer/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="PlayerInfoText" type="RichTextLabel" parent="UI/PlayerInfoContainer/Panel/MarginContainer"]
+process_mode = 3
+layout_mode = 2
+bbcode_enabled = true
+text = "[p align=\"center\"]Level: 1
+XP: 1
+TNL: 10
+HP: 100"
+
+[node name="LevelUpUI" parent="UI" instance=ExtResource("6_kdryc")]
+unique_name_in_owner = true
+visible = false
+
+[node name="CharacterSelectUI" parent="UI" instance=ExtResource("5_navxo")]
+visible = false
+
+[node name="ProgressTrackerControl" parent="UI" node_paths=PackedStringArray("main_menu") instance=ExtResource("7_7vrjw")]
+visible = false
+main_menu = NodePath("../MainMenu")
+
+[node name="MainMenu" parent="UI" instance=ExtResource("7_6e45b")]
+
+[node name="GameOverUI" type="PanelContainer" parent="UI"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/GameOverUI"]
+layout_mode = 2
+theme_override_constants/margin_left = 80
+theme_override_constants/margin_top = 80
+theme_override_constants/margin_right = 80
+theme_override_constants/margin_bottom = 80
+
+[node name="Panel" type="Panel" parent="UI/GameOverUI/MarginContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/GameOverUI/MarginContainer/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Spacer" type="Control" parent="UI/GameOverUI/MarginContainer/Panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="RichTextLabel" type="RichTextLabel" parent="UI/GameOverUI/MarginContainer/Panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/normal_font_size = 256
+bbcode_enabled = true
+text = "[center]GAME OVER[/center]"
+
+[node name="Spacer2" type="Control" parent="UI/GameOverUI/MarginContainer/Panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/GameOverUI/MarginContainer/Panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+theme_override_constants/margin_left = 600
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 600
+theme_override_constants/margin_bottom = 40
+
+[node name="RestartButton" type="Button" parent="UI/GameOverUI/MarginContainer/Panel/VBoxContainer/MarginContainer"]
+process_mode = 2
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+theme_override_font_sizes/font_size = 80
+text = "DISAVOW"
+
+[node name="PauseButton" type="Button" parent="UI"]
+unique_name_in_owner = true
+process_mode = 3
+visible = false
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -62.0
+offset_top = 16.0
+offset_right = -16.0
+offset_bottom = 57.0
+grow_horizontal = 0
+icon = ExtResource("7_uohvc")
+
+[node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
+process_mode = 3
+stream = ExtResource("7_7bn7d")
+volume_db = -5.0
+autoplay = true
+bus = &"Music"
+parameters/looping = true

@@ -1,0 +1,157 @@
+[gd_scene load_steps=21 format=3 uid="uid://d2lds6aupinx5"]
+
+[ext_resource type="Script" uid="uid://be361hr1w38ld" path="res://scripts/characters/enemies/enemy.gd" id="1_tqx47"]
+[ext_resource type="PackedScene" uid="uid://remf34e7bwbp" path="res://prefabs/ui/healthbar.tscn" id="2_qanmn"]
+[ext_resource type="SpriteFrames" uid="uid://drpsnnuwf674n" path="res://assets/sprites/characters/enemies/basic_enemy.tres" id="3_bipts"]
+[ext_resource type="AudioStream" uid="uid://cp212fsoorkcu" path="res://assets/audio/LIQImpt_Goo Splatter_09.wav" id="4_o7c7e"]
+[ext_resource type="AudioStream" uid="uid://cpa54i274qfh7" path="res://assets/audio/ranged enemy/sci-fi_weapon_blaster_laser_boom_small_01.wav" id="5_kinkl"]
+[ext_resource type="AudioStream" uid="uid://cecnc2bgd4mfk" path="res://assets/audio/ranged enemy/sci-fi_weapon_blaster_laser_boom_small_02.wav" id="6_5t00q"]
+[ext_resource type="AudioStream" uid="uid://dbnoxtq3ysjbb" path="res://assets/audio/ranged enemy/sci-fi_weapon_blaster_laser_boom_small_03.wav" id="7_nhj82"]
+[ext_resource type="AudioStream" uid="uid://dlijmd2ioepir" path="res://assets/audio/ranged enemy/sci-fi_weapon_blaster_laser_boom_small_04.wav" id="8_tt2i8"]
+[ext_resource type="Script" uid="uid://bhgklwud55i1l" path="res://scripts/states/enemy/enemy_state_machine.gd" id="9_3kjuy"]
+[ext_resource type="Script" uid="uid://d1gk31klqp7er" path="res://scripts/states/enemy/enemy_death.gd" id="10_5lnw5"]
+[ext_resource type="Script" uid="uid://ckp6ox7be3gsc" path="res://scripts/states/enemy/enemy_idle.gd" id="11_lummi"]
+[ext_resource type="Script" uid="uid://bv6qtxpppyc2c" path="res://scripts/states/enemy/enemy_walk.gd" id="12_m48vf"]
+[ext_resource type="Script" uid="uid://4geq1i1satr4" path="res://scripts/states/enemy/enemy_attack.gd" id="13_pmfm8"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_3soxo"]
+radius = 13.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_3m2xr"]
+radius = 4.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_xkwav"]
+radius = 0.01
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_h6a0t"]
+streams_count = 4
+stream_0/stream = ExtResource("5_kinkl")
+stream_1/stream = ExtResource("6_5t00q")
+stream_2/stream = ExtResource("7_nhj82")
+stream_3/stream = ExtResource("8_tt2i8")
+
+[sub_resource type="Gradient" id="Gradient_xkwav"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_8drnm"]
+gradient = SubResource("Gradient_xkwav")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_hoy00"]
+lifetime_randomness = 1.0
+particle_flag_disable_z = true
+emission_shape = 1
+emission_sphere_radius = 25.0
+direction = Vector3(0, 1, 0)
+initial_velocity_min = 200.0
+initial_velocity_max = 400.0
+gravity = Vector3(0, 0, 0)
+damping_min = 100.0
+damping_max = 800.0
+scale_max = 2.0
+color = Color(0.533333, 0.0313726, 0.0313726, 1)
+color_ramp = SubResource("GradientTexture1D_8drnm")
+hue_variation_min = -2.23517e-08
+hue_variation_max = -2.23517e-08
+
+[node name="Enemy" type="Area2D" groups=["Enemies"]]
+z_index = 100
+y_sort_enabled = true
+position = Vector2(0, -6)
+collision_layer = 2
+script = ExtResource("1_tqx47")
+
+[node name="HealthBar" parent="." instance=ExtResource("2_qanmn")]
+unique_name_in_owner = true
+visible = false
+offset_left = -23.0
+offset_top = -28.0
+offset_right = 913.0
+offset_bottom = 97.0
+scale = Vector2(0.05, 0.05)
+
+[node name="Spritesheet" type="AnimatedSprite2D" parent="."]
+unique_name_in_owner = true
+texture_filter = 1
+sprite_frames = ExtResource("3_bipts")
+animation = &"idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(-1, 1)
+shape = SubResource("CircleShape2D_3soxo")
+
+[node name="EnemyAvoidanceArea" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 4
+
+[node name="EnemyAvoidanceCollider" type="CollisionShape2D" parent="EnemyAvoidanceArea"]
+position = Vector2(0, 6)
+shape = SubResource("CircleShape2D_3m2xr")
+debug_color = Color(0.922462, 5.14036e-05, 0.687427, 0.42)
+
+[node name="AttackRange" type="Area2D" parent="."]
+unique_name_in_owner = true
+collision_layer = 0
+monitoring = false
+monitorable = false
+
+[node name="AttackRangeCollider" type="CollisionShape2D" parent="AttackRange"]
+unique_name_in_owner = true
+shape = SubResource("CircleShape2D_xkwav")
+
+[node name="DeathSound" type="AudioStreamPlayer2D" parent="."]
+unique_name_in_owner = true
+stream = ExtResource("4_o7c7e")
+
+[node name="AttackSounds" type="AudioStreamPlayer2D" parent="."]
+unique_name_in_owner = true
+stream = SubResource("AudioStreamRandomizer_h6a0t")
+
+[node name="DisplacementTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 2.0
+
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("actor")]
+unique_name_in_owner = true
+script = ExtResource("9_3kjuy")
+actor = NodePath("..")
+metadata/_custom_type_script = "uid://bhgklwud55i1l"
+
+[node name="EnemyDeath" type="Node" parent="StateMachine"]
+script = ExtResource("10_5lnw5")
+metadata/_custom_type_script = "uid://d1gk31klqp7er"
+
+[node name="EnemyIdle" type="Node" parent="StateMachine"]
+script = ExtResource("11_lummi")
+metadata/_custom_type_script = "uid://ckp6ox7be3gsc"
+
+[node name="EnemyWalk" type="Node" parent="StateMachine"]
+script = ExtResource("12_m48vf")
+metadata/_custom_type_script = "uid://bv6qtxpppyc2c"
+
+[node name="EnemyAttack" type="Node" parent="StateMachine"]
+script = ExtResource("13_pmfm8")
+metadata/_custom_type_script = "uid://4geq1i1satr4"
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="."]
+unique_name_in_owner = true
+emitting = false
+amount = 20
+lifetime = 0.8
+one_shot = true
+explosiveness = 1.0
+randomness = 0.5
+process_material = SubResource("ParticleProcessMaterial_hoy00")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+unique_name_in_owner = true
+avoidance_enabled = true
+radius = 4.0
+neighbor_distance = 10.0
+max_neighbors = 5
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]
+[connection signal="area_entered" from="EnemyAvoidanceArea" to="." method="_on_enemy_avoidance_area_area_entered"]
+[connection signal="body_entered" from="AttackRange" to="." method="_on_attack_range_body_entered"]
+[connection signal="body_exited" from="AttackRange" to="." method="_on_attack_range_body_exited"]

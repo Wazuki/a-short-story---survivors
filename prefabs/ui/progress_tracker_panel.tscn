@@ -1,0 +1,103 @@
+[gd_scene load_steps=6 format=3 uid="uid://c8ol85q23j4if"]
+
+[ext_resource type="Texture2D" uid="uid://bguee08c3f17c" path="res://assets/sprites/characters/valkyrie/valkyrie_icon.tres" id="1_8nu7t"]
+[ext_resource type="StyleBox" uid="uid://ixx1sj4fe5nb" path="res://assets/simple_cyan_border_stylebox.tres" id="1_fugqt"]
+[ext_resource type="Script" uid="uid://deut5llcpx8fo" path="res://scripts/ui/progress_tracker_panel.gd" id="1_p5lec"]
+[ext_resource type="Shader" uid="uid://c27flpnhtvhur" path="res://assets/shaders/locked_character_shader.tres" id="2_s74r3"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_p5lec"]
+shader = ExtResource("2_s74r3")
+shader_parameter/line_color = Color(1, 1, 1, 1)
+shader_parameter/line_thickness = 1.0
+
+[node name="ProgressTrackerPanel" type="Panel"]
+custom_minimum_size = Vector2(0, 200)
+anchors_preset = 10
+anchor_right = 1.0
+offset_right = -120.0
+offset_bottom = 200.0
+grow_horizontal = 2
+script = ExtResource("1_p5lec")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="Panel" type="Panel" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.1
+theme_override_styles/panel = ExtResource("1_fugqt")
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="QuestIcon" type="TextureRect" parent="MarginContainer/HBoxContainer/Panel/MarginContainer"]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_p5lec")
+layout_mode = 2
+texture = ExtResource("1_8nu7t")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="MarginContainer2" type="MarginContainer" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="QuestObjective" type="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/normal_font_size = 48
+bbcode_enabled = true
+text = "[color=red]OBJECTIVE:[/color] SLAY 1000 FOES"
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="QuestProgressBar" type="ProgressBar" parent="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.8
+max_value = 1.0
+value = 1.0
+
+[node name="QuestReward" type="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/normal_font_size = 48
+bbcode_enabled = true
+text = "[color=ffc857]REWARD: NEW CHARACTER"
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 2

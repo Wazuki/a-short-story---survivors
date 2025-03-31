@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3 uid="uid://dqhqi15ijtkdy"]
+
+[ext_resource type="Script" uid="uid://b70gqnhi46qvb" path="res://scripts/bullets/lightning_strike.gd" id="1_ahstv"]
+[ext_resource type="SpriteFrames" uid="uid://588ht2syw7wa" path="res://assets/sprites/weapons/chain_lightning/lightning_strike/lightning_strike_bullet.tres" id="1_ssu8q"]
+[ext_resource type="Script" uid="uid://ckyjakxlmwq5h" path="res://scripts/helpers/random_anim_on_spawn.gd" id="3_ahstv"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_o638a"]
+radius = 30.0
+
+[node name="LightningStrike" type="Area2D" groups=["Lightning Strikes", "Projectiles"]]
+modulate = Color(1, 1, 1, 0.75)
+z_index = 5
+z_as_relative = false
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1_ahstv")
+metadata/_custom_type_script = "uid://dhndwso1we0i7"
+
+[node name="Spritesheet" type="AnimatedSprite2D" parent="."]
+sprite_frames = ExtResource("1_ssu8q")
+animation = &"lightning_strike_1"
+script = ExtResource("3_ahstv")
+
+[node name="DamageArea" type="CollisionShape2D" parent="."]
+unique_name_in_owner = true
+shape = SubResource("CircleShape2D_o638a")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="area_exited" from="." to="." method="_on_area_exited"]

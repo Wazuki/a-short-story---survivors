@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://cp212fsoorkcu"
+path="res://.godot/imported/LIQImpt_Goo Splatter_09.wav-a1273f12fbb68dcd888eeb9635c22fc1.sample"
+
+[deps]
+
+source_file="res://assets/audio/LIQImpt_Goo Splatter_09.wav"
+dest_files=["res://.godot/imported/LIQImpt_Goo Splatter_09.wav-a1273f12fbb68dcd888eeb9635c22fc1.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

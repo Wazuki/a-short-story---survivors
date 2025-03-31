@@ -1,0 +1,11 @@
+[gd_resource type="Resource" load_steps=6 format=3 uid="uid://c7cp8gfyq068b"]
+
+[ext_resource type="Script" uid="uid://coxkgyr0m3be6" path="res://data/weapons/weapon_database.gd" id="1_48s8b"]
+[ext_resource type="Resource" uid="uid://bc762v57pkix3" path="res://data/weapons/arrow_data.tres" id="2_pybma"]
+[ext_resource type="Resource" uid="uid://vqco3hbdgcc3" path="res://data/weapons/light_blade_data.tres" id="3_48s8b"]
+[ext_resource type="Resource" uid="uid://ctstshqbk5vtk" path="res://data/weapons/slam_data.tres" id="4_bb07e"]
+[ext_resource type="Resource" uid="uid://btn6uja8p0372" path="res://data/weapons/waldos_data.tres" id="5_3j2n6"]
+
+[resource]
+script = ExtResource("1_48s8b")
+weapon_data = Array[Resource]([ExtResource("2_pybma"), ExtResource("3_48s8b"), ExtResource("4_bb07e"), ExtResource("5_3j2n6")])

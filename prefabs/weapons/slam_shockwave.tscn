@@ -1,0 +1,88 @@
+[gd_scene load_steps=7 format=3 uid="uid://4x7awsvvkmgg"]
+
+[ext_resource type="Shader" uid="uid://b2qp0hi3o8ykm" path="res://assets/shaders/slam_shockwave.gdshader" id="1_eolsh"]
+[ext_resource type="Script" uid="uid://dwy2njsdfv5m4" path="res://distortion_shader.gd" id="2_01bha"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_e41ab"]
+shader = ExtResource("1_eolsh")
+shader_parameter/center = Vector2(0.5, 0.5)
+shader_parameter/force = 1.0
+shader_parameter/size = 0.0
+shader_parameter/thickness = 0.05
+shader_parameter/offset = 0.002
+
+[sub_resource type="Animation" id="Animation_av7a3"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:material:shader_parameter/size")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:material:shader_parameter/force")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [1.0]
+}
+
+[sub_resource type="Animation" id="Animation_khe4o"]
+resource_name = "shockwave"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:material:shader_parameter/size")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 2.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:material:shader_parameter/force")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [1.0, 0.2]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_av7a3"]
+_data = {
+&"RESET": SubResource("Animation_av7a3"),
+&"shockwave": SubResource("Animation_khe4o")
+}
+
+[node name="SlamShockwaveRect" type="ColorRect"]
+material = SubResource("ShaderMaterial_e41ab")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_01bha")
+
+[node name="ShockwaveAnimPlayer" type="AnimationPlayer" parent="."]
+unique_name_in_owner = true
+libraries = {
+&"": SubResource("AnimationLibrary_av7a3")
+}

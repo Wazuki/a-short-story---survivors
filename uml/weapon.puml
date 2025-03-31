@@ -1,0 +1,183 @@
+@startuml Combat 
+' How weapons work, inherit, and interact with targets.
+' Theme and theme parameters for easier readin'
+!theme crt-amber
+skinparam classAttributeIconSize 0
+skinparam classFontSize 14
+skinparam classAttributeFontSize 12
+skinparam Padding 8
+'left to right direction
+
+package "GodotCore" 
+{
+	class Area2D
+}
+
+package "Combat"
+{
+	Weapon <|-- Area2D
+	Bullet <|-- Area2D
+	
+	class WeaponManager
+	{
+		weapon_data: Dictionary
+		arive_weapons: Array[Weapon]
+		get_weapon_data(weapon_type: Weapon.Type) -> WeaponData
+		create_weapon(weapon_type: WeaponEnums.Type) -> Weapon
+		get_active_weapons() -> Array[Weapon]
+		clear_weapons() -> void
+		create_cooldown_panel(weapon: Weapon) -> void
+		reset() -> void
+		get_weapon_data_by_type(t: WeaponEnums.Type) -> WeaponData
+	}
+
+	class Weapon
+	{
+		==Variables==
+		--Global Definitions--
+		enum Type { SLAM, LIGHT_BLADE, WALDOS, ARROW, CHAIN_LIGHTNING }
+		enum TargetType { NONE, CLOSEST, HIGHEST_HP, RANDOM }
+		const OVERHAUL_LEVEL = 7
+		const FRAME_UPDATE_OFFSET = 6
+		const ENEMY_CLEANUP_FRAME_OFFSET = 15
+
+		--Descriptive Elements--
+		name: String
+		description: String
+		icon: AtlasTexture
+		level_up_texts: Array[String]
+		
+
+		--Weapon Stats--
+		level: int
+		damage: float
+		speed: float
+		cooldown: float
+		crit_chance: float
+		crit_mod: float
+
+		--Targeting Logic--
+		weapon_type: Type
+		ready_to_fire: bool
+		target_type: TargetType
+
+		--UI Elements--
+		cooldown_timer: Timer
+		cooldown_panel: Panel
+
+		--Signals--
+		fire: signal
+		critical_hit: signal
+		create_cooldown_panel: signal
+		begin_attack_sequence: signal
+		gained_level(value): signal
+
+		--Deprecated--
+		first_level_up: bool = true
+
+		==Functions==
+		initialize(data: WeaponData) -> void
+		_ready() -> void
+		_process(delta: float) -> void
+		level_up() -> void
+		reset_timer() -> void
+		fire_weapon() -> void
+		get_level_up_texts() -> Array[String]
+		'set_stats(base_damage: float, base_speed: float, base_cooldown: float) -> void
+
+		--Targeting Functions--
+		get_closest_target() -> void
+		get_highest_hp_target() -> void
+
+		--Signal Functions--
+		_on_area_entered(area: Area2D) -> void
+		_on_area_exited(area: Area2D) -> void
+		_on_weapon_timer_timeout() -> void
+		
+		--Helper Functions--
+		remove_enemy(instance_id: int) -> void
+		cleanup_enemies() -> void
+		get_weapon_range() -> float
+		is_overhaul_enabled() -> bool
+
+		--Deprecated--
+		damage_calc() -> float
+	}
+
+	note left of Weapon::_process
+		Any derived classes that override this function MUST call super._process(delta) first.
+	end note
+
+	note left of Weapon::damage_calc()
+		Calculated damage based on crit chance.
+		Should be moved to Bullet instead.
+		Emits critical_hit signal - must be moved as well.
+	end note
+	' Weapon inheritance goes below
+	Weapon <|-- Arrow
+	Weapon <|-- ChainLightning
+	Weapon <|-- LightBlade
+	Weapon <|-- Slam
+	Weapon <|-- Waldos
+
+	class Bullet
+	{
+		==Variables==
+		var: weapon: Weapon
+		--Required--
+		damage: float
+		starting_pos: Vector2
+		sprite_z_index: SpriteConstants.Z_INDEX
+
+		--Optional Variables--
+		'speed: float
+		target_node: Node2D
+		lifetime: float
+		'lifetime_dependent: bool = false
+
+		--Other Parameters--
+		affected_areas: Array[Area2D]
+
+		==Functions==
+		_ready() -> void
+		initialize(spawning_weapon: Weapon, data: BulletData, spawn_pos: Vector2, sprite_z_index: int, target: Node2D = null) -> void
+		enable_timer_expiration() -> void
+
+		--Signals Functions--
+		destroy_self_on_timer_timeout() -> void
+	}
+	note left of Bullet::_ready
+		Automatically deploys a timer to destroy the bullet at the end of its lifetime if lifetime > 0.0
+	end note
+
+	Bullet <|-- ArrowBullet
+	Bullet <|-- ChainLightningBullet
+	Bullet <|-- ChainLightningStrike
+	Bullet <|-- LightBladeBullet
+	Bullet <|-- SlamBullet
+
+}
+
+
+'Relationships
+WeaponManager --> WeaponData: loads >>
+WeaponManager --> Weapon: instantiates >>
+Weapon --> WeaponData: uses >>
+Weapon --> Bullet: spawns >>
+WeaponData --> BulletData: has >>
+Bullet -> BulletData: intitializes from >>
+
+'Notes for role clarification.
+note right of WeaponManager
+	Loads all WeaponData at runtime from disk.
+	Creates weapons for the player.
+end note
+
+note right of Bullet
+	Some bullets may override initialize()
+	or use secondary setup menthods.
+end note
+'Player --> Weapon: equips
+'Weapon --> Bullet: spawns
+
+@enduml
