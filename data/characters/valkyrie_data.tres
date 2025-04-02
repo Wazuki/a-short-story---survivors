@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="PlayerCharacterData" load_steps=6 format=3 uid="uid://dcwbqh4eh2gfl"]
+
+[ext_resource type="Texture2D" uid="uid://bguee08c3f17c" path="res://assets/sprites/characters/valkyrie/valkyrie_icon.tres" id="1_3relu"]
+[ext_resource type="Script" uid="uid://cjjbdq25xs0c" path="res://data/characters/player_character_data.gd" id="2_sxunq"]
+[ext_resource type="SpriteFrames" uid="uid://ikijgiwetusk" path="res://assets/sprites/characters/valkyrie/valkyrie_sprite_frames.tres" id="3_lar3p"]
+[ext_resource type="Script" uid="uid://dt0pa4luip6h5" path="res://data/characters/stat_map.gd" id="4_y2qrm"]
+
+[sub_resource type="Resource" id="Resource_y2qrm"]
+script = ExtResource("4_y2qrm")
+health = 100.0
+armor = 1.0
+speed = 150.0
+phys = 20.0
+mag = 20.0
+metadata/_custom_type_script = "uid://dt0pa4luip6h5"
+
+[resource]
+script = ExtResource("2_sxunq")
+starting_weapon = 1
+level_up_text = "[color=white]My power grows.[/color]"
+character_name = "Valkyrie"
+description = "\\nAn arranged marriage.\\nA duel to the death.\\nA blade of immense power.\\nA new purpose.\\n"
+spritesheet = ExtResource("3_lar3p")
+icon = ExtResource("1_3relu")
+stat_map = SubResource("Resource_y2qrm")

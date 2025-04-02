@@ -1,0 +1,31 @@
+[gd_scene load_steps=6 format=3 uid="uid://bxobiefi6gneh"]
+
+[ext_resource type="Script" uid="uid://ddna7gwcabw0b" path="res://scripts/weapons/scatterstar.gd" id="1_5ekr3"]
+[ext_resource type="AudioStream" uid="uid://dehyclmn1h82w" path="res://assets/audio/scatterstar/sci-fi_weapon_rifle_boomer_01.wav" id="3_pjnty"]
+[ext_resource type="AudioStream" uid="uid://dq6bmfvov8wy8" path="res://assets/audio/scatterstar/sci-fi_weapon_rifle_med_shot_01.wav" id="4_fislu"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_kjp5i"]
+radius = 75.0
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_1amh8"]
+streams_count = 2
+stream_0/stream = ExtResource("3_pjnty")
+stream_1/stream = ExtResource("4_fislu")
+
+[node name="Scatterstar" type="Area2D"]
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+script = ExtResource("1_5ekr3")
+metadata/_custom_type_script = "uid://djsxe1bhfgip3"
+
+[node name="WeaponRange" type="CollisionShape2D" parent="."]
+unique_name_in_owner = true
+shape = SubResource("CircleShape2D_kjp5i")
+
+[node name="ScatterstarSounds" type="AudioStreamPlayer2D" parent="."]
+unique_name_in_owner = true
+stream = SubResource("AudioStreamRandomizer_1amh8")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="area_exited" from="." to="." method="_on_area_exited"]

@@ -94,7 +94,7 @@ void fragment() {
 
 
 // MultiplyAdd:25
-	float n_out25p0 = (n_out9p0 * n_out8p0) + n_out30p0;
+	float n_out25p0 = fma(n_out9p0, n_out8p0, n_out30p0);
 
 
 // FloatFunc:22

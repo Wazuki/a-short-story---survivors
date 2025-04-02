@@ -19,8 +19,8 @@ func _ready() -> void:
 		weapon_data.set(data.weapon_type, data)
 
 	# Preload Chain Lightning separately due to a bug. Editor bug? Unknown at this time.
-	var chain_lightning_data = preload("res://data/weapons/chain_lightning_data.tres")
-	weapon_data.set(chain_lightning_data.weapon_type, chain_lightning_data)
+	#var chain_lightning_data = preload("res://data/weapons/chain_lightning_data.tres")
+	#weapon_data.set(chain_lightning_data.weapon_type, chain_lightning_data)
 
 	# var dir = DirAccess.open(weapon_data_path)
 	# if dir:

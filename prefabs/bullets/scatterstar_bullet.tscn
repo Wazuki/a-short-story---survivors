@@ -1,0 +1,65 @@
+[gd_scene load_steps=8 format=3 uid="uid://mks6krr0c1pa"]
+
+[ext_resource type="Script" uid="uid://cy41kjqbhbmmn" path="res://scripts/bullets/scatterstar_bullet.gd" id="1_5nxga"]
+[ext_resource type="Texture2D" uid="uid://davmgw364kvgt" path="res://assets/sprites/weapons/Purple Effect and Bullet 16x16.png" id="2_dinw2"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gp8dg"]
+atlas = ExtResource("2_dinw2")
+region = Rect2(160, 48, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7w8e3"]
+atlas = ExtResource("2_dinw2")
+region = Rect2(176, 48, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4okuv"]
+atlas = ExtResource("2_dinw2")
+region = Rect2(192, 48, 16, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_18nky"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": null
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gp8dg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7w8e3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4okuv")
+}, {
+"duration": 1.0,
+"texture": null
+}],
+"loop": false,
+"name": &"default",
+"speed": 16.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_5nxga"]
+radius = 25.0
+height = 120.0
+
+[node name="ScatterstarBullet" type="Area2D"]
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+script = ExtResource("1_5nxga")
+metadata/_custom_type_script = "uid://dhndwso1we0i7"
+
+[node name="ScatterstarSprite" type="AnimatedSprite2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(35, 0)
+scale = Vector2(4, 4)
+sprite_frames = SubResource("SpriteFrames_18nky")
+frame = 4
+frame_progress = 1.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(36, 0)
+shape = SubResource("CapsuleShape2D_5nxga")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="area_exited" from="." to="." method="_on_area_exited"]

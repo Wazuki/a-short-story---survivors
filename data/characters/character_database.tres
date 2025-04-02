@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CharacterDatabase" load_steps=7 format=3 uid="uid://cufeldbgbparg"]
+
+[ext_resource type="Script" uid="uid://cjjbdq25xs0c" path="res://data/characters/player_character_data.gd" id="1_tbt7q"]
+[ext_resource type="Resource" uid="uid://dcwbqh4eh2gfl" path="res://data/characters/valkyrie_data.tres" id="2_3gn88"]
+[ext_resource type="Resource" uid="uid://cri2c25su8j5v" path="res://data/characters/technician_data.tres" id="3_hopcy"]
+[ext_resource type="Resource" uid="uid://b6wxbf26aebqx" path="res://data/characters/tank_data.tres" id="4_8cjun"]
+[ext_resource type="Resource" uid="uid://cs8msq8myc2lk" path="res://data/characters/huntress_data.tres" id="5_3qdnb"]
+[ext_resource type="Script" uid="uid://cq10p01741lyp" path="res://data/characters/character_database.gd" id="6_hic0t"]
+
+[resource]
+script = ExtResource("6_hic0t")
+player_character_data = Array[ExtResource("1_tbt7q")]([ExtResource("2_3gn88"), ExtResource("3_hopcy"), ExtResource("4_8cjun"), ExtResource("5_3qdnb")])
+metadata/_custom_type_script = "uid://cq10p01741lyp"

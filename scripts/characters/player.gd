@@ -32,19 +32,19 @@ var total_level_ups = 0
 
 signal gained_xp(amount)
 signal gained_level
-signal _health_changed
-signal _health_depleted
+signal health_changed
+signal health_depleted
 
 func _ready() -> void:
 	level_up_text_reset_pos = %LevelUpText.position
 	GameController.game_ended.connect(reset_player_pos) # Reset the player's start position when the game ends.
 	state_machine.initialize(AnimationNames.IDLE) # Initialize the state machine with the IDLE animation since the player starts with no input.
 
-func initialize(character: PlayerCharacterStats) -> void:
-	health = character.get_stat_value(PlayerCharacterStats.Stat.HEALTH)
+func initialize(character: PlayerCharacterData) -> void:
+	health = character.get_stat(PlayerCharacterData.Stat.HEALTH)
 	max_health = health
-	speed = character.get_stat_value(PlayerCharacterStats.Stat.SPEED)
-	armor = character.get_stat_value(PlayerCharacterStats.Stat.ARMOR)
+	speed = character.get_stat(PlayerCharacterData.Stat.SPEED)
+	armor = character.get_stat(PlayerCharacterData.Stat.ARMOR)
 	level_up_text = character.level_up_text
 	%Spritesheet.sprite_frames = character.spritesheet
 
@@ -79,7 +79,7 @@ func _physics_process(delta: float) -> void:
 		# If our enemy dict hasn't changed since last frame then just deal the same damage again rather than iterate.
 		if enemies_touching_last_frame != enemies_touching.size(): 
 			total_contact_damage = 0
-			for e in enemies_touching: total_contact_damage += enemies_touching[e].stats.contact_damage # Remember that the enemy dict is { ID, enemy } so we need to use the key
+			for e in enemies_touching: total_contact_damage += enemies_touching[e].statblock.contact_damage # Remember that the enemy dict is { ID, enemy } so we need to use the key
 			enemies_touching_last_frame = enemies_touching.size()
 		# Deal damage to the player.
 		take_damage(total_contact_damage * delta)
@@ -89,7 +89,7 @@ func _physics_process(delta: float) -> void:
 			%Spritesheet.material.set_shader_parameter("speed", shader_flicker_speed)
 			total_contact_damage = 0.0
 			enemies_touching_last_frame = 0
-	
+
 	# Prune the enemies touching dict of invalid instances (about once every second at physics 30 FPS)
 	if not enemies_touching.is_empty() and GameController.global_frame_count % PRUNE_DICT_FRAME_OFFSET == 0:
 		var enemies_left = enemies_touching.values().filter(is_instance_valid)
@@ -98,10 +98,13 @@ func _physics_process(delta: float) -> void:
 
 
 
+## Deals [damage: float] to the player and plays the "hurt" particles.[br]
+## Adjusts the player healer bar as well. If died, emit the health_depleted signal.
 func take_damage(damage: float) -> void:
+	if not %HurtParticles.emitting: %HurtParticles.emitting = true
 	health -= damage
 	adjust_health_bar()
-	if health <= 0: _health_depleted.emit()
+	if health <= 0: health_depleted.emit()
 
 # Heal the player by a percentage of max health, clamped by max health
 func heal_damage(heal: float) -> void:
@@ -109,7 +112,7 @@ func heal_damage(heal: float) -> void:
 	adjust_health_bar()
 
 func adjust_health_bar() -> void:
-	emit_signal("_health_changed", health, max_health)
+	emit_signal("health_changed", health, max_health)
 
 func gain_experience(xp: float) -> void:
 	# If the player gets enough XP, level up!
@@ -146,7 +149,9 @@ func tween_xp_bar() -> void:
 	tween.tween_callback(%XPBar.hide)
 	tween.tween_callback(tween.kill)
 
-
+## Plays a random walk sound from the array.
+func play_random_walk_sound() -> void:
+	if not %WalkSounds.playing: %WalkSounds.play()
 
 
 func level_up() -> void:

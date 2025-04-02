@@ -1,0 +1,37 @@
+[gd_resource type="Resource" load_steps=7 format=3 uid="uid://c0udc2h18u5nd"]
+
+[ext_resource type="Texture2D" uid="uid://byfh5vj5pj0le" path="res://assets/UI/icons/hailfire_icon.tres" id="1_cchp2"]
+[ext_resource type="Resource" uid="uid://ypggs1pwmt8h" path="res://data/weapons/bullets/hailfire_bullet_data.tres" id="1_m76tj"]
+[ext_resource type="Script" uid="uid://cymgvhwef5gk" path="res://data/weapons/hailfire_data.gd" id="1_s83wk"]
+[ext_resource type="Script" uid="uid://besfugoahx8v7" path="res://data/weapons/weapon_scene_map.gd" id="2_nl3ta"]
+[ext_resource type="PackedScene" uid="uid://disb0ytubc821" path="res://prefabs/weapons/hailfire.tscn" id="5_f2x71"]
+
+[sub_resource type="Resource" id="Resource_kxpvp"]
+script = ExtResource("2_nl3ta")
+bullet_scene = ExtResource("1_m76tj")
+metadata/_custom_type_script = "uid://besfugoahx8v7"
+
+[resource]
+script = ExtResource("1_s83wk")
+max_range = 500.0
+fire_angle = 5.0
+base_fire_rate = 3.0
+max_fire_rate = 12.0
+ramp_speed = 5.0
+shots_per_attack = 45
+knockback_value = 5.0
+bounce_value = 5.0
+name = "Hailfire"
+description = "A rapid-fire submachine gun capable of laying down a ramping torrent of fire."
+icon = ExtResource("1_cchp2")
+level_up_texts = Array[String](["Extended Magazine\\nIncrease total number of shots.", "Recoil Compensation\\nReduced spread.", "Richochet Rounds\\nBullets bounce off enemies once.", "Overclocked Barrel\\nIncreased fire rate.", "Penetrator Rounds\\nPierce enemies once before bouncing.", "Suppressing Fire\\nIncreased knockback and fire rate. Bullets bounce twice."])
+weapon_type = 5
+target_type = 4
+damage = 4.0
+weapon_range = 100.0
+speed = 600.0
+cooldown = 3.0
+crit_chance = 0.0
+crit_mod = 0.0
+weapon_scene = ExtResource("5_f2x71")
+bullet_scene_map = SubResource("Resource_kxpvp")

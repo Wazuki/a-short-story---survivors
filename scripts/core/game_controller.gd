@@ -63,7 +63,7 @@ func _ready() -> void:
 	player.connect("gained_xp", _on_player_gain_xp) # Called when the player gains xp.
 	player.connect("gained_level", _on_player_gain_level) # Called when the player gains a level.
 	#player.connect("_health_depleted", game_over) # When the player dies
-	player.connect("_health_changed", update_player_info_text) # When the player's health changes (but not zero)
+	player.connect("health_changed", update_player_info_text) # When the player's health changes (but not zero)
 	
 	
 	# lol
@@ -152,7 +152,7 @@ func start_game() -> void:
 	character_select_UI.visible = true
 	game_started.emit()
 
-func select_character(character: PlayerCharacterStats) -> void:
+func select_character(character: PlayerCharacterData) -> void:
 	# Hide the select character UI and start the game after setting the player's stats
 	character_select_UI.visible = false
 	player.initialize(character)

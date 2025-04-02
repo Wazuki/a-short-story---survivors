@@ -1,0 +1,48 @@
+[gd_resource type="Resource" script_class="PlayerCharacterData" load_steps=11 format=3 uid="uid://b6wxbf26aebqx"]
+
+[ext_resource type="Texture2D" uid="uid://b7y7phnc7opug" path="res://assets/sprites/characters/tank/tank_icon.tres" id="1_os0sp"]
+[ext_resource type="Script" uid="uid://cjjbdq25xs0c" path="res://data/characters/player_character_data.gd" id="2_f5gfg"]
+[ext_resource type="SpriteFrames" uid="uid://bjaasfha8sw2h" path="res://assets/sprites/characters/tank/tank_sprite_frames.tres" id="3_uucn7"]
+[ext_resource type="Script" uid="uid://dt0pa4luip6h5" path="res://data/characters/stat_entry.gd" id="4_js8jb"]
+[ext_resource type="Resource" uid="uid://dpdx5tcfkp41m" path="res://data/quests/unlock_tank.tres" id="6_js8jb"]
+
+[sub_resource type="Resource" id="Resource_3sbfb"]
+script = ExtResource("4_js8jb")
+stat_type = 0
+value = 200.0
+metadata/_custom_type_script = "uid://dt0pa4luip6h5"
+
+[sub_resource type="Resource" id="Resource_amb44"]
+script = ExtResource("4_js8jb")
+stat_type = 2
+value = 5.0
+metadata/_custom_type_script = "uid://dt0pa4luip6h5"
+
+[sub_resource type="Resource" id="Resource_mxm4y"]
+script = ExtResource("4_js8jb")
+stat_type = 3
+value = 100.0
+metadata/_custom_type_script = "uid://dt0pa4luip6h5"
+
+[sub_resource type="Resource" id="Resource_26gvd"]
+script = ExtResource("4_js8jb")
+stat_type = 4
+value = 40.0
+metadata/_custom_type_script = "uid://dt0pa4luip6h5"
+
+[sub_resource type="Resource" id="Resource_uq7ei"]
+script = ExtResource("4_js8jb")
+stat_type = 5
+value = 0.0
+metadata/_custom_type_script = "uid://dt0pa4luip6h5"
+
+[resource]
+script = ExtResource("2_f5gfg")
+starting_weapon = 0
+level_up_text = "[color=red][b]..hm.[/b][/color]"
+unlock_quest = ExtResource("6_js8jb")
+character_name = "Tank"
+description = "TBD"
+spritesheet = ExtResource("3_uucn7")
+icon = ExtResource("1_os0sp")
+stats = Array[ExtResource("4_js8jb")]([SubResource("Resource_3sbfb"), SubResource("Resource_amb44"), SubResource("Resource_mxm4y"), SubResource("Resource_26gvd"), SubResource("Resource_uq7ei")])

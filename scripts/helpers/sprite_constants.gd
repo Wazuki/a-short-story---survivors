@@ -16,6 +16,8 @@ enum Z_INDEX {
     CHAIN_LIGHTNING = 80,
     PLAYER = 100,
     ENEMY = 100, 
+    SCATTERSTAR = 115,
+    HAILFIRE = 125,
     ARROW = 150,
     }
 

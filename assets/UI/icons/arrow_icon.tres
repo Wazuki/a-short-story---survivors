@@ -1,6 +1,10 @@
-[gd_resource type="AtlasTexture" load_steps=2 format=3 uid="uid://dla2ldgy6t6yf"]
+[gd_resource type="AtlasTexture" load_steps=3 format=3 uid="uid://dla2ldgy6t6yf"]
 
-[ext_resource type="Texture2D" uid="uid://imgtmua8e3m4" path="res://assets/UI/icons/arrow.png" id="1_d8mrq"]
+[ext_resource type="Texture2D" uid="uid://505ik7h810vl" path="res://assets/UI/icons/icon_tileset.jpg" id="1_ktqpe"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2bytw"]
+atlas = ExtResource("1_ktqpe")
+region = Rect2(2304, 2048, 256, 256)
 
 [resource]
-atlas = ExtResource("1_d8mrq")
+atlas = SubResource("AtlasTexture_2bytw")

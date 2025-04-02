@@ -1,0 +1,34 @@
+[gd_resource type="Resource" load_steps=7 format=3 uid="uid://cff10v2v5nlgv"]
+
+[ext_resource type="Resource" uid="uid://c5os3a1wcn3mg" path="res://data/weapons/bullets/scatterstar_bullet_data.tres" id="1_4cy35"]
+[ext_resource type="Texture2D" uid="uid://c3gjacuppaqgl" path="res://assets/UI/icons/scatterstar_icon.tres" id="1_27og5"]
+[ext_resource type="Script" uid="uid://besfugoahx8v7" path="res://data/weapons/weapon_scene_map.gd" id="2_ok0nd"]
+[ext_resource type="Script" uid="uid://svxjlgaxeqyf" path="res://data/weapons/scatterstar_data.gd" id="2_t26ei"]
+[ext_resource type="PackedScene" uid="uid://bxobiefi6gneh" path="res://prefabs/weapons/scatterstar.tscn" id="3_t26ei"]
+
+[sub_resource type="Resource" id="Resource_481sx"]
+script = ExtResource("2_ok0nd")
+bullet_scene = ExtResource("1_4cy35")
+metadata/_custom_type_script = "uid://besfugoahx8v7"
+
+[resource]
+script = ExtResource("2_t26ei")
+shots_per_cooldown = 2
+disorient_chance = 0.25
+disorient_duration = 0.5
+knockback_strength = 50.0
+heal_per_hit = 2.0
+name = "Scatterstar"
+description = "A close-range scatter weapon capable of knockback, disorienting enemies, and healing the user."
+icon = ExtResource("1_27og5")
+level_up_texts = Array[String](["Chance to disorient enemies.", "Increased knockback and disorient chance.", "Increased disorient duration and cooldown.", "Nano-Infused Shells: Heal the user for each enemy hit.", "Improved heal from Nano-Infused Shells.", "Overhaul: Guaranteed disorient."])
+weapon_type = 6
+target_type = 1
+damage = 80.0
+weapon_range = 75.0
+speed = 0.0
+cooldown = 3.0
+crit_chance = 0.0
+crit_mod = 0.0
+weapon_scene = ExtResource("3_t26ei")
+bullet_scene_map = SubResource("Resource_481sx")

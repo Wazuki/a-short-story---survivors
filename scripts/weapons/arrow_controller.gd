@@ -112,7 +112,7 @@ func spawn_split_arrows(spawn_pos: Vector2) -> void:
 		# These calls MUST be deferred because enemies die during the physics process and we can only perform these during idle time.
 		WeaponManager.call_deferred("add_child", new_arrow) # Add the new arrow to the child of the WeaponManager (has no transform inheritance)
 		new_arrow.call_deferred("set_arrow_angle", a*45) # Set the arrow's angle based on our current iteration index.
-		print_debug("New arrow speed: " + str(new_arrow.speed))
+		#print_debug("New arrow speed: " + str(new_arrow.speed))
 		# Add the arrows to the scene, then angle them based on the current count.__find_method_line_number_in_script
 		# call_deferred("add_child", new_arrow)
 

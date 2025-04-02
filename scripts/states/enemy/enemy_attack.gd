@@ -10,7 +10,7 @@ func _enter_tree() -> void: name = ATTACK
 func initialize(state_machine: StateMachine) -> void:
 	super.initialize(state_machine)
 	# Connect to our attack timeout signal only if the enemy is an attack. Connect the 
-	if enemy.stats.is_attacker(): 
+	if enemy.statblock.is_attacker(): 
 		setup_attack_timer()
 		enemy.animation_player.animation_finished.connect(attack)
 
@@ -41,7 +41,7 @@ func setup_attack_timer() -> void:
 	attack_cooldown_timer = Timer.new()
 	attack_cooldown_timer.one_shot = true # The timer will only start again when making an attack.
 	attack_cooldown_timer.process_callback = Timer.TIMER_PROCESS_PHYSICS
-	attack_cooldown_timer.wait_time = enemy.stats.attack_cooldown
+	attack_cooldown_timer.wait_time = enemy.statblock.attack_cooldown
 	attack_cooldown_timer.timeout.connect(reset_attack_state) # Connect the timeout signal to resetting the attack state.
 	add_child(attack_cooldown_timer) # Don't forget to add it to the scene tree (:
 

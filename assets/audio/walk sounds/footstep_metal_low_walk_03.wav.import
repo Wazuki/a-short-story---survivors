@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://cncwr3wyjdtsc"
+path="res://.godot/imported/footstep_metal_low_walk_03.wav-3821fabf152c5f7dcd93b89222c1dd59.sample"
+
+[deps]
+
+source_file="res://assets/audio/walk sounds/footstep_metal_low_walk_03.wav"
+dest_files=["res://.godot/imported/footstep_metal_low_walk_03.wav-3821fabf152c5f7dcd93b89222c1dd59.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

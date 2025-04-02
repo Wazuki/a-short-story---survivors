@@ -1,6 +1,10 @@
-[gd_resource type="AtlasTexture" load_steps=2 format=3 uid="uid://mm1htf73hlx7"]
+[gd_resource type="AtlasTexture" load_steps=3 format=3 uid="uid://mm1htf73hlx7"]
 
-[ext_resource type="Texture2D" uid="uid://d0tyhcfea62g6" path="res://unused_assets/wenrexa/Skill Icons (Rounded)/47.png" id="1_43b1o"]
+[ext_resource type="Texture2D" uid="uid://505ik7h810vl" path="res://assets/UI/icons/icon_tileset.jpg" id="1_xt0u5"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0ltqb"]
+atlas = ExtResource("1_xt0u5")
+region = Rect2(2048, 2304, 256, 256)
 
 [resource]
-atlas = ExtResource("1_43b1o")
+atlas = SubResource("AtlasTexture_0ltqb")

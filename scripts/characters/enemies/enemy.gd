@@ -5,7 +5,7 @@ extends Area2D
 #############################
 ####### REFACTOR AREA #######
 #############################
-#const Stat = CharacterStats.Stat
+#const Stat = CharacterData.Stat
 const AVOIDANCE_MAGNITUDE = 3 ## Magnitude to amplify the avoidance direction to add a little stronger avoidance movement.
 
 @onready var nav_agent: NavigationAgent2D = %NavigationAgent2D ## Navigation agent for walking on the navmesh.
@@ -18,7 +18,8 @@ var move_dir: Vector2 = Vector2.ZERO ## Primary move direction towards player (t
 var avoidance_dir: Vector2 = Vector2.ZERO ## Movement component for avoiding obstacles, enemies, etc.
 var avoidance_weight: float = 0.1
 var velocity: Vector2 = Vector2.ZERO ## Velocity [Vector2] of the enemy.
-var stats: EnemyStats
+var statblock: EnemyData
+var stats: Dictionary
 var slowed: bool = false
 
 var attacking = false
@@ -64,26 +65,28 @@ func _ready() -> void:
 	player = GameController.player
 
 ## Set up the enemy's stats based on the type from [EnemyStats.EnemyType]
-func initialize(statblock: EnemyStats) -> void:
+func initialize(data: EnemyData) -> void:
 	# Set the z-index of our enemies according to our sprite constants. TODO - different z-index for different enemies?
 	z_index = SpriteConstants.Z_INDEX.ENEMY
 
 	# Set the stats based on the enemy type
-	stats = statblock.get_copy()
+	statblock = data.get_copy()
+	stats = statblock.stat_map.to_dict()
+	#print_debug("Total stats: " + str(stats.size()) + " vs map: " + str(statblock.stat_map.to_dict().size()))
 
 	# Retrieve the enemy's vitals from the statblock and set them all up properly.
-	name = stats.character_name
-	animation_player.sprite_frames = stats.spritesheet
-	scale = stats.enemy_scale
+	name = statblock.character_name
+	animation_player.sprite_frames = statblock.spritesheet
+	scale = statblock.enemy_scale
 
 	# Initialize the state machine with the [AnimationNames.WALK] animation since all enemies start by pursuing the player.
 	state_machine.actor = self
 	state_machine.initialize(AnimationNames.WALK)
 
 	# If we are an attacking enemy, make sure to set our range (the radius of our collider) and enable monitoring on t he attack range.
-	if stats.is_attacker():
+	if statblock.is_attacker():
 		%AttackRange.monitoring = true
-		%AttackRangeCollider.shape.radius = stats.attack_range
+		%AttackRangeCollider.shape.radius = statblock.attack_range
 		# print_debug("Attack range: " + str(stats.attack_range) + ", collider rad: " + str(%AttackRangeCollider.shape.radius))
 	else: # Prune the attack state since we're not an attacker.
 		state_machine.states[AnimationNames.ATTACK].queue_free() # Remove the attack state from enemies that don't attack.
@@ -92,15 +95,15 @@ func initialize(statblock: EnemyStats) -> void:
 
 func _physics_process(delta: float) -> void:
 	# TODO - status effect functions. For now simply keep clamping speed if we are slowed.
-	if stats.get_stat(CharacterStats.Stat.SPEED) < stats.base_speed: 
-		stats.set_stat(CharacterStats.Stat.SPEED, clampf(stats.speed + slow_decay_rate * delta, 0, stats.base_speed))
+	if stats.get(CharacterData.Stat.SPEED) < statblock.base_speed: 
+		stats.set(CharacterData.Stat.SPEED, clampf(statblock.speed + slow_decay_rate * delta, 0, statblock.base_speed))
 
 
 # Slow the enemy by a percentage of their speed
 func apply_slow(slow: float) -> void:
 	# Only apply slow if the enemy is not already slowed
-	var current_speed = stats.get_stat(CharacterStats.Stat.SPEED)
-	if current_speed == stats.base_speed: stats.set_stat(CharacterStats.Stat.SPEED, current_speed * (1.0 - slow))
+	var current_speed = stats[CharacterData.Stat.SPEED]
+	if current_speed == statblock.base_speed: stats[CharacterData.Stat.SPEED] = current_speed * (1.0 - slow)
 
 # func _is_displaced() -> void:
 # 	if displaced: %DisplacementTimer.start()
@@ -119,23 +122,23 @@ func remove_stun() -> void:
 	modulate = Color.WHITE
 
 func take_damage(dam: float) -> void:
-	stats.subtract_from_stat(CharacterStats.Stat.HEALTH, dam)
+	stats[CharacterData.Stat.HEALTH] -= dam
 	emit_signal("damaged", dam)
 
 	# Set the emit direction of the particles to tbe the direct opposite of incoming attack angle (i.e., from the player) with * -1
 	var emit_dir = global_position.direction_to(player.global_position) * -1
-	%GPUParticles2D.process_material.set_direction(Vector3(emit_dir.x, emit_dir.y, 0))
-	%GPUParticles2D.restart()
-	%GPUParticles2D.emitting = true
+	%HurtParticles.process_material.set_direction(Vector3(emit_dir.x, emit_dir.y, 0))
+	%HurtParticles.restart()
+	%HurtParticles.emitting = true
 
-	if stats.get_stat(CharacterStats.Stat.HEALTH) <= 0:
+	if stats[CharacterData.Stat.HEALTH] <= 0:
 		dead = true
 		health_depleted.emit()
 		enemy_died.emit(self)
 		# Spawn an explosion of some kind? use call_deferred if you do
 		# Spawn an experience orb
-		GameController.spawn_experience_orb(global_position, stats.xp_value)
-		if randf() < stats.health_drop_chance: GameController.spawn_health_pickup(global_position)
+		GameController.spawn_experience_orb(global_position, statblock.xp_value)
+		if randf() < statblock.health_drop_chance: GameController.spawn_health_pickup(global_position)
 
 func apply_knockback(source: Vector2, strength: float) -> void:
 	# Calculate the direction from the knockback source to this enemy
@@ -148,11 +151,11 @@ func apply_knockback(source: Vector2, strength: float) -> void:
 ## Spawns the projectile to fly towards the [target_pos: Vector2]
 func spawn_projectile(target_pos: Vector2) -> void:
 	# Play our attack sequence at the targeting position.
-	assert(stats.attack_prefab != null, "Error! An attacking enemy is missing their prefab to instantiate!")
-	var projectile: EnemyBullet = stats.attack_prefab.instantiate()
+	assert(statblock.attack_prefab != null, "Error! An attacking enemy is missing their prefab to instantiate!")
+	var projectile: EnemyBullet = statblock.attack_prefab.instantiate()
 	# Initialize the projectile after instantiation and then set it as top level so it doesn't follow the enemy.
 	projectile.global_position = global_position
-	projectile.initialize(target_pos, stats.attack_damage)
+	projectile.initialize(target_pos, statblock.attack_damage)
 	add_child(projectile)
 	projectile.top_level = true
 	

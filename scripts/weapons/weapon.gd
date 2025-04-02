@@ -6,7 +6,7 @@ extends Area2D
 const SceneKey = WeaponEnums.SceneKey # Assigns the WeaponEnums enum for quick access.
 const Type = WeaponEnums.Type # Assigns the WeaponData enum for quick access.
 const TargetType = WeaponEnums.TargetType # Assigns the WeaponData enum for quick access.
-#const Stat = CharacterStats.Stat # Assigns the CharacterStats enum for quick access.
+#const Stat = CharacterData.Stat # Assigns the CharacterData enum for quick access.
 
 # Other offset constants
 const FRAME_UPDATE_OFFSET = 6 ## The number of frames between each targeting update.
@@ -45,12 +45,12 @@ var enemies_in_range = {} ## An [int]-[Enemy] dictionary that tracks enemies in 
 var bullet_scenes: Dictionary = {} ## Dictionary of packed scenes for the weapon. Should be scene name, packed scene.
 
 ## Deprecated. Will be tied into the new weapon data system.
-var first_level_up: bool = true:
-	get:
-		return first_level_up
-	set(value):
-		first_level_up = value
-		if not first_level_up: create_cooldown_panel.emit() # Emit the signal only if we are now false - theoretically should only be called once?
+# var first_level_up: bool = true:
+# 	get:
+# 		return first_level_up
+# 	set(value):
+# 		first_level_up = value
+# 		if not first_level_up: create_cooldown_panel.emit() # Emit the signal only if we are now false - theoretically should only be called once?
 
 
 
@@ -79,7 +79,7 @@ func initialize(data: WeaponData) -> void:
 	crit_mod = data.crit_mod
 
 	target_type = data.target_type as TargetType
-	bullet_scenes = data.bullet_scene_map.to_dict()
+	if data.bullet_scene_map != null: bullet_scenes = data.bullet_scene_map.to_dict()
 	
 
 # Called when the node enters the scene tree for the first time.
@@ -149,8 +149,24 @@ func get_highest_hp_target() -> void:
 	if not enemies_in_range.is_empty():
 		if highest_hp_enemy_in_range == null: highest_hp_enemy_in_range = enemies_in_range.values().pick_random() # If we don't have a highest hp enemy anymore set to a random enemy.
 		for enemy_ID in enemies_in_range:
-			if enemies_in_range[enemy_ID].stats.get_stat(CharacterStats.Stat.HEALTH) > highest_hp_enemy_in_range.stats.get_stat(CharacterStats.Stat.HEALTH):
+			if enemies_in_range[enemy_ID].stats[CharacterData.Stat.HEALTH] > highest_hp_enemy_in_range.stats[CharacterData.Stat.HEALTH]:
 				highest_hp_enemy_in_range = enemies_in_range[enemy_ID]
+
+## Returns a random valid enemy from the enemies in range collection.
+func get_random_target_in_range() -> Enemy:
+	if enemies_in_range.is_empty(): return null
+
+	# Duplicate the key array and then pick a random one - if we get a valid target, return it. Otherwise, erase the invalid enemy and try again.
+	while not enemies_in_range.is_empty():
+		var keys = enemies_in_range.keys().duplicate()
+		var index = keys.pick_random()
+		if is_instance_valid(enemies_in_range[index]): return enemies_in_range[index]
+		else:
+			enemies_in_range.erase(index)
+
+	return null
+
+
 
 ## When the enemy enters range, add them to the [enemies_in_range] dictionary. Then, if we target by HP, sort the dictionary by max HP.
 func _on_area_entered(area:Area2D) -> void:
@@ -161,7 +177,7 @@ func _on_area_entered(area:Area2D) -> void:
 				highest_hp_enemy_in_range = area
 			else:
 				# Get the HP of the current enemy. If this new enemy's HP is greater, they're the new highest HP enemy.
-				if area.stats.get_stat(CharacterStats.Stat.HEALTH) > highest_hp_enemy_in_range.stats.get_stat(CharacterStats.Stat.HEALTH):
+				if area.stats[CharacterData.Stat.HEALTH] > highest_hp_enemy_in_range.stats[CharacterData.Stat.HEALTH]:
 					highest_hp_enemy_in_range = area
 
 		
@@ -210,6 +226,7 @@ func reset_timer() -> void:
 	cooldown_timer.wait_time = cooldown
 	ready_to_fire = false
 	
+## Automatically resets the cooldown timer (if stopped), sets [ready_to_fire] to false and emits the fire signal to notify listeners.
 func fire_weapon() -> void:
 	# print_debug(get_parent().name + " is firing!")
 	if cooldown_timer.is_stopped():

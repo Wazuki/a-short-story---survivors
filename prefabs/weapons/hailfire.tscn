@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3 uid="uid://disb0ytubc821"]
+
+[ext_resource type="Script" uid="uid://do63pam33oqhl" path="res://scripts/weapons/hailfire.gd" id="2_76bdg"]
+[ext_resource type="AudioStream" uid="uid://bpfua5a8fvwvu" path="res://assets/audio/hailfire/gun_submachine_auto_shot_00_first_01.wav" id="3_0ugl1"]
+[ext_resource type="AudioStream" uid="uid://4innir0iywyo" path="res://assets/audio/hailfire/gun_submachine_auto_shot_00_tail_only_01.wav" id="4_sudr4"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ab5ct"]
+radius = 100.0
+
+[node name="Hailfire Controller" type="Area2D" node_paths=PackedStringArray("collision_shape")]
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+script = ExtResource("2_76bdg")
+collision_shape = NodePath("WeaponRange")
+metadata/_custom_type_script = "uid://djsxe1bhfgip3"
+
+[node name="WeaponRange" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_ab5ct")
+
+[node name="HailfireFirstShot" type="AudioStreamPlayer2D" parent="."]
+unique_name_in_owner = true
+stream = ExtResource("3_0ugl1")
+
+[node name="HailfireLastShotTail" type="AudioStreamPlayer2D" parent="."]
+unique_name_in_owner = true
+stream = ExtResource("4_sudr4")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="area_exited" from="." to="." method="_on_area_exited"]

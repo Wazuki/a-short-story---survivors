@@ -25,4 +25,5 @@ func physics_update(delta) -> void:
 	if player.velocity.length() <= 0: 
 		finished.emit(IDLE)
 		return
+	player.play_random_walk_sound()
 	player.move_and_collide(player.velocity * delta) # Move and collide does NOT applies delta to the player's velocity.

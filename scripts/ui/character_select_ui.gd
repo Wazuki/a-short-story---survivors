@@ -1,6 +1,6 @@
 extends Control
 
-var characters: Array[PlayerCharacterStats]
+var characters: Array[PlayerCharacterData]
 # var character_dict_by_name = {}
 var panels_expanded = false
 
@@ -10,7 +10,7 @@ var selected_character_panel: CharacterSelectPanel = null
 
 func init() -> void:
 	await DataManager.ready
-	characters = DataManager.UNLOCKABLE_CHARACTER_DATA.get_all_chars()
+	characters = DataManager.characters
 	# print_debug("There are " + str(characters.size()) + " characters loaded!")
 
 	# Debug function for checking some Web5 stuff mostly related to possible load order issues.
@@ -43,8 +43,8 @@ func init() -> void:
 		for x in 8 - characters.size():
 			# print_debug("Deploying bonus character " + str(x))
 			var char_panel = preload("res://prefabs/ui/char_select_panel.tscn").instantiate()
-			var c: PlayerCharacterStats = PlayerCharacterStats.new()
-			c.set_stats("COMING SOON", 9999, 9999, 9999, Weapon.Type.SLAM)
+			var c: PlayerCharacterData = PlayerCharacterData.new()
+			#c.set_stats("COMING SOON", 9999, 9999, 9999, Weapon.Type.SLAM)
 			c.icon = preload("res://assets/sprites/characters/valkyrie/valkyrie_icon.tres")
 			
 			char_panel.initialize(c)
@@ -89,16 +89,16 @@ func display_character_info(panel: Panel) -> void:
 	%CharacterIcon.texture = panel.character.icon
 	%CharacterNameText.text = panel.character.character_name
 	# Concat a string of the character's description and then their stats (Health, Armor, Speed)
-	%CharacterInfoText.text = panel.character.description
-	%CharacterInfoText.text += "\n\nHealth: " + str(panel.character.get_stat_value(PlayerCharacterStats.Stat.HEALTH))
-	%CharacterInfoText.text += "\n\nArmor: " + str(panel.character.get_stat_value(PlayerCharacterStats.Stat.ARMOR))
-	%CharacterInfoText.text += "\n\nSpeed: " + str(panel.character.get_stat_value(PlayerCharacterStats.Stat.SPEED))
+	%CharacterInfoText.text = Utils.replace_line_breaks(panel.character.description)
+	%CharacterInfoText.text += "\n\nHealth: " + str(panel.character.get_stat(PlayerCharacterData.Stat.HEALTH))
+	%CharacterInfoText.text += "\n\nArmor: " + str(panel.character.get_stat(PlayerCharacterData.Stat.ARMOR))
+	%CharacterInfoText.text += "\n\nSpeed: " + str(panel.character.get_stat(PlayerCharacterData.Stat.SPEED))
 
 	# Assign the character's starting weapon information to the left panel.
 	var starting_weapon = WeaponManager.get_weapon_data_by_type(panel.character.starting_weapon)
 	# print_debug(panel.character.character_name + "'s starting weapon: " + starting_weapon.name)
 	%WeaponIcon.texture = starting_weapon.icon
-	%WeaponInfoText.text = starting_weapon.description
+	%WeaponInfoText.text = Utils.replace_line_breaks(starting_weapon.description)
 	%WeaponInfoText.text += "\n\nDamage: " + str(starting_weapon.damage)
 	%WeaponInfoText.text += "\n\nCooldown: " + str(starting_weapon.cooldown)
 	%WeaponInfoText.text += "\n\nRange: " + str(starting_weapon.weapon_range)

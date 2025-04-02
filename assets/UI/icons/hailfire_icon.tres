@@ -1,0 +1,10 @@
+[gd_resource type="AtlasTexture" load_steps=3 format=3 uid="uid://byfh5vj5pj0le"]
+
+[ext_resource type="Texture2D" uid="uid://505ik7h810vl" path="res://assets/UI/icons/icon_tileset.jpg" id="1_xakgo"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2bytw"]
+atlas = ExtResource("1_xakgo")
+region = Rect2(1280, 1024, 256, 256)
+
+[resource]
+atlas = SubResource("AtlasTexture_2bytw")

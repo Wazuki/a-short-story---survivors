@@ -1,6 +1,10 @@
-[gd_resource type="AtlasTexture" load_steps=2 format=3 uid="uid://pyw41ngccl4o"]
+[gd_resource type="AtlasTexture" load_steps=3 format=3 uid="uid://pyw41ngccl4o"]
 
-[ext_resource type="Texture2D" uid="uid://dgcy12ly5brq4" path="res://assets/UI/icons/waldos.png" id="1_owxn1"]
+[ext_resource type="Texture2D" uid="uid://505ik7h810vl" path="res://assets/UI/icons/icon_tileset.jpg" id="1_jk0ed"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y7ngw"]
+atlas = ExtResource("1_jk0ed")
+region = Rect2(1024, 512, 256, 256)
 
 [resource]
-atlas = ExtResource("1_owxn1")
+atlas = SubResource("AtlasTexture_y7ngw")

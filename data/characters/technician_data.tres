@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="PlayerCharacterData" load_steps=7 format=3 uid="uid://cri2c25su8j5v"]
+
+[ext_resource type="Texture2D" uid="uid://4hrw8rwj7ynw" path="res://assets/sprites/characters/technician/technician_icon.tres" id="1_thnkw"]
+[ext_resource type="Script" uid="uid://cjjbdq25xs0c" path="res://data/characters/player_character_data.gd" id="2_0b6w7"]
+[ext_resource type="SpriteFrames" uid="uid://dgk30s3ujkrhw" path="res://assets/sprites/characters/technician/technician_sprite_frames.tres" id="3_b2tw5"]
+[ext_resource type="Script" uid="uid://dt0pa4luip6h5" path="res://data/characters/stat_map.gd" id="4_w1omd"]
+[ext_resource type="Resource" uid="uid://pl0yk5ml85ke" path="res://data/quests/unlock_technician.tres" id="6_6lssd"]
+
+[sub_resource type="Resource" id="Resource_w1omd"]
+script = ExtResource("4_w1omd")
+health = 150.0
+armor = 3.0
+speed = 110.0
+phys = 35.0
+mag = 5.0
+metadata/_custom_type_script = "uid://dt0pa4luip6h5"
+
+[resource]
+script = ExtResource("2_0b6w7")
+starting_weapon = 2
+level_up_text = "[color=gray]Operational breathrough.[/color]"
+unlock_quest = ExtResource("6_6lssd")
+character_name = "Technician"
+description = "\\nA transhumanist cult.\\nA dark secret discovered.\\nA mass slaughter.\\nA seach for redemption.\\n"
+spritesheet = ExtResource("3_b2tw5")
+icon = ExtResource("1_thnkw")
+stat_map = SubResource("Resource_w1omd")

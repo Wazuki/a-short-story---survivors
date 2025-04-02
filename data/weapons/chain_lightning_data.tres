@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="ChainLightningData" load_steps=8 format=3 uid="uid://c3d65g77hgqff"]
+[gd_resource type="Resource" load_steps=8 format=3 uid="uid://c3d65g77hgqff"]
 
 [ext_resource type="Texture2D" uid="uid://cvdqnpg7gow3s" path="res://assets/UI/icons/chain_lightning_icon.tres" id="1_5s5lo"]
 [ext_resource type="Script" uid="uid://bgtg166hcb0w6" path="res://data/weapons/chain_lightning_data.gd" id="1_cjjkp"]

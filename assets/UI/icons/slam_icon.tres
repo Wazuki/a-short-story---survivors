@@ -1,6 +1,10 @@
-[gd_resource type="AtlasTexture" load_steps=2 format=3 uid="uid://bdm0l4d00vqw7"]
+[gd_resource type="AtlasTexture" load_steps=3 format=3 uid="uid://bdm0l4d00vqw7"]
 
-[ext_resource type="Texture2D" uid="uid://capmb8tuudn3e" path="res://assets/UI/icons/slam.png" id="1_fl4ws"]
+[ext_resource type="Texture2D" uid="uid://505ik7h810vl" path="res://assets/UI/icons/icon_tileset.jpg" id="1_2iumw"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ltj7l"]
+atlas = ExtResource("1_2iumw")
+region = Rect2(512, 768, 256, 256)
 
 [resource]
-atlas = ExtResource("1_fl4ws")
+atlas = SubResource("AtlasTexture_ltj7l")

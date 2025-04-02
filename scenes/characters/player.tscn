@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://bivcmhjsdsyy2"]
+[gd_scene load_steps=38 format=3 uid="uid://bivcmhjsdsyy2"]
 
 [ext_resource type="Script" uid="uid://bnx6epykj7o3t" path="res://scripts/characters/player.gd" id="1_py671"]
 [ext_resource type="SpriteFrames" uid="uid://bjaasfha8sw2h" path="res://assets/sprites/characters/tank/tank_sprite_frames.tres" id="2_a2ns6"]
@@ -8,13 +8,49 @@
 [ext_resource type="AudioStream" uid="uid://b505215xfthyh" path="res://assets/audio/High-Tech Gadget Activate.wav" id="4_rg687"]
 [ext_resource type="AudioStream" uid="uid://db3xpb1qqhqnv" path="res://assets/audio/Holographic Interaction-32.wav" id="5_g5n55"]
 [ext_resource type="Material" uid="uid://xckcfyu6x2u" path="res://assets/shaders/flashing_color_material.tres" id="9_f2e50"]
+[ext_resource type="AudioStream" uid="uid://q2jv26tv44no" path="res://assets/audio/walk sounds/footstep_metal_low_walk_01.wav" id="9_tswxa"]
+[ext_resource type="AudioStream" uid="uid://dfvq00idofbch" path="res://assets/audio/walk sounds/footstep_metal_low_walk_02.wav" id="10_aqa0x"]
+[ext_resource type="AudioStream" uid="uid://01lb6t8ccyfs" path="res://assets/audio/walk sounds/footstep_metal_low_walk_11.wav" id="11_yhyq5"]
+[ext_resource type="AudioStream" uid="uid://dugijfi4auo6v" path="res://assets/audio/walk sounds/footstep_metal_low_walk_12.wav" id="12_5jukt"]
+[ext_resource type="AudioStream" uid="uid://dd4tn3f7pyo86" path="res://assets/audio/walk sounds/footstep_metal_low_walk_13.wav" id="13_vwwfy"]
+[ext_resource type="AudioStream" uid="uid://cu8fxpmtiuhit" path="res://assets/audio/walk sounds/footstep_metal_low_walk_14.wav" id="14_dg40j"]
+[ext_resource type="AudioStream" uid="uid://cekipiluiw8bh" path="res://assets/audio/walk sounds/footstep_metal_low_walk_15.wav" id="15_7xgtv"]
 [ext_resource type="Script" uid="uid://cu5u44bi050m7" path="res://scripts/states/state_machine.gd" id="15_lulei"]
+[ext_resource type="AudioStream" uid="uid://dd5n07dg4ltbt" path="res://assets/audio/walk sounds/footstep_metal_low_walk_16.wav" id="16_6rclf"]
 [ext_resource type="Script" uid="uid://bq3nw52b2lr6f" path="res://scripts/states/player/player_idle.gd" id="16_edtk3"]
 [ext_resource type="Script" uid="uid://busgd24q0krbr" path="res://scripts/states/player/player_walk.gd" id="17_edtk3"]
+[ext_resource type="AudioStream" uid="uid://cncwr3wyjdtsc" path="res://assets/audio/walk sounds/footstep_metal_low_walk_03.wav" id="17_s0anf"]
 [ext_resource type="Script" uid="uid://j4uuxdv6hgw8" path="res://scripts/states/player/player_death.gd" id="18_q2wkl"]
+[ext_resource type="AudioStream" uid="uid://qjkes8sivac6" path="res://assets/audio/walk sounds/footstep_metal_low_walk_04.wav" id="18_s1x7u"]
+[ext_resource type="AudioStream" uid="uid://8jsv0rdr8f1c" path="res://assets/audio/walk sounds/footstep_metal_low_walk_05.wav" id="19_c3kfx"]
+[ext_resource type="AudioStream" uid="uid://bdppsdyl1kvj6" path="res://assets/audio/walk sounds/footstep_metal_low_walk_06.wav" id="20_hdner"]
+[ext_resource type="AudioStream" uid="uid://c0vr3pvllash" path="res://assets/audio/walk sounds/footstep_metal_low_walk_07.wav" id="21_m38kj"]
+[ext_resource type="AudioStream" uid="uid://dq428t34g1jvl" path="res://assets/audio/walk sounds/footstep_metal_low_walk_08.wav" id="22_v1y1o"]
+[ext_resource type="AudioStream" uid="uid://7wntvkcqbkkt" path="res://assets/audio/walk sounds/footstep_metal_low_walk_09.wav" id="23_hnvwh"]
+[ext_resource type="AudioStream" uid="uid://bose8uxgupn8h" path="res://assets/audio/walk sounds/footstep_metal_low_walk_10.wav" id="24_rfou0"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lihhf"]
 size = Vector2(10, 15)
+
+[sub_resource type="Curve" id="Curve_jk2m4"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.011236), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_xhtjm"]
+curve = SubResource("Curve_jk2m4")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_k4v7y"]
+particle_flag_disable_z = true
+direction = Vector3(0, 0, 0)
+spread = 180.0
+initial_velocity_min = 150.0
+initial_velocity_max = 300.0
+gravity = Vector3(0, 0, 0)
+damping_min = 500.0
+damping_max = 800.0
+scale_max = 1.5
+color = Color(0.926789, 0.0783968, 0.164611, 1)
+alpha_curve = SubResource("CurveTexture_xhtjm")
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_onk5g"]
 atlas = ExtResource("4_mndlr")
@@ -29,6 +65,25 @@ region = Rect2(55, 118, 34, 5)
 [sub_resource type="CircleShape2D" id="CircleShape2D_lihhf"]
 radius = 40.0
 
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_vkt2s"]
+streams_count = 16
+stream_0/stream = ExtResource("9_tswxa")
+stream_1/stream = ExtResource("10_aqa0x")
+stream_2/stream = ExtResource("17_s0anf")
+stream_3/stream = ExtResource("18_s1x7u")
+stream_4/stream = ExtResource("19_c3kfx")
+stream_5/stream = ExtResource("20_hdner")
+stream_6/stream = ExtResource("21_m38kj")
+stream_7/stream = ExtResource("22_v1y1o")
+stream_8/stream = ExtResource("23_hnvwh")
+stream_9/stream = ExtResource("24_rfou0")
+stream_10/stream = ExtResource("11_yhyq5")
+stream_11/stream = ExtResource("12_5jukt")
+stream_12/stream = ExtResource("13_vwwfy")
+stream_13/stream = ExtResource("14_dg40j")
+stream_14/stream = ExtResource("15_7xgtv")
+stream_15/stream = ExtResource("16_6rclf")
+
 [node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("state_machine")]
 z_index = 100
 collision_layer = 5
@@ -40,6 +95,15 @@ state_machine = NodePath("StateMachine")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 0.5)
 shape = SubResource("RectangleShape2D_lihhf")
+
+[node name="HurtParticles" type="GPUParticles2D" parent="."]
+unique_name_in_owner = true
+emitting = false
+amount = 32
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_k4v7y")
 
 [node name="Spritesheet" type="AnimatedSprite2D" parent="."]
 unique_name_in_owner = true
@@ -133,6 +197,10 @@ volume_db = -10.0
 unique_name_in_owner = true
 stream = ExtResource("5_g5n55")
 volume_db = 10.0
+
+[node name="WalkSounds" type="AudioStreamPlayer2D" parent="Audio"]
+unique_name_in_owner = true
+stream = SubResource("AudioStreamRandomizer_vkt2s")
 
 [node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("actor")]
 script = ExtResource("15_lulei")

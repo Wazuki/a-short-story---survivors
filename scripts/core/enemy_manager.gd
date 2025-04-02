@@ -72,7 +72,7 @@ func spawn_enemy() -> void:
 
 	# Finally, add add the enemy to the spawned_enemies container.
 	spawned_enemies.set(new_enemy.get_instance_id(), new_enemy)
-	#print_debug("New enemy speed: " + str(new_enemy.stats.get_stat(CharacterStats.Stat.SPEED)))
+	#print_debug("New enemy speed: " + str(new_enemy.stats.get_stat(CharacterData.Stat.SPEED)))
 
 func _on_enemy_spawn_timer_timeout() -> void:
 	spawn_enemy()
@@ -110,12 +110,12 @@ func _on_enemy_difficulty_timer_timeout() -> void:
 
 
 ## Determine what enemy type to spawn based on a counter (typically total enemies spawned).[br]
-func determine_enemy_type(enemy_count: int) -> EnemyStats.EnemyType:
+func determine_enemy_type(enemy_count: int) -> EnemyData.EnemyType:
 	# Spawn a basic enemy. Every 12, a ranged enemy. Every 20 enemies, spawn an elite. Every 50, spawn a boss. 
-	if enemy_count % 50 == 0: return EnemyStats.EnemyType.BOSS
-	elif enemy_count % 20 == 0: return EnemyStats.EnemyType.ELITE
-	elif enemy_count % 12 == 0: return EnemyStats.EnemyType.RANGED
-	else: return EnemyStats.EnemyType.BASIC
+	if enemy_count % 50 == 0: return EnemyData.EnemyType.BOSS
+	elif enemy_count % 20 == 0: return EnemyData.EnemyType.ELITE
+	elif enemy_count % 12 == 0: return EnemyData.EnemyType.RANGED
+	else: return EnemyData.EnemyType.BASIC
 
 
 # Signal connectors for tracking player variables.

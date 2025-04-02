@@ -1,0 +1,21 @@
+[gd_resource type="Resource" load_steps=5 format=3 uid="uid://b0p3kumgxyg2v"]
+
+[ext_resource type="PackedScene" uid="uid://vdpcbf0b1fs3" path="res://prefabs/bullets/enemy_bullet.tscn" id="1_uhmga"]
+[ext_resource type="Script" uid="uid://c7j0fa7qjysyq" path="res://data/characters/enemies/ranged_enemy_data.gd" id="2_aup0w"]
+[ext_resource type="SpriteFrames" uid="uid://c5hesxioqtbmd" path="res://assets/sprites/characters/enemies/ranged_enemy.tres" id="2_uhmga"]
+[ext_resource type="Script" uid="uid://dt0pa4luip6h5" path="res://data/characters/stat_entry.gd" id="4_56a7k"]
+
+[resource]
+script = ExtResource("2_aup0w")
+xp_value = 8
+enemy_scale = Vector2(0.75, 0.75)
+health_drop_chance = 0.1
+contact_damage = 1.5
+attack_range = 150.0
+attack_damage = 12.0
+attack_cooldown = 1.0
+attack_prefab = ExtResource("1_uhmga")
+character_name = "Ranged Enemy"
+description = ""
+spritesheet = ExtResource("2_uhmga")
+stats = Array[ExtResource("4_56a7k")]([])

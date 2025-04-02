@@ -1,7 +1,7 @@
 class_name  EnemyWalk
 extends EnemyState
 
-#const SPEED = CharacterStats.Stat.SPEED
+#const SPEED = CharacterData.Stat.SPEED
 
 ## Defines the state's name as it enters the tree.
 func _enter_tree() -> void: 
@@ -28,7 +28,7 @@ func physics_update(delta) -> void:
 		enemy.final_direction =  enemy.move_dir.lerp(enemy.avoidance_dir, enemy.avoidance_weight) # Lerp from our main move direction towards the play 90% and the enemy we are avoiding 10%
 		enemy.avoidance_dir.move_toward(Vector2.ZERO, get_physics_process_delta_time()) # Move the avoidance Vector2 towards zero.
 
-	enemy.velocity = enemy.final_direction * enemy.stats.get_stat(CharacterStats.Stat.SPEED) * delta
+	enemy.velocity = enemy.final_direction * enemy.stats.get(CharacterData.Stat.SPEED) * delta
 	if enemy.velocity.length() > 0:
 		enemy.move()
 	# else:

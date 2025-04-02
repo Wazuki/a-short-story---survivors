@@ -1,9 +1,9 @@
 extends Node
 
-var UNLOCKABLE_CHARACTER_DATA: UnlockableCharacters = load("res://data/characters/unlockable_characters.tres")
+var character_database: CharacterDatabase = preload("res://data/characters/character_database.tres")
 
-var characters: Array[PlayerCharacterStats]
-const QUEST_FOLDER = "res://data/quests/"
+var characters: Array[PlayerCharacterData]
+#const QUEST_FOLDER = "res://data/quests/"
 
 var data = {}
 
@@ -12,8 +12,10 @@ signal data_reset
 signal updated_quests
 
 func _init():
-	UNLOCKABLE_CHARACTER_DATA._init()
-	characters = UNLOCKABLE_CHARACTER_DATA.get_all_chars()
+	#character_database._init()
+	characters = character_database.get_all_characters()
+	# Copy the stat_map to to the stats var for easy access.
+	for c in characters: c.stats = c.stat_map.to_dict()
 
 ## Instantiate all quests, then connect the query_requested signal to Questify.
 func _ready() -> void:
@@ -61,9 +63,9 @@ func instantiate_quests() -> void:
 	# Iterate through the character quests, instantiate them, then match them to the character list and assign them. And pray.
 	for character in characters:
 		# Only instantiate actual quests - default characters have a null quest value so they auto-unlock
-		if character.unlock_quest_path != "":
-			quest = load(character.unlock_quest_path).instantiate()
-			character.unlock_quest = quest
+		if character.unlock_quest != null:
+			quest = character.unlock_quest.instantiate()
+			character.unlock_quest = quest # Assign the quest INSTANCE back to the character so tracking works right.
 			# Start the quest (so its objectives are set up) and then create a tracker panel for it.
 			Questify.start_quest(quest)
 			get_node("/root/GameScene/UI/ProgressTrackerControl").create_progress_tracker_panel(quest)

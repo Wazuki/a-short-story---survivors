@@ -1,0 +1,28 @@
+[gd_resource type="Resource" load_steps=5 format=3 uid="uid://rfxb8kjjnu76"]
+
+[ext_resource type="Script" uid="uid://cfvlx0106080l" path="res://data/characters/enemies/elite_enemy_data.gd" id="1_dnocm"]
+[ext_resource type="SpriteFrames" uid="uid://drpsnnuwf674n" path="res://assets/sprites/characters/enemies/basic_enemy.tres" id="2_glc6x"]
+[ext_resource type="Script" uid="uid://dt0pa4luip6h5" path="res://data/characters/stat_map.gd" id="3_6hda1"]
+
+[sub_resource type="Resource" id="Resource_dnocm"]
+script = ExtResource("3_6hda1")
+health = 40.0
+armor = 0.0
+speed = 75.0
+phys = 0.0
+mag = 0.0
+metadata/_custom_type_script = "uid://dt0pa4luip6h5"
+
+[resource]
+script = ExtResource("1_dnocm")
+xp_value = 8
+enemy_scale = Vector2(1, 1)
+health_drop_chance = 0.2
+contact_damage = 2.5
+attack_range = 0.0
+attack_damage = 0.0
+attack_cooldown = 0.0
+character_name = "Elite Enemy"
+description = ""
+spritesheet = ExtResource("2_glc6x")
+stat_map = SubResource("Resource_dnocm")

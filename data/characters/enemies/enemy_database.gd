@@ -1,7 +1,7 @@
 class_name EnemyDatabase
 extends Resource
 
-@export var enemy_data: Array[EnemyStats]
+@export var enemy_data: Array[EnemyData]
 #const ENEMY_DATA_PATH = "res://data/characters/enemies/"
 
 var enemy_stat_dict = {}
@@ -13,8 +13,10 @@ func initialize() -> void:
 			print_debug("Warning! Duplicate enemy type detected! Skipping " + data.character_name)
 		else:
 			data.initialize()
+			data.stats = data.stat_map.to_dict()
 			enemy_stat_dict.set(data.get_type(), data)
 			#print_debug("Processed " + data.character_name)
+			#print_debug("Total stats: " + str(data.stats.size()) + " vs map: " + str(data.stat_map.to_dict().size()))
 
 
 
@@ -38,6 +40,6 @@ func initialize() -> void:
 
 ## Returns the EnemyStats object from the array of enemy types (loaded from the directory)[br]
 ## See [EnemyStats.EnemyType] for a list of enemy types.
-func init_from_type(t: EnemyStats.EnemyType) -> EnemyStats:
+func init_from_type(t: EnemyData.EnemyType) -> EnemyData:
 	#print_debug("Deploying statblock " + enemy_stat_dict[t].character_name)
 	return enemy_stat_dict[t]

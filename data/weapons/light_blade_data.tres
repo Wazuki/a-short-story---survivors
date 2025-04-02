@@ -1,4 +1,4 @@
-[gd_resource type="Resource" load_steps=7 format=3 uid="uid://vqco3hbdgcc3"]
+[gd_resource type="Resource" load_steps=7 format=3 uid="uid://cy5m857gnh87w"]
 
 [ext_resource type="Resource" uid="uid://xpd7doxx2l0n" path="res://data/weapons/bullets/light_blade_bullet_data.tres" id="1_1gy4b"]
 [ext_resource type="Script" uid="uid://besfugoahx8v7" path="res://data/weapons/weapon_scene_map.gd" id="1_dslp4"]
@@ -25,7 +25,7 @@ level_up_texts = Array[String](["Increased damage and attack speed.", "Increased
 weapon_type = 1
 target_type = 1
 damage = 25.0
-weapon_range = 0.0
+weapon_range = 50.0
 speed = 50.0
 cooldown = 1.75
 crit_chance = 0.0
