@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=3 uid="uid://bivcmhjsdsyy2"]
+[gd_scene load_steps=39 format=3 uid="uid://bivcmhjsdsyy2"]
 
 [ext_resource type="Script" uid="uid://bnx6epykj7o3t" path="res://scripts/characters/player.gd" id="1_py671"]
 [ext_resource type="SpriteFrames" uid="uid://bjaasfha8sw2h" path="res://assets/sprites/characters/tank/tank_sprite_frames.tres" id="2_a2ns6"]
@@ -28,6 +28,7 @@
 [ext_resource type="AudioStream" uid="uid://dq428t34g1jvl" path="res://assets/audio/walk sounds/footstep_metal_low_walk_08.wav" id="22_v1y1o"]
 [ext_resource type="AudioStream" uid="uid://7wntvkcqbkkt" path="res://assets/audio/walk sounds/footstep_metal_low_walk_09.wav" id="23_hnvwh"]
 [ext_resource type="AudioStream" uid="uid://bose8uxgupn8h" path="res://assets/audio/walk sounds/footstep_metal_low_walk_10.wav" id="24_rfou0"]
+[ext_resource type="Script" uid="uid://bw6udya2vnion" path="res://scripts/status_effects/status_effect_manager.gd" id="29_aqa0x"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lihhf"]
 size = Vector2(10, 15)
@@ -84,12 +85,13 @@ stream_13/stream = ExtResource("14_dg40j")
 stream_14/stream = ExtResource("15_7xgtv")
 stream_15/stream = ExtResource("16_6rclf")
 
-[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("state_machine")]
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("effect_manager", "state_machine")]
 z_index = 100
 collision_layer = 5
 motion_mode = 1
 platform_on_leave = 2
 script = ExtResource("1_py671")
+effect_manager = NodePath("StatusEffectManager")
 state_machine = NodePath("StateMachine")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -218,6 +220,11 @@ metadata/_custom_type_script = "uid://busgd24q0krbr"
 [node name="PlayerDeath" type="Node" parent="StateMachine"]
 script = ExtResource("18_q2wkl")
 metadata/_custom_type_script = "uid://j4uuxdv6hgw8"
+
+[node name="StatusEffectManager" type="Node" parent="." node_paths=PackedStringArray("target")]
+script = ExtResource("29_aqa0x")
+target = NodePath("..")
+metadata/_custom_type_script = "uid://bw6udya2vnion"
 
 [connection signal="animation_finished" from="Spritesheet" to="." method="_on_spritesheet_animation_finished"]
 [connection signal="area_entered" from="PlayerCollider" to="." method="_on_player_collider_area_entered"]

@@ -111,7 +111,7 @@ func jump_to_next_target() -> void:
 func deal_chain_damage() -> void:
 	#var enemy = current_jump_target as Enemy
 	damage_modifier = weapon.calculcate_chain_modifier(current_chain)
-	damage_target(current_jump_target)
+	damage_target(current_jump_target, weapon.get_stun_effect())
 	# if is_instance_valid(current_jump_target):
 	# 	var enemy = current_jump_target as Enemy
 
@@ -126,7 +126,7 @@ func deal_chain_damage() -> void:
 
 	# 	# Before we deal damage we should make sure the target isn't dead!
 	# 	if not enemy.dead: enemy.take_damage(damage_result * damage_mod)
-	if weapon.is_stun_enabled() and is_instance_valid(current_jump_target): current_jump_target.apply_stun(weapon.stun_duration)
+	#if weapon.is_stun_enabled() and is_instance_valid(current_jump_target): current_jump_target.apply_stun(weapon.stun_duration)
 	# After dealing damage, try to jump to the next target.
 	jump_to_next_target()
 

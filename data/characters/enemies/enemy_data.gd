@@ -24,15 +24,17 @@ var base_speed: float ## The base, unmodified speed of the enemy.
 @export var attack_prefab: PackedScene = null ## The prefab that we'll instantiate when calling the attack 
 
 
-## Initialize the enemy's stat block when we are ready since the enemies will define them in init.
+## Initialize the enemy's stat block when we are ready since the enemies will define them in init.[br]
+## Currently doesn't do anything lmao
 func initialize() -> void:
+	pass
 	#super.initialize()
 	# stats[Stat.HEALTH].value
 	# stats[Stat.HEALTH] = get_base_health()
 	# stats[Stat.MAX_HEALTH] = stats[Stat.HEALTH]
 	# stats[Stat.ARMOR] = get_base_armor()
 	# stats[Stat.SPEED] = get_base_speed()
-	base_speed = enemy_speed
+	#base_speed = stats[]
 	#stats = stat_map.to_dict()
 	#print_debug("Total stats: " + str(stats.size()) + " vs map: " + str(stat_map.to_dict().size()))
 

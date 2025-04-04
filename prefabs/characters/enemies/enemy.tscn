@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://d2lds6aupinx5"]
+[gd_scene load_steps=22 format=3 uid="uid://d2lds6aupinx5"]
 
 [ext_resource type="Script" uid="uid://be361hr1w38ld" path="res://scripts/characters/enemies/enemy.gd" id="1_tqx47"]
 [ext_resource type="PackedScene" uid="uid://remf34e7bwbp" path="res://prefabs/ui/healthbar.tscn" id="2_qanmn"]
@@ -13,6 +13,7 @@
 [ext_resource type="Script" uid="uid://ckp6ox7be3gsc" path="res://scripts/states/enemy/enemy_idle.gd" id="11_lummi"]
 [ext_resource type="Script" uid="uid://bv6qtxpppyc2c" path="res://scripts/states/enemy/enemy_walk.gd" id="12_m48vf"]
 [ext_resource type="Script" uid="uid://4geq1i1satr4" path="res://scripts/states/enemy/enemy_attack.gd" id="13_pmfm8"]
+[ext_resource type="Script" uid="uid://bw6udya2vnion" path="res://scripts/status_effects/status_effect_manager.gd" id="14_qanmn"]
 
 [sub_resource type="Gradient" id="Gradient_xkwav"]
 colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
@@ -149,6 +150,12 @@ avoidance_enabled = true
 radius = 4.0
 neighbor_distance = 10.0
 max_neighbors = 5
+
+[node name="StatusEffectManager" type="Node" parent="." node_paths=PackedStringArray("target")]
+unique_name_in_owner = true
+script = ExtResource("14_qanmn")
+target = NodePath("..")
+metadata/_custom_type_script = "uid://bw6udya2vnion"
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="body_exited" from="." to="." method="_on_body_exited"]

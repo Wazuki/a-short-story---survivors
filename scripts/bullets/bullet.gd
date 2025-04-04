@@ -49,9 +49,9 @@ func _ready() -> void:
 
 ## Deal damage to a target based on the damage modifier of the bullet and the damage of the weapon.[br]
 ## Includes a check to make sure the target is currently a valid instance.
-func damage_target(target: Variant) -> bool:
+func damage_target(target: Variant, effect: StatusEffect = null) -> bool:
 	if is_instance_valid(target) and not target.dead:
-		target.take_damage(weapon.damage_calc() * damage_modifier)
+		target.take_damage(weapon.damage_calc() * damage_modifier, effect)
 		return true
 	return false
 

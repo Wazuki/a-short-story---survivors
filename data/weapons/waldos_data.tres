@@ -18,6 +18,7 @@ inner_ring_scale = Vector2(0.65, 0.65)
 max_inner_ring_scale = Vector2(1.15, 1.15)
 overhaul_growth_rate = Vector2(0.3, 0.3)
 max_scale = Vector2(3, 3)
+shield_cooldown = 2.0
 name = "Waldos"
 description = "Spinning waldos form an area of constant damage, slapping and slowing those who dare to get close."
 icon = ExtResource("1_7yr2a")

@@ -7,3 +7,4 @@ extends WeaponData
 @export var max_inner_ring_scale = Vector2(1.15, 1.15)
 @export var overhaul_growth_rate = Vector2(0.3, 0.3)
 @export var max_scale = Vector2(3, 3)
+@export var shield_cooldown:float  = 1.0

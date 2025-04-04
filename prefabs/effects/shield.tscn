@@ -1,0 +1,48 @@
+[gd_scene load_steps=9 format=3 uid="uid://ddsgksnuiteeo"]
+
+[ext_resource type="Texture2D" uid="uid://dy3saf434etkr" path="res://assets/sprites/effects/shield/energyV001effect000.png" id="1_y41xb"]
+[ext_resource type="Texture2D" uid="uid://imcmi7sml3p" path="res://assets/sprites/effects/shield/energyV001effect001.png" id="2_5k7qn"]
+[ext_resource type="Texture2D" uid="uid://dt4k3sfx58kne" path="res://assets/sprites/effects/shield/energyV001effect002.png" id="3_mg4t6"]
+[ext_resource type="Texture2D" uid="uid://co51tkatysbfi" path="res://assets/sprites/effects/shield/energyV001effect003.png" id="4_en05e"]
+[ext_resource type="Texture2D" uid="uid://bytmxbw1idicf" path="res://assets/sprites/effects/shield/energyV001effect004.png" id="5_wnaa0"]
+[ext_resource type="Texture2D" uid="uid://ctmjgxnmqu2wn" path="res://assets/sprites/effects/shield/energyV001effect005.png" id="6_wrlwb"]
+[ext_resource type="Texture2D" uid="uid://c02uus6vp2aqg" path="res://assets/sprites/effects/shield/energyV001effect006.png" id="7_r6thv"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_lebc3"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_y41xb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_5k7qn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_mg4t6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_en05e")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_wnaa0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_wrlwb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_r6thv")
+}],
+"loop": true,
+"name": &"default",
+"speed": 12.0
+}]
+
+[node name="ShieldSprite" type="AnimatedSprite2D"]
+self_modulate = Color(1, 1, 1, 0)
+z_index = 1
+texture_filter = 1
+scale = Vector2(0.65, 0.65)
+sprite_frames = SubResource("SpriteFrames_lebc3")
+autoplay = "default"
+frame = 5
+frame_progress = 0.434423

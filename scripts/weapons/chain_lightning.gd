@@ -10,11 +10,13 @@ const FINAL_CHAIN_FULL_DAMAGE_LEVEL = 6
 var chain_modifiers = {} ## Dictionary of chain modifiers for each chain. The key is the number of chains, and the value is the damage modifier.
 var max_chains: int ## Number of maximum times chain lightning can chain.
 var jump_speed: float ## How long it takes each lightning bolt to travel.
-#
+
 # Modifiers that are level-dependent
 var stun_duration: float
 var arc_chance: float
 var strike_modulus: int ## The number of chains before a lightning strike is spawned.
+
+var stun_effect: Stun
 
 ## Initialize the weapon statistics before being added to the scene tree.
 func initialize(data: WeaponData) -> void:
@@ -26,6 +28,8 @@ func initialize(data: WeaponData) -> void:
 	stun_duration = data.initial_stun_duration
 	arc_chance = data.initial_arc_split_chance
 	strike_modulus = data.lightning_strike_modulus
+	# Create the stun status effect
+	stun_effect = Stun.new(stun_duration)
 
 
 # func reset() -> void:
@@ -89,7 +93,9 @@ func spawn_lightning_stike(spawn_pos: Vector2) -> void:
 func is_final_chain_full_damage() -> bool: return level >= FINAL_CHAIN_FULL_DAMAGE_LEVEL
 func is_splittable() -> bool: return level >= ARC_SPLIT_LEVEL
 func is_splitting_this_attack() -> bool: return true if randf() <= arc_chance else false # Check to see if we actually arced
-func is_stun_enabled() -> bool: return level >= APPLY_STUN_LEVEL
+func get_stun_effect() -> StatusEffect: ## Returns the stun status effect if unlocked, otherwise returns null.
+	if level >= APPLY_STUN_LEVEL: return stun_effect
+	return null
 
 # If the weapon isn't currently charging then reset the cooldown.
 func critical_hit_cooldown_reset() -> void:

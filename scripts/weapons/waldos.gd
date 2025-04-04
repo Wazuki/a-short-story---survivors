@@ -3,6 +3,7 @@ extends Weapon
 
 const SLOW_ENABLED_LEVEL = 4
 const INNER_RING_LEVEL = 5
+const SHIELD_ENABLED_LEVEL = 6
 # const BASE_DAMAGE = 8.0
 # const BASE_SPEED = PI / 2
 # # const BASE_COOLDOWN = 1.5
@@ -22,10 +23,14 @@ var inner_ring
 var inner_ring_scale: Vector2
 var max_inner_ring_scale : Vector2
 
+var slow_status_effect: Slow
+
 var slow_value: float
 var overhaul_growth_rate: Vector2
 var max_scale: Vector2
 var expanding: bool = false
+var can_shield: bool = false
+var shield_cooldown: float
 
 # var inner_ring_enemies = {}
 
@@ -37,41 +42,26 @@ func initialize(data: WeaponData) -> void:
 	max_inner_ring_scale = data.max_inner_ring_scale
 	overhaul_growth_rate = data.overhaul_growth_rate
 	max_scale = data.max_scale
+	shield_cooldown = data.shield_cooldown
+	# Instantiate the slow status effect.
+	slow_status_effect = Slow.new(1, slow_value)
+	#slow_status_effect.initialize(1, slow_value) # Small slow. TODO - implement this properly like, immediately.
+	#print_debug("Slow: " + str(slow_status_effect.duration) + "s, " + str(slow_status_effect.intensity))
 	
-
-# Called when the node enters the scene tree for the first time.
-# func _ready() -> void:
-# 	super._ready()
-# 	name = "Spinning Waldos"
-# 	weapon_type = Weapon.Type.WALDOS
-# 	target_type = TargetType.NONE
-# 	description = "Spinning waldos form an area of constant damage."
-# 	icon = preload("res://assets/UI/icons/waldos_icon.tres")
-# 	# weapon = preload("res://prefabs/weapon.tscn").instantiate()
-# 	# add_child(weapon)
-# 	# reset()
-
-# func reset() -> void:
-# 	set_stats(BASE_DAMAGE, 1.0, 1.0)
-# 	reset_timer()
-# 	weapon_scale = BASE_SCALE
-# 	scale = weapon_scale
-# 	first_level_up = true
-# 	overhaul_enabled = false
-# 	inner_ring_enabled = false
-# 	expanding = false
-# 	slow_enabled = false
-# 	# make sure we hide the waldos since they're special when they reset.
-# 	%InnerRing.visible = false
-# 	visible = false
-
-func _process(delta: float) -> void:
-	super._process(delta)
-	# Prune the inner ring dict every n frames to remove dead references. TODO - maybe this should be its own derived weapon for ease of use? hmmm
-
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta: float) -> void:
+	# Check if we can apply a shield to the player.
+	if is_shield_enabled():
+		# Set all the shield variables BEFORE passing it to the player!
+		var shield = Shield.new(99999)
+		GameController.player.effect_manager.apply_effect(shield)
+		# Connect the new shield instance in the effect manager to the signal to restart the shield.
+		GameController.player.effect_manager.connect_signal(typeof(shield), "shield_destroyed", %ShieldTimer.start)
+		can_shield = false # Disable the shield effect until it's removed by a signal and the timer refires.
+		# Set the shield timer
+		%ShieldTimer.wait_time = shield_cooldown
+
 	rotation += speed * delta
 	#%InnerRing.rotation -= BASE_SPEED * delta * 2 # Have to double this to make it spin opposite due to the parent also spinning
 
@@ -103,8 +93,10 @@ func _physics_process(delta: float) -> void:
 func deal_damage(enemies: Array) -> void:
 	for e in enemies:
 		if e.dead: continue
-		e.take_damage(damage)
-		if is_slow_enabled(): e.apply_slow(slow_value)
+		if is_slow_enabled(): e.take_damage(damage, slow_status_effect)
+		else: e.take_damage(damage)
+		#e.take_damage(damage)
+		#if is_slow_enabled(): e.apply_slow(slow_value)
 
 
 # Level 1: Base: a slowly expanding, passive damage field.
@@ -140,7 +132,7 @@ func level_up() -> void:
 		6:
 			# Level 6: Further boost damage frequency and add a shield effect
 			cooldown *= 9
-			# TODO - shield effect?
+			can_shield = true
 		7:
 			# Level 7: Signature overhaul - burst mode? 
 			# Level up UI handles checking if the weapon is a levle up option. Duh.
@@ -153,29 +145,10 @@ func level_up() -> void:
 
 ## Returns whether or not slow is enabled based on the weapon's level and the defined consts.
 func is_slow_enabled() -> bool: return level >= SLOW_ENABLED_LEVEL
+func is_shield_enabled() -> bool:  ## Returns whether or not the shield effect is enabled and if we are able to shield.
+	if level >= SHIELD_ENABLED_LEVEL and can_shield: return true
+	return false
 
-# func level_up() -> void:
-# 	# Call the weapon's level up function, then finalize any others that aren't in weapon (projectiles, lifetime, etc)
-# 	if first_level_up:
-# 		first_level_up = false
-# 		visible = true
-# 		weapon.fire_weapon()
-# 		return
-	
-# 	weapon.level_up(LEVEL_UP_DAMAGE, 1.0, LEVEL_UP_COOLDOWN)
-# 	scale *= LEVEL_UP_SCALE
-# 	weapon.fire_weapon() # Design this way, the player starts with the cooldown instead of getting a "free shot".
-
-
-
-# func get_level_up_text() -> String:
-# 	# Need to watch order of operations especially with modulus and concatenating strings!
-# 	var level_up_string: String
-# 	if first_level_up: level_up_string = "Level 1\nDamage " + str(weapon.damage) + "\nInterval " + str(weapon.cooldown) + "/s";
-# 	else: 
-# 		level_up_string = "Level " + str(weapon.level) + " -> " + str(weapon.level + 1) + "\n"
-# 		level_up_string += "Damage " + str(GameController.round_to_dec(weapon.damage, 2)) + " -> " + str(GameController.round_to_dec(weapon.damage * LEVEL_UP_DAMAGE, 2)) + "\n"
-# 		level_up_string += "Size " + str(GameController.round_to_dec(scale.x, 2)) + " -> " + str(GameController.round_to_dec(scale.x * LEVEL_UP_SCALE, 2)) + "\n"
-# 		level_up_string += "Interval " + str(GameController.round_to_dec(weapon.cooldown, 2)) + "s -> " + str(GameController.round_to_dec((weapon.cooldown * LEVEL_UP_COOLDOWN),2)) + "s";
-		
-# 	return level_up_string
+func _on_shield_timer_timeout() -> void:
+	can_shield = true # Re-enable the shield effect after the cooldown is over.
+	#print_debug("Shield timer over")

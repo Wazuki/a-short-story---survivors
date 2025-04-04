@@ -23,12 +23,13 @@ func _process(_delta: float) -> void:
 
 ## Update the enemy's direction every [FRAME_UPDATE_OFFSET] frames and then move the enemy towards the player.
 func physics_update(delta) -> void:
-	if enemy.avoidance_dir == Vector2.ZERO:	enemy.final_direction = enemy.move_dir # Default enemy movement - simply move to the player.
-	else: # Avoidance logic
-		enemy.final_direction =  enemy.move_dir.lerp(enemy.avoidance_dir, enemy.avoidance_weight) # Lerp from our main move direction towards the play 90% and the enemy we are avoiding 10%
-		enemy.avoidance_dir.move_toward(Vector2.ZERO, get_physics_process_delta_time()) # Move the avoidance Vector2 towards zero.
+	# if enemy.avoidance_dir == Vector2.ZERO:	enemy.final_direction = enemy.move_dir # Default enemy movement - simply move to the player.
+	# else: # Avoidance logic
+	# 	enemy.final_direction =  enemy.move_dir.lerp(enemy.avoidance_dir, enemy.avoidance_weight) # Lerp from our main move direction towards the play 90% and the enemy we are avoiding 10%
+	# 	enemy.avoidance_dir.move_toward(Vector2.ZERO, get_physics_process_delta_time()) # Move the avoidance Vector2 towards zero.
+	# 	print_debug("avoid :(")
 
-	enemy.velocity = enemy.final_direction * enemy.stats.get(CharacterData.Stat.SPEED) * delta
+	enemy.velocity = enemy.move_dir * enemy.stats.get(CharacterData.Stat.SPEED) * delta
 	if enemy.velocity.length() > 0:
 		enemy.move()
 	# else:

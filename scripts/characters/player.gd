@@ -26,6 +26,7 @@ var level_up_text_reset_pos
 var total_level_ups = 0
 # var enemy_damage_rate = 5.0
 
+@export var effect_manager: StatusEffectManager
 @export var state_machine: StateMachine
 @onready var player_info_text : RichTextLabel = get_node("/root/GameScene/UI/PlayerInfoContainer/Panel/MarginContainer/PlayerInfoText")
 @onready var animation_player: AnimatedSprite2D = %Spritesheet
@@ -99,8 +100,14 @@ func _physics_process(delta: float) -> void:
 
 
 ## Deals [damage: float] to the player and plays the "hurt" particles.[br]
-## Adjusts the player healer bar as well. If died, emit the health_depleted signal.
+## Adjusts the player healer bar as well. If died, emit the health_depleted signal.[br]
+## Also checks if the player has the Shield status effect.
 func take_damage(damage: float) -> void:
+	# Check if the player has the shield effect and remove it if so automatically. If not, the player should continue to take damage.
+	if effect_manager.remove_effect(typeof(Shield)):
+		print_debug("Shield absorbed damage!")
+		return
+	# If no shield was removed, then we take damage instead.
 	if not %HurtParticles.emitting: %HurtParticles.emitting = true
 	health -= damage
 	adjust_health_bar()

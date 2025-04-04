@@ -1,0 +1,59 @@
+@startuml StatusEffects 
+' How weapons work, inherit, and interact with targets.
+' Theme and theme parameters for easier readin'
+!theme crt-amber
+skinparam classAttributeIconSize 0
+skinparam classFontSize 14
+skinparam classAttributeFontSize 12
+skinparam Padding 8
+'left to right direction
+
+package "StatusEffects"
+{
+	
+	class StatusEffect
+	{
+		==Variables==
+		duration: float
+		intensity: float
+
+		==Functions==
+		apply(target) -> void
+		update(target, delta) -> void
+		remove(target) -> void
+	}
+
+	class StatusEffectManager
+	{
+		==Variables==
+		active_effects: Dictionary<StatusEffect, duration>
+
+		==Functions==
+		add_effect(effect: StatusEffect) -> void
+		update_effects(delta) -> void
+
+	}
+	note right of StatusEffectManager::add_effect
+		Apply the effect if we dont' have it.
+		Otherwise, update to the greater duration.
+	end note
+	note right of StatusEffectManager::update_effects
+		Iterate through each status effect, update their times, remove any expired.
+	end note
+	
+	' StatusEffect inheritance goes below
+	StatusEffect <|-- Slow
+	StatusEffect <|-- Knockback
+	StatusEffect <|-- Disorient
+	StatusEffect <|-- Burn
+	StatusEffect <|-- Stun
+
+
+}
+
+
+'Relationships
+StatusEffectManager --> StatusEffect: tracks >>
+StatusEffect --> Character: applies >>
+
+@enduml
