@@ -5,6 +5,13 @@ var enemies_damaged_this_cycle = []
 var is_mini_slam = false
 # var slow_value: float
 
+var slow_status_effect: Slow
+
+func _ready() -> void:
+	super._ready()
+	# Initialize the new slow status effect with the weapon's slow value.
+	slow_status_effect = Slow.new(1, weapon.slow_value)
+
 # Fire the weapon - if we hit something, return true so we fire the weapon and reset the timer.
 func slam(pos: Vector2) -> bool:
 	var overlapping_areas = get_overlapping_areas()
@@ -43,10 +50,11 @@ func _on_area_entered(area: Node2D) -> void:
 		deal_damage(area)
 
 func deal_damage(e : Node2D) -> void:
-	damage_target(e)
+	if weapon.is_slow_enabled() and not is_mini_slam: damage_target(e, slow_status_effect)
+	else: damage_target(e)
 	#e.take_damage(damage)
 	enemies_damaged_this_cycle.append(e)
-	if weapon.is_slow_enabled() and not is_mini_slam: e.apply_slow(weapon.slow_value)
+	# if weapon.is_slow_enabled() and not is_mini_slam: e.apply_slow(weapon.slow_value)
 
 
 

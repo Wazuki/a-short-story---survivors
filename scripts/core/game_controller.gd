@@ -1,52 +1,30 @@
 extends Node
 
-#############################
-####### REFACTOR AREA #######
-#############################
-var global_frame_count = 0 ## Tracks the total frames elapsed for anything that is calling something every [i]n[/i] frames.
+enum GameState { IDLE, MAIN_MENU, CHAR_SELECT, IN_GAME, PAUSED, UNLOCK_SCREEN, GAME_OVER } ## Enum for the game's states.
+var current_state: GameState = GameState.IDLE ## Indicates the current state of the game, used to determine what we are currently doing.
+signal game_state_changed(state: GameState) ## Signal to emit when the game state changes.
 
-# TODO - clean this up some day will ya? It's gettin crowded!
+var global_frame_count = 0 ## Tracks the total frames elapsed for anything that is calling something every [i]n[/i] frames. Combines with a modulus to execute actions every [i]n[/i] frames.
+var game_time_elapsed: float = 0.0 ## Tracks the total IN-GAME time elapsed. This is not the same as the global frame count. Used to display a clock for the player.
+
+
+# TODO These are all nodes we should consider changing how we acquire them.
 @onready var player = get_node("/root/GameScene/Player")
 @onready var player_health_bar = get_node("/root/GameScene/UI/PlayerHealthBar")
 @onready var level_up_UI = get_node("/root/GameScene/UI/LevelUpUI")
 @onready var character_select_UI = get_node("/root/GameScene/UI/CharacterSelectUI")
-# @onready var tilemap: TileMapLayer = get_node("/root/GameScene/Level")
 
-# @onready var energy_sword = get_node ("/root/GameScene/Player/Weapons/EnergySword")
-# @onready var spreadfire = get_node("/root/GameScene/Player/Weapons/Spreadfire")
-# @onready var slam = get_node("/root/GameScene/Player/Weapons/SlamWeaponController")
-# @onready var light_blade = get_node("/root/GameScene/Player/Weapons/LightBladeController")
-# @onready var arrow = get_node("/root/GameScene/Player/Weapons/ArrowController")
-# @onready var waldos = get_node("/root/GameScene/Player/Weapons/Waldos")
-# @onready var chain_lightning = get_node("/root/GameScene/Player/Weapons/ChainLightning") as ChainLightning
-
-# @onready var mob_spawn_point: PathFollow2D = get_node("/root/GameScene/Player/MobSpawnPath/MobSpawnPoint")
-#@onready var enemy_spawn_timer: Timer = get_node("/root/GameScene/EnemySpawnTimer")
-#@onready var enemy_difficulty_timer: Timer = get_node("/root/GameScene/EnemySpawnTimer/EnemyDifficultyTimer")
 
 @onready var game_over_UI: PanelContainer = get_node("/root/GameScene/UI/GameOverUI")
 @onready var pause_button: Button = get_node("/root/GameScene/UI/PauseButton")
 
-
-
-
-var game_time_elapsed: float = 0.0
-
-var total_enemies_spawned: int = 0
 var game_active: bool = false
-# var weapons = []
-# var enemies: Array[Node2D]
-# var spawned_xp: Array[Node2D]
 
-# Variables to save/load to track player stats
-# var total_enemies_killed: int = 0
-# var total_xp_gained: int = 0
-# var total_damage_done: float = 0.0
+# Deprecated
+#signal game_started
+#signal game_ended
 
-signal game_started
-signal game_ended
-
-var start_button_pressed = true
+# var start_button_pressed = true
 
 var touch_input_enabled: bool = false
 
@@ -71,19 +49,6 @@ func _ready() -> void:
 	# print_debug(restart_game_button.name)
 	restart_game_button.pressed.connect(restart_game)
 	
-	# Add all weapons to the weapons array
-	# weapons.append(energy_sword)
-	# weapons.append(spreadfire)
-	#weapons.append(slam)
-	#weapons.append(light_blade)
-	#weapons.append(arrow)
-	#weapons.append(waldos)
-	#weapons.append(chain_lightning)
-	#slam.create_cooldown_panel.connect(create_cooldown_panel.bind(slam))
-	#light_blade.create_cooldown_panel.connect(create_cooldown_panel.bind(light_blade))
-	#arrow.create_cooldown_panel.connect(create_cooldown_panel.bind(arrow))
-	#waldos.create_cooldown_panel.connect(create_cooldown_panel.bind(waldos))
-	#chain_lightning.create_cooldown_panel.connect(create_cooldown_panel.bind(chain_lightning))
 
 	load_game()
 	# Initialize the character select UI to properly set the weapons in the Dict
@@ -99,6 +64,7 @@ func _process(delta: float) -> void:
 		update_time_passed_label()
 		
 
+## Updates the game time label to show the time elapsed in the game.
 func update_time_passed_label() -> void:
 	var seconds = floori(game_time_elapsed)
 	var minutes = seconds / 60
@@ -141,16 +107,12 @@ func spawn_health_pickup(pos: Vector2) -> void:
 
 # Reset enemies and weapons, then let the player select a character.
 func start_game() -> void:
-	total_enemies_spawned = 0
-
-	# for w in weapons:
-	# 	w.reset()
 
 	game_time_elapsed = 0.0
 	# display_level_up()
 	# Display the character select screen
 	character_select_UI.visible = true
-	game_started.emit()
+	change_game_state(GameState.CHAR_SELECT) # Swap the game state to the char select state
 
 func select_character(character: PlayerCharacterData) -> void:
 	# Hide the select character UI and start the game after setting the player's stats
@@ -160,26 +122,10 @@ func select_character(character: PlayerCharacterData) -> void:
 
 
 	WeaponManager.create_weapon(character.starting_weapon) # Create the weapon based on the character's starting weapon.
-	# # TODO - Improve the functionality of the initial weapon gaining via the Weapon enum. Prefer instantiating new instance maybe.
-	# match character.starting_weapon:
-	# 	Weapon.Type.LIGHT_BLADE:
-	# 		light_blade.level_up()
-	# 	Weapon.Type.CHAIN_LIGHTNING:
-	# 		chain_lightning.level_up()
-	# 	Weapon.Type.SLAM:
-	# 		slam.level_up()
-	# 	Weapon.Type.ARROW:
-	# 		arrow.level_up()
-	# 	Weapon.Type.WALDOS:
-	# 		waldos.level_up()
-	# 		waldos.visible = true	
-
-	#character["weapon"].level_up() # Don't need to ask the array since we have a ref already.
-	#character["weapon"].visible = true # Make sure the weapon is visiible (required for some weapons)
-
 
 	unpause_game()
 	game_active = true
+	change_game_state(GameState.IN_GAME) # Swap the game state t o the "in game" state (e.g., the player is now actively playing)
 	# print_debug("Selected " + character)
 
 
@@ -229,14 +175,25 @@ func apply_shockwave_displacement(origin: Vector2, strength: float) -> void:
 		# 	e.displaced = true
 		# 	# print_debug("Applied displacement of " + str(direction * displacement))
 		
-	
 func game_over() -> void:
 	#Pause the game, destroy all enemies, then show the game over UI 
-	game_ended.emit()
+	change_game_state(GameState.GAME_OVER) # Notify listeners that the game state has changed to game_over.
+	#game_ended.emit()
 	save_game()
 	pause_game()
 	game_active = false
+	if current_state == GameState.UNLOCK_SCREEN: return # Don't show the game over screen if we are already in the unlock screen.
+	show_game_over_screen()
+
+## Shows the game over screen and sets the game state to game over.
+func show_game_over_screen() -> void: 
 	game_over_UI.visible = true
+	change_game_state(GameState.GAME_OVER) # Notify listeners that the game state has changed to game_over.
+
+## Hides the game over screen and resets the game state to the main menu.
+func hide_game_over_screen() -> void:
+	game_over_UI.visible = false
+	change_game_state(GameState.MAIN_MENU) # Notify listeners that the game state has changed to main menu.
 
 func restart_game() -> void:
 	# Hide the game over UI and return the player to the main menu.
@@ -272,3 +229,19 @@ func reset_game() -> void:
 	DataManager.reset_saved_data() # Handles game restting and re-saves the data.
 
 	print_debug("Game reset!")
+
+
+###################################################################################################################
+## hello there
+####################################################################################################################
+
+## Change to the new game state [param new_state] and emit the [game_state_changed(state)] signal.[br]
+func change_game_state(new_state: GameState) -> void:
+	# If we are changing to the current state, throw a warning and do nothing.
+	if current_state == new_state: 
+		push_warning("Error! Attempting to change the game state to the same state! State: " + str(GameState.keys()[new_state]))
+		return
+	# Set the new state and emit the signal.
+	current_state = new_state
+	game_state_changed.emit(current_state)
+	#print_debug("Game state changed to: " + str(GameState.keys()[current_state]))

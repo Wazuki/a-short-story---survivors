@@ -10,7 +10,7 @@ extends Node2D
 
 func _ready() -> void:
 	EnemyManager.mob_spawn_point = mob_spawn_point
-	GameController.game_ended.connect(snap_to_target_start_pos)
+	#GameController.game_ended.connect(snap_to_target_start_pos)
 	#camera_bounds = Rect2(camera.limit_left, camera.limit_top, camera.limit_right, camera.limit_bottom) # Rect2 Constructor is (x, y, width, height). This will make the Rect2 start at a Vector2 pos and stretch to the limits listed.
 
 func _physics_process(_delta: float) -> void:

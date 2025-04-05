@@ -19,7 +19,7 @@ metadata/_custom_type_script = "uid://dt0pa4luip6h5"
 script = ExtResource("2_pqj13")
 starting_weapon = 3
 level_up_text = "[color=green]The hunt continues.[/color]"
-unlock_quest = ExtResource("6_pqj13")
+unlock_quest_resource = ExtResource("6_pqj13")
 character_name = "Huntress"
 description = "\\nA bow of both worlds.\\nTBD"
 spritesheet = ExtResource("3_kqq0v")

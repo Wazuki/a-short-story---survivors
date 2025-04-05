@@ -26,12 +26,12 @@ var quest: QuestResource
 ## [b]Quest Reward:[/b] [reward: String][br]
 func initialize(selected_quest: QuestResource) -> void:
 	# Assign the quest variable and extract the first objective. From there, extract the metadata for the quest information.
-	self.quest = selected_quest
+	quest = selected_quest
 	var current_quest_objective = quest.get_active_objectives()[0] # Retrieve the first objective. Our quests should typically only have one.
 	var extracted_objective_text = current_quest_objective.description # Extract the quest description.
-	var extracted_reward_text = current_quest_objective.get_meta("reward") # Extract the reward text from the metadata.
+	var extracted_reward_text = quest.start_node.get_meta("reward") # Extract the reward text from the metadata.
 	#var icon_path = current_quest_objective.get_meta("icon_path") # Extract the icon path to a variable.
-	%QuestIcon.texture = load(current_quest_objective.get_meta("icon_path")) # Load the icon for the quest.
+	%QuestIcon.texture = load(quest.start_node.get_meta("icon_path")) # Load the icon for the quest.
 	# Combine the base text values and colors with the extracted texts.
 	%QuestObjective.text = objective_text + extracted_objective_text
 	%QuestReward.text = reward_text + extracted_reward_text

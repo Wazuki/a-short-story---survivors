@@ -14,19 +14,17 @@ type = "variable:>="
 key = "experience"
 id = "ClNtsykr_G"
 optional = false
-graph_editor_position = Vector2(480, 600)
+graph_editor_position = Vector2(520, 720)
 graph_editor_size = Vector2(377, 309)
-metadata/value = 5000.0
+metadata/value = 500.0
 
 [sub_resource type="Resource" id="Resource_rhfos"]
 script = ExtResource("3_kspeh")
-description = "Gain 5000 experience."
+description = "Gain 500 experience."
 id = "elHXNzbxIv"
 optional = false
 graph_editor_position = Vector2(1120, 120)
 graph_editor_size = Vector2(520, 740)
-metadata/icon_path = "res://assets/sprites/characters/tank/tank_icon.tres"
-metadata/reward = "Mobilize Tank."
 
 [sub_resource type="Resource" id="Resource_eqjwp"]
 script = ExtResource("1_oof27")
@@ -40,8 +38,10 @@ name = "Unlock Tank"
 description = "Unlock Tank by gaining 5000 experience."
 id = "9WNZlyos1F"
 optional = false
-graph_editor_position = Vector2(480, 40)
-graph_editor_size = Vector2(280, 516)
+graph_editor_position = Vector2(480, -20)
+graph_editor_size = Vector2(360, 620)
+metadata/icon_path = "res://assets/sprites/characters/tank/tank_icon.tres"
+metadata/reward = "Mobilize Tank"
 
 [sub_resource type="Resource" id="Resource_lqo7s"]
 script = ExtResource("1_oof27")
@@ -64,5 +64,5 @@ edge_type = 0
 
 [resource]
 script = ExtResource("7_voi6q")
-nodes = Array[ExtResource("6_1b885")]([SubResource("Resource_5q0m3"), SubResource("Resource_8ompf"), SubResource("Resource_5c7b3"), SubResource("Resource_rhfos")])
+nodes = Array[ExtResource("6_1b885")]([SubResource("Resource_5q0m3"), SubResource("Resource_rhfos"), SubResource("Resource_8ompf"), SubResource("Resource_5c7b3")])
 edges = Array[ExtResource("1_oof27")]([SubResource("Resource_eqjwp"), SubResource("Resource_lqo7s"), SubResource("Resource_jyddt")])

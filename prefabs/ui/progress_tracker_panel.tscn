@@ -57,7 +57,7 @@ unique_name_in_owner = true
 material = SubResource("ShaderMaterial_p5lec")
 layout_mode = 2
 texture = ExtResource("1_8nu7t")
-expand_mode = 3
+expand_mode = 4
 stretch_mode = 5
 
 [node name="MarginContainer2" type="MarginContainer" parent="MarginContainer/HBoxContainer"]

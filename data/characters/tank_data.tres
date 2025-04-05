@@ -19,7 +19,7 @@ metadata/_custom_type_script = "uid://dt0pa4luip6h5"
 script = ExtResource("2_f5gfg")
 starting_weapon = 0
 level_up_text = "[color=red][b]..hm.[/b][/color]"
-unlock_quest = ExtResource("6_js8jb")
+unlock_quest_resource = ExtResource("6_js8jb")
 character_name = "Tank"
 description = "TBD"
 spritesheet = ExtResource("3_uucn7")

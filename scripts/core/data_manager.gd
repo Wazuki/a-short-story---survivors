@@ -1,5 +1,6 @@
 extends Node
 
+@onready var unlock_screen = get_node("/root/GameScene/UI/UnlockScreen")
 var character_database: CharacterDatabase = preload("res://data/characters/character_database.tres")
 
 var characters: Array[PlayerCharacterData]
@@ -19,9 +20,12 @@ func _init():
 
 ## Instantiate all quests, then connect the query_requested signal to Questify.
 func _ready() -> void:
+	# Connect the functions to the Questify signals for quest completion and condition query.
+	Questify.quest_completed.connect(_on_quest_completed)
+	Questify.condition_query_requested.connect(_on_condition_requested)
+	# Instantiate all the quests, start tthem, and then load the player's data to update them.
 	instantiate_quests()
 	print_debug("Total quests: " + str(Questify.get_quests().size()))
-	Questify.condition_query_requested.connect(_on_condition_requested)
 	load_data_from_disk()
 	print_debug("Active quests: " + str(Questify.get_active_quests().size()))
 	print_debug("Completed quests: " + str(Questify.get_completed_quests().size()))
@@ -59,21 +63,20 @@ func _on_condition_requested(type: String, key: String, value: Variant, requeste
 ## Iterates through all quests available and then starts them.[br]
 ## [b]Quests:[/b] Character unlock quests -> assigned to each character
 func instantiate_quests() -> void:
-	var quest:QuestResource
 	# Iterate through the character quests, instantiate them, then match them to the character list and assign them. And pray.
 	for character in characters:
 		# Only instantiate actual quests - default characters have a null quest value so they auto-unlock
-		if character.unlock_quest != null:
-			quest = character.unlock_quest.instantiate()
+		var quest:QuestResource
+		if character.unlock_quest_resource != null:
+			quest = character.unlock_quest_resource.instantiate()
 			character.unlock_quest = quest # Assign the quest INSTANCE back to the character so tracking works right.
 			# Start the quest (so its objectives are set up) and then create a tracker panel for it.
 			Questify.start_quest(quest)
+			# Questify.update_quests()
 			get_node("/root/GameScene/UI/ProgressTrackerControl").create_progress_tracker_panel(quest)
+			# We should also connect the Quest Complete signal [quest_completed(quest)] to the unlock screen
+			 # A character with an empty quest path has a "null" quest - they're a default character, no unlock reqs.
 
-		else: character.unlock_quest = null # A character with an empty quest path has a "null" quest - they're a default character, no unlock reqs.
-			#print(character_unlock_quests[char_name].name + " is now active!")
-		# Assign the quests to the unlock_quest var for each character
-		#GameController.character_select_UI.assign_quest_to_char()
 
 	#for c in characters: print_debug(c.character_name + " has the quest: " + (c.unlock_quest.name if c.unlock_quest_path != "" else " default character"))
 	# var quest_paths = ResourceLoader.list_directory(QUEST_FOLDER)
@@ -189,3 +192,17 @@ func reset_saved_data() -> void:
 
 	save_data.save("user://save_game.cfg")
 	updated_quests.emit()
+
+## Called when a quest is completed. This will be connected to the Questify quest_completed signal.[br]
+## [param quest] is the completed quest that will be passed to the Unlock Screen.
+func _on_quest_completed(quest: QuestResource) -> void:
+
+	if GameController.current_state == GameController.GameState.GAME_OVER or GameController.current_state == GameController.GameState.UNLOCK_SCREEN: 
+		print_debug("We finished a quest at the end of the game")
+		# Tell the game manager to transition to the Unlock character state instead.
+		GameController.change_game_state(GameController.GameState.UNLOCK_SCREEN)
+		# Tell the unlock screen to display with whatever quests we just fininished.
+		print_debug("Completed " + quest.name)
+
+		unlock_screen.init_unlock_panel(quest)
+		unlock_screen.display_unlock_screen()

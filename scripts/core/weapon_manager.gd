@@ -38,7 +38,7 @@ func _ready() -> void:
 	# 	dir.list_dir_end()
 	# print_debug("Weapon data loaded: ", str(weapon_data.keys().size()))
 	# Connect to the GameController's GameOver signal to reset weapons, panels, etc.
-	GameController.game_ended.connect(reset)
+	GameController.game_state_changed.connect(_on_game_state_changed)
 
 ## Returns the weapon data for a given [Weapon.Type]
 func get_weapon_data(weapon_type: WeaponEnums.Type) -> WeaponData:
@@ -131,3 +131,11 @@ func level_up_weapon(t: WeaponEnums.Type) -> void:
 		create_weapon(t)
 	else:
 		print_debug("Weapon not found for level up: ", str(t))
+
+## Assess the current game state and reset the weapons if the game is over.[br]
+## Uses match for future expandability.
+func _on_game_state_changed(state: GameController.GameState) -> void: 
+	match state:
+		GameController.GameState.GAME_OVER: 
+			reset()
+		_: return # Do nothing for other states.

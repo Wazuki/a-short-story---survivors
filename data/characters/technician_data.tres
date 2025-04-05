@@ -19,7 +19,7 @@ metadata/_custom_type_script = "uid://dt0pa4luip6h5"
 script = ExtResource("2_0b6w7")
 starting_weapon = 2
 level_up_text = "[color=gray]Operational breathrough.[/color]"
-unlock_quest = ExtResource("6_6lssd")
+unlock_quest_resource = ExtResource("6_6lssd")
 character_name = "Technician"
 description = "\\nA transhumanist cult.\\nA dark secret discovered.\\nA mass slaughter.\\nA seach for redemption.\\n"
 spritesheet = ExtResource("3_b2tw5")
