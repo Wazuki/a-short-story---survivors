@@ -1,6 +1,8 @@
 class_name ProgressTracker
 extends Control
 
+enum QuestType { CHARACTER, WEAPON } ## enum for tracking quest types, used for sorting quest visibility.
+
 @export var main_menu: MainMenu
 @export var locked_shader: ShaderMaterial
 # var progress_panels: Array[ProgressTrackerPanel]
@@ -43,6 +45,21 @@ func toggle_visibility(state: bool) -> void:
 func _on_back_button_pressed() -> void:
 	toggle_visibility(false)
 
-# TODO - display the quests sorted by their type. enum in progress_tracker?
-func _on_tab_bar_tab_selected(tab:int) -> void:
-	pass # Replace with function body.
+## Sort the quest panels by type and name, hiding any that do not meet the [QuestType] enum.[br]
+## [b]Note:[/b] Because the "all" tab is our zeroth tab, the [QuestType] enum will be 1-indexed.
+func _on_tab_bar_tab_selected(tab_selected:int) -> void:
+	# "ALL" tab selection:
+	if tab_selected == 0:
+		for child in %ProgressContainer.get_children():
+			if child is ProgressTrackerPanel:
+				child.visible = true
+	else:
+		for child in %ProgressContainer.get_children():
+			# Hide all panels that are not of the selected type and show the ones that are.
+			if child is ProgressTrackerPanel:
+				if child.quest_type == tab_selected - 1:
+					child.visible = true
+				else: child.visible = false
+
+	####### TWEEN THEM ########
+

@@ -144,7 +144,7 @@ func level_up() -> void:
 			speed += 250.0
 		3:
 			# Level 3: Add a slight homing or tracking feature (or improve targeting efficiency).
-			cooldown = 0.25
+			cooldown -= 0.25
 			# TODO - tracking implementation?
 		4:
 			# Level 4: Enhance piercing (e.g., an arrow can hit one additional enemy).

@@ -1,6 +1,8 @@
 class_name ProgressTrackerPanel
 extends Panel
 
+const QuestType = ProgressTracker.QuestType ## Enum from the ProgressTracker class.
+
 var reward_text: String = "[color=ffc857]REWARD: [/color]"
 var objective_text: String = "[color=red]OBJECTIVE: [/color]"
 
@@ -8,6 +10,7 @@ var progress: float
 var quest_objective_value_key: String
 var quest_objective_value: Variant
 var quest: QuestResource
+var quest_type: QuestType
 
 # Take in quest object.
 # Objective metadata icon_path has path to quest icon
@@ -35,6 +38,7 @@ func initialize(selected_quest: QuestResource) -> void:
 	# Combine the base text values and colors with the extracted texts.
 	%QuestObjective.text = objective_text + extracted_objective_text
 	%QuestReward.text = reward_text + extracted_reward_text
+	quest_type = quest.start_node.get_meta("type") as QuestType # Retrieve the quest type from the metadata, used for sorting.
 	# Returns the variable from the first condition of the quest - the quest requirement value.
 	quest_objective_value = current_quest_objective.conditions[0].value
 	quest_objective_value_key = current_quest_objective.conditions[0].key

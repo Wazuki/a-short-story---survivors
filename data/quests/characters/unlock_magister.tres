@@ -33,8 +33,8 @@ edge_type = 0
 
 [sub_resource type="Resource" id="Resource_y7rdf"]
 script = ExtResource("4_h3onb")
-name = "Unlock Magister"
-description = "Holds the requirements for unlocking the character \"Magister\"."
+name = "Liberate Magister"
+description = "Liberate Magister by <objective>"
 id = "VXlD530eEg"
 optional = false
 graph_editor_position = Vector2(0, -120)
@@ -64,5 +64,5 @@ edge_type = 1
 
 [resource]
 script = ExtResource("7_xhjgb")
-nodes = Array[ExtResource("6_p0dlr")]([SubResource("Resource_idl5t"), SubResource("Resource_iu2ru"), SubResource("Resource_y7rdf"), SubResource("Resource_su0v0")])
+nodes = Array[ExtResource("6_p0dlr")]([SubResource("Resource_idl5t"), SubResource("Resource_iu2ru"), SubResource("Resource_su0v0"), SubResource("Resource_y7rdf")])
 edges = Array[ExtResource("1_ipt66")]([SubResource("Resource_2bqoy"), SubResource("Resource_nhun4"), SubResource("Resource_os7x7")])

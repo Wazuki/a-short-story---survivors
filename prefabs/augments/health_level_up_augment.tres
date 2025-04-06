@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="HealthLevelUpAugment" load_steps=2 format=3 uid="uid://lc5iyui2n6ec"]
+
+[ext_resource type="Script" uid="uid://canx8fwh5k4v6" path="res://scripts/augments/level_up_augments/health_level_up_augment.gd" id="1_cwqt0"]
+
+[resource]
+script = ExtResource("1_cwqt0")
+health_increase = 10.0
+metadata/_custom_type_script = "uid://canx8fwh5k4v6"
