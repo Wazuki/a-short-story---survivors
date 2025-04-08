@@ -16,6 +16,7 @@ collision_shape = NodePath("WeaponRange")
 metadata/_custom_type_script = "uid://djsxe1bhfgip3"
 
 [node name="WeaponRange" type="CollisionShape2D" parent="."]
+unique_name_in_owner = true
 shape = SubResource("CircleShape2D_ab5ct")
 
 [node name="HailfireFirstShot" type="AudioStreamPlayer2D" parent="."]

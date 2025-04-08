@@ -21,7 +21,6 @@ func _init():
 ## Instantiate all quests, then connect the query_requested signal to Questify.
 func _ready() -> void:
 	# Connect the functions to the Questify signals for quest completion and condition query.
-	Questify.quest_completed.connect(_on_quest_completed)
 	Questify.condition_query_requested.connect(_on_condition_requested)
 	# Instantiate all the quests, start tthem, and then load the player's data to update them.
 	instantiate_quests()
@@ -192,17 +191,3 @@ func reset_saved_data() -> void:
 
 	save_data.save("user://save_game.cfg")
 	updated_quests.emit()
-
-## Called when a quest is completed. This will be connected to the Questify quest_completed signal.[br]
-## [param quest] is the completed quest that will be passed to the Unlock Screen.
-func _on_quest_completed(quest: QuestResource) -> void:
-
-	if GameController.current_state == GameController.GameState.GAME_OVER or GameController.current_state == GameController.GameState.UNLOCK_SCREEN: 
-		print_debug("We finished a quest at the end of the game")
-		# Tell the game manager to transition to the Unlock character state instead.
-		GameController.change_game_state(GameController.GameState.UNLOCK_SCREEN)
-		# Tell the unlock screen to display with whatever quests we just fininished.
-		print_debug("Completed " + quest.name)
-
-		unlock_screen.init_unlock_panel(quest)
-		unlock_screen.display_unlock_screen()

@@ -2,8 +2,8 @@
 Shader from Godot Shaders - the free shader library.
 godotshaders.com/shader/teleport-effect
 
-This shader is under CC0 license. Feel free to use, improve and 
-change this shader according to your needs and consider sharing 
+This shader is under CC0 license. Feel free to use, improve and
+change this shader according to your needs and consider sharing
 the modified result on godotshaders.com.
 */
 
@@ -14,7 +14,7 @@ uniform float noise_desnity = 60;
 uniform float beam_size : hint_range(0.01, 0.15);
 uniform vec4 color : source_color = vec4(0.0, 1.02, 1.2, 1.0);
 
-// We are generating our own noise here. You could experiment with the 
+// We are generating our own noise here. You could experiment with the
 // built in SimplexNoise or your own noise texture for other effects.
 vec2 random(vec2 uv){
     uv = vec2( dot(uv, vec2(127.1,311.7) ),
@@ -37,18 +37,18 @@ float noise(vec2 uv) {
 void fragment()
 {
 	vec4 tex = texture(TEXTURE, UV);
-	
+
 	float noise = noise(UV * noise_desnity) * UV.y;
 	//vec2 grid_uv = round(UV * float(pixel_amount)) / float(pixel_amount);
 	//float noise = noise(grid_uv * noise_desnity) * UV.y;
-	
+
 	float d1 = step(progress, noise);
 	float d2 = step(progress - beam_size, noise);
-	
+
 	vec3 beam = vec3(d2 - d1) * color.rgb;
-	
+
 	tex.rgb += beam;
 	tex.a *= d2;
-	
+
 	COLOR = tex;
 }
