@@ -1,8 +1,12 @@
 extends Bullet
 
+var knockback_status: Knockback ## The knockback status effect to apply to the target.
+
 ## Initialize the bullet basd on the weapon parameters.
 func initialize(spawning_weapon: Weapon, data: BulletData, spawn_pos: Vector2, sprite_z_index: int, target: Node2D = null) -> void:
 	super.initialize(spawning_weapon, data, spawn_pos, sprite_z_index, target)
+	# Set up the knockback status effect.
+	knockback_status = Knockback.new(0.5, weapon.knockback_strength)
 
 func _ready() -> void:
 	super._ready()
@@ -17,10 +21,13 @@ func shoot() -> void:
 	# Await a small amount, then deal damage to all enemies in the affected area.
 	await get_tree().create_timer(0.1).timeout
 
+	# Set the origin of the knockback before iterating to deal damage.
+	knockback_status.set_origin(weapon.global_position)
 	# Deal damage to each target in the affected area array.
 	for key in affected_areas:
 		# Make sure each instance of the enemy is valid. If they are, deal damage to them and heal the player (if possible) the amount listed.
-		damage_target(affected_areas.get(key))
+		
+		damage_target(affected_areas.get(key), knockback_status)
 		#print_debug("Deal damage to " + e.name)
 		weapon.heal_on_hit()
 
