@@ -8,11 +8,18 @@ func _enter_tree() -> void:
 	name = KNOCKBACK
 	allows_attack_transition = false # Prevent enemies from transition to attacking while knocked back.
 
-## Set's the enemy's walk animation as it enters the state.
-func enter(_previous_state_path: String = "", data := {}) -> void:
+## Set's the enemy's knockback animation as it enters the state.[br]
+## If we are already in Knockback, we should add our knockback vectors together rather than discarding the previous velocity.
+func enter(previous_state_path: String = "", data := {}) -> void:
 	#print_debug("Entering " + name + " for " + enemy.name)
 	enemy.animation_player.play(KNOCKBACK)
-	enemy.velocity = data["velocity"] # Set the velocity to the knockback velocity.
+
+	# If we were previously in a knocked back state we should add our new knockback velocity instead of overwriting the old one
+	if previous_state_path == KNOCKBACK:
+		enemy.velocity += data["velocity"]
+		print_debug("Double knockback!")
+	else:
+		enemy.velocity = data["velocity"] # Set the velocity to the knockback velocity.
 
 
 ## Move the enemy away from the source of the knockback over time.

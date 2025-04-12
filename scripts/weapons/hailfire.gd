@@ -22,6 +22,7 @@ var bullets_fired: int
 var firing: bool = false ## Used to handle the current weapon state.
 var fire_timer: float = 0.0
 var ramp_speed: float = 3.0
+var knockback_status: Knockback
 
 ## Initializes the weapon from the data. Accepts [data: WeaponData]
 func initialize(data: WeaponData) -> void:
@@ -35,6 +36,9 @@ func initialize(data: WeaponData) -> void:
 	shots_per_attack = data.shots_per_attack
 	knockback_value = data.knockback_value
 	bounce_value = data.bounce_value
+
+	# Create the knockback status.
+	knockback_status = Knockback.new(1.0, knockback_value) # Temporary hard-coded duration values.
 
 ## Determine the weapon firing logic.
 func _physics_process(delta: float) -> void:

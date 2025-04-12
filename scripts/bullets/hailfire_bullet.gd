@@ -44,7 +44,9 @@ func _physics_process(delta: float) -> void:
 
 ## Checks to see if we have exceeded our pierce count and, if we have, queue free
 func check_pierce_count() -> void:
-	if pierce < 0: call_deferred("queue_free")
+	if pierce <= 0: 
+		call_deferred("queue_free")
+		# print_debug("Hailfire bullet queued for deletion.")
 
 ## Sets the attack sound to autoplay upon entering the scene tree.
 func play_attack_sound() -> void: %HailfireSounds.autoplay = true
@@ -63,8 +65,9 @@ func bounce_off(target: Node2D) -> void:
 func _on_area_entered(area:Area2D) -> void:
 	# Check to make sure we don't have this enemy in our effected area's to prevent accidentally damaging the same enemy twice.
 	if affected_areas.has(area.get_instance_id()): return
-
-	damage_target(area) # Call to the base Bullet which will automatically calculate our damage.
+ 	# Call to the base Bullet which will automatically calculate our damage.
+	weapon.knockback_status.set_origin(global_position) # Set the knockback's origin to our pos so it applies correctly.
+	damage_target(area, weapon.knockback_status) # Also pass in the knockback status from the weapon to apply knockback.
 	affected_areas.set(area.get_instance_id(), area)
 	# Then check for bouncing. We should only check for piecing if we don't have any bounces left.
 	if bounces > 0:

@@ -22,9 +22,13 @@ func apply_effect(new_effect: StatusEffect) -> void:
 		effect.apply(target) # Apply the effect's effects to the target.
 		active_effects.set(effect_type, effect)
 	else:
-		# Compare the duration of the effect we already have to the new one and set it to the higher value.
-		if effect.duration > active_effects.get(effect_type).duration: active_effects.get(effect_type).duration = effect.duration
-		# Otherwise don't do anything, because we're already effected longer than we would be right now.
+		match effect_type:
+			Knockback: # We need to apply the affect again for knockback because of the way it adds its own velocity.
+				effect.apply(target) # No need to duplicate duration since the state machine handles the KB logic.
+			_: # Default option if we don't have a matching effect type.
+				# Compare the duration of the effect we already have to the new one and set it to the higher value.
+				if effect.duration > active_effects.get(effect_type).duration: active_effects.get(effect_type).duration = effect.duration
+				# Otherwise don't do anything, because we're already effected longer than we would be right now.
 
 ## Iterate through the effects backwards, removing any that have expired
 func update_effects(delta: float) -> void:
