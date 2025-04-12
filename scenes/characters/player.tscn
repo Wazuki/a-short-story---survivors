@@ -1,7 +1,7 @@
-[gd_scene load_steps=39 format=3 uid="uid://bivcmhjsdsyy2"]
+[gd_scene load_steps=40 format=3 uid="uid://bivcmhjsdsyy2"]
 
 [ext_resource type="Script" uid="uid://bnx6epykj7o3t" path="res://scripts/characters/player.gd" id="1_py671"]
-[ext_resource type="SpriteFrames" uid="uid://bjaasfha8sw2h" path="res://assets/sprites/characters/tank/tank_sprite_frames.tres" id="2_a2ns6"]
+[ext_resource type="SpriteFrames" uid="uid://di5rvc2j526nw" path="res://assets/sprites/characters/huntress/huntress_sprite_frames.tres" id="3_aqa0x"]
 [ext_resource type="AudioStream" uid="uid://h0ln3dnbqsfw" path="res://assets/audio/BLLTRico_Ricochet Metallic_04.wav" id="3_lihhf"]
 [ext_resource type="PackedScene" uid="uid://remf34e7bwbp" path="res://prefabs/ui/healthbar.tscn" id="3_ydbw3"]
 [ext_resource type="Texture2D" uid="uid://cpnfuea0fu8oo" path="res://assets/UI/04.png" id="4_mndlr"]
@@ -29,6 +29,7 @@
 [ext_resource type="AudioStream" uid="uid://7wntvkcqbkkt" path="res://assets/audio/walk sounds/footstep_metal_low_walk_09.wav" id="23_hnvwh"]
 [ext_resource type="AudioStream" uid="uid://bose8uxgupn8h" path="res://assets/audio/walk sounds/footstep_metal_low_walk_10.wav" id="24_rfou0"]
 [ext_resource type="Script" uid="uid://bw6udya2vnion" path="res://scripts/status_effects/status_effect_manager.gd" id="29_aqa0x"]
+[ext_resource type="Script" uid="uid://ptncgre6rt3j" path="res://scripts/states/player/player_jump.gd" id="29_yhyq5"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lihhf"]
 size = Vector2(10, 15)
@@ -85,12 +86,13 @@ stream_13/stream = ExtResource("14_dg40j")
 stream_14/stream = ExtResource("15_7xgtv")
 stream_15/stream = ExtResource("16_6rclf")
 
-[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("effect_manager", "state_machine")]
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("sprite_parent", "effect_manager", "state_machine")]
 z_index = 100
 collision_layer = 5
 motion_mode = 1
 platform_on_leave = 2
 script = ExtResource("1_py671")
+sprite_parent = NodePath("PlayerSpriteParent")
 effect_manager = NodePath("StatusEffectManager")
 state_machine = NodePath("StateMachine")
 
@@ -107,13 +109,17 @@ one_shot = true
 explosiveness = 1.0
 process_material = SubResource("ParticleProcessMaterial_k4v7y")
 
-[node name="Spritesheet" type="AnimatedSprite2D" parent="."]
+[node name="PlayerSpriteParent" type="Node2D" parent="."]
+
+[node name="Spritesheet" type="AnimatedSprite2D" parent="PlayerSpriteParent"]
 unique_name_in_owner = true
 texture_filter = 1
 material = ExtResource("9_f2e50")
-sprite_frames = ExtResource("2_a2ns6")
-animation = &"death"
+sprite_frames = ExtResource("3_aqa0x")
+animation = &"jump"
 autoplay = "idle"
+frame = 2
+frame_progress = 1.0
 
 [node name="HealthBar" parent="." instance=ExtResource("3_ydbw3")]
 unique_name_in_owner = true
@@ -221,12 +227,16 @@ metadata/_custom_type_script = "uid://busgd24q0krbr"
 script = ExtResource("18_q2wkl")
 metadata/_custom_type_script = "uid://j4uuxdv6hgw8"
 
+[node name="PlayerJump" type="Node" parent="StateMachine"]
+script = ExtResource("29_yhyq5")
+metadata/_custom_type_script = "uid://ptncgre6rt3j"
+
 [node name="StatusEffectManager" type="Node" parent="." node_paths=PackedStringArray("target")]
 script = ExtResource("29_aqa0x")
 target = NodePath("..")
 metadata/_custom_type_script = "uid://bw6udya2vnion"
 
-[connection signal="animation_finished" from="Spritesheet" to="." method="_on_spritesheet_animation_finished"]
+[connection signal="animation_finished" from="PlayerSpriteParent/Spritesheet" to="." method="_on_spritesheet_animation_finished"]
 [connection signal="area_entered" from="PlayerCollider" to="." method="_on_player_collider_area_entered"]
 [connection signal="area_exited" from="PlayerCollider" to="." method="_on_player_collider_area_exited"]
 [connection signal="area_entered" from="PickupRadius" to="." method="_on_pickup_radius_area_entered"]

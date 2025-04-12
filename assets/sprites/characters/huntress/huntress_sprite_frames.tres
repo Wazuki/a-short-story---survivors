@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=24 format=3 uid="uid://di5rvc2j526nw"]
+[gd_resource type="SpriteFrames" load_steps=27 format=3 uid="uid://di5rvc2j526nw"]
 
 [ext_resource type="Texture2D" uid="uid://c4upkvh2y1awx" path="res://assets/sprites/characters/huntress/huntress.png" id="1_odcri"]
 
@@ -65,6 +65,18 @@ region = Rect2(128, 0, 64, 64)
 [sub_resource type="AtlasTexture" id="AtlasTexture_j2fub"]
 atlas = ExtResource("1_odcri")
 region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6wqge"]
+atlas = ExtResource("1_odcri")
+region = Rect2(0, 256, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dmsye"]
+atlas = ExtResource("1_odcri")
+region = Rect2(64, 256, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_224m3"]
+atlas = ExtResource("1_odcri")
+region = Rect2(128, 256, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_gkxde"]
 atlas = ExtResource("1_odcri")
@@ -149,6 +161,20 @@ animations = [{
 "loop": true,
 "name": &"idle",
 "speed": 4.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6wqge")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dmsye")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_224m3")
+}],
+"loop": false,
+"name": &"jump",
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,

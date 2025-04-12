@@ -118,7 +118,7 @@ func is_weapon_valid_level_up_option(t: WeaponEnums.Type) -> bool:
 	if active_weapons.has(t):
 		if active_weapons[t].level >= MAX_WEAPON_LEVEL: return false
 		return true
-	return true # Currently only weapons the player has "active" (starting weapons) are valid level up options.
+	return false # Currently only weapons the player has "active" (starting weapons) are valid level up options.
 
 ## Instructs the weapon to level up based on the type of weapon passed in. If the weapon is not active it will be instantiated.
 func level_up_weapon(t: WeaponEnums.Type) -> void:

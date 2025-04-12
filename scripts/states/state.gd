@@ -5,6 +5,7 @@ const IDLE = AnimationNames.IDLE
 const WALK = AnimationNames.WALK
 const DEATH = AnimationNames.DEATH
 const ATTACK = AnimationNames.ATTACK
+const JUMP = AnimationNames.JUMP
 const KNOCKBACK = AnimationNames.KNOCKBACK
 
 var allows_attack_transition = false ## Tracks whether or not a state can transition to attacking from the current state.

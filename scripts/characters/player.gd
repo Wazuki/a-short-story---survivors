@@ -25,7 +25,7 @@ var level_up_text_reset_pos
 
 var total_level_ups = 0
 # var enemy_damage_rate = 5.0
-
+@export var sprite_parent: Node2D ## The parent node of the player sprite. Used for animating the player moving without actually affecting their position/colliders/etc.
 @export var effect_manager: StatusEffectManager
 @export var state_machine: StateMachine
 @onready var player_info_text : RichTextLabel = get_node("/root/GameScene/UI/PlayerInfoContainer/Panel/MarginContainer/PlayerInfoText")
@@ -231,3 +231,4 @@ func show_level_up_text() -> void:
 	tween.set_parallel(false)
 	tween.tween_callback(level_up)
 	#tween.tween_callback(tween.kill)
+

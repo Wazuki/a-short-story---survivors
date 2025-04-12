@@ -52,7 +52,9 @@ func _ready() -> void:
 func damage_target(target: Variant, effect: StatusEffect = null) -> bool:
 	if is_instance_valid(target) and not target.dead:
 		target.take_damage(weapon.damage_calc() * damage_modifier, effect)
+		#print_debug("Dealt " + str(weapon.damage_calc() * damage_modifier) + " damage to " + target.name)
 		return true
+	#else: print("Error! validity: " + str(is_instance_valid(target)) + ", dead: " + str(target.dead))
 	return false
 
 ## Automatically kill self on call_deferred() with a timer option, like in instantiate (timer_die = false)

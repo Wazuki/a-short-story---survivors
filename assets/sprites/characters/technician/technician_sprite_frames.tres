@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=24 format=3 uid="uid://dgk30s3ujkrhw"]
+[gd_resource type="SpriteFrames" load_steps=27 format=3 uid="uid://dgk30s3ujkrhw"]
 
 [ext_resource type="Texture2D" uid="uid://bs5nt2120fuq7" path="res://assets/sprites/characters/technician/technician.png" id="1_cm7vc"]
 
@@ -65,6 +65,18 @@ region = Rect2(128, 0, 64, 64)
 [sub_resource type="AtlasTexture" id="AtlasTexture_t4r5j"]
 atlas = ExtResource("1_cm7vc")
 region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_oao0x"]
+atlas = ExtResource("1_cm7vc")
+region = Rect2(0, 256, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1i47x"]
+atlas = ExtResource("1_cm7vc")
+region = Rect2(64, 256, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mo7ru"]
+atlas = ExtResource("1_cm7vc")
+region = Rect2(128, 256, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_remws"]
 atlas = ExtResource("1_cm7vc")
@@ -149,6 +161,20 @@ animations = [{
 "loop": true,
 "name": &"idle",
 "speed": 4.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_oao0x")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1i47x")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mo7ru")
+}],
+"loop": false,
+"name": &"jump",
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,

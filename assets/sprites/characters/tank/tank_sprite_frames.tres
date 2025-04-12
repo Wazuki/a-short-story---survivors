@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=21 format=3 uid="uid://bjaasfha8sw2h"]
+[gd_resource type="SpriteFrames" load_steps=24 format=3 uid="uid://bjaasfha8sw2h"]
 
 [ext_resource type="Texture2D" uid="uid://fha3h1w1m86s" path="res://assets/sprites/characters/tank/tank.png" id="1_6yvt6"]
 
@@ -53,6 +53,18 @@ region = Rect2(128, 64, 64, 64)
 [sub_resource type="AtlasTexture" id="AtlasTexture_cmtsq"]
 atlas = ExtResource("1_6yvt6")
 region = Rect2(192, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yx5yv"]
+atlas = ExtResource("1_6yvt6")
+region = Rect2(0, 256, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m6a53"]
+atlas = ExtResource("1_6yvt6")
+region = Rect2(64, 256, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_raxf3"]
+atlas = ExtResource("1_6yvt6")
+region = Rect2(128, 256, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_o4y20"]
 atlas = ExtResource("1_6yvt6")
@@ -128,6 +140,20 @@ animations = [{
 "loop": true,
 "name": &"idle",
 "speed": 4.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yx5yv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m6a53")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_raxf3")
+}],
+"loop": false,
+"name": &"jump",
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,

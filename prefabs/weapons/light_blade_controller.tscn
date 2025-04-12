@@ -29,10 +29,11 @@ stream_4/stream = ExtResource("11_1lq30")
 [sub_resource type="CircleShape2D" id="CircleShape2D_3lkc4"]
 radius = 50.0
 
-[node name="LightBladeController" type="Area2D"]
+[node name="LightBladeController" type="Area2D" node_paths=PackedStringArray("collision_shape")]
 collision_layer = 0
 collision_mask = 2
 script = ExtResource("1_yhd0t")
+collision_shape = NodePath("WeaponRange")
 
 [node name="Slash" type="AudioStreamPlayer2D" parent="."]
 unique_name_in_owner = true

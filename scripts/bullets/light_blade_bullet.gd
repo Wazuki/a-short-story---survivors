@@ -3,7 +3,7 @@ extends Bullet
 # var max_slashes: int = 1
 # var slash_count: int = 0
 # var connected: bool = false
-var slash_animations = ["slash1", "slash2", "slash3"]
+var slash_animations = ["main_slash", "slash1", "slash2", "slash3"]
 var cause_knockback = false
 var knockback_strength: float  = 250.0 # High knockback combined with high friction to simulate the enemy recovering their footing
 var enemies_damaged_this_slash = []

@@ -41,3 +41,10 @@ func _process(delta: float) -> void:
 
 func _physics_process(delta: float) -> void:
 	if current_state: current_state.physics_update(delta)
+
+## Connect a [param state_name]'s [param signal_name] to a passed [param callable]
+func connect_signal_to_state(state_name: String, signal_name: String, callable: Callable) -> bool:
+	if states[state_name].has_signal(signal_name):
+		states[state_name].connect(signal_name, callable)
+		return true
+	return false

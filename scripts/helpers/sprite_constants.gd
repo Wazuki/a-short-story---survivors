@@ -6,7 +6,9 @@ class_name SpriteConstants ## Tracks the sprite
 ## Remember[code]z_as_relative[/code] should be set to [i]false[/i] because it adds the parent's z-index to ours.
 enum Z_INDEX { 
     TERRAIN = -99, 
+    JUMP_CIRCLE = -50,
     LIGHTNING_STRIKE = 5,
+    LANDING_CIRCLE = 8,
     SLAM = 10,
     WALDOS = 20,
     INNER_WALDOS = 21,

@@ -25,10 +25,12 @@ var target_type = TargetType.NONE ## Determines the targeting logic for the weap
 var level: int = 1 ## The level of the weapon. Used for leveling up and determining the weapon's stats.
 var damage: float ## The damage of the weapon.
 var speed: float ## The speed of the weapon (attack speed, lightning jump speed, etc.)
+var projectile_count: int ## The number of "projectiles" the weapon fires per attack.
 var cooldown: float ## The cooldown of the weapon (how often it can attack)
 var crit_chance: float ## The base critical chance of the weapon.
 var crit_mod: float ## The base critical damage modifier of the weapon.
 var weapon_scale: Vector2 = Vector2.ONE ## The scale of the weapon. Used for scaling the weapon's size.
+var level_up_augments ## The augments that will be applied to the weapon on each level. Indexed at level -2 
 
 # UI Elements
 var cooldown_timer: Timer
@@ -43,7 +45,7 @@ var closest_enemy: Enemy = null
 var enemies_in_range = {} ## An [int]-[Enemy] dictionary that tracks enemies in our colliders. Use [method get_instance_id()] to get the instance ID.
 
 # Packed scenes
-var bullet_scenes: Dictionary = {} ## Dictionary of packed scenes for the weapon. Should be scene name, packed scene.
+var projectile_scenes: Dictionary = {} ## Dictionary of packed scenes for the weapon. Should be scene name, packed scene.
 
 ## Deprecated. Will be tied into the new weapon data system.
 # var first_level_up: bool = true:
@@ -57,7 +59,7 @@ var bullet_scenes: Dictionary = {} ## Dictionary of packed scenes for the weapon
 
 signal fire
 signal critical_hit
-signal create_cooldown_panel
+#signal create_cooldown_panel
 signal begin_attack_sequence
 signal gained_level(value)
 
@@ -72,16 +74,18 @@ func initialize(data: WeaponData) -> void:
 	description = data.description
 	icon = data.icon
 	level_up_texts = data.level_up_texts
+	level_up_augments = data.level_up_augments.duplicate(true) # Duplicate to prevent modifying the original data along with a deep copy to preserve each object in the array.
 
 	damage = data.damage
 	speed = data.speed
+	projectile_count = data.projectile_count
 	cooldown = data.cooldown
 	crit_chance = data.crit_chance
 	crit_mod = data.crit_mod
 
 	weapon_range = data.weapon_range
 	target_type = data.target_type as TargetType
-	if data.bullet_scene_map != null: bullet_scenes = data.bullet_scene_map.to_dict()
+	if data.bullet_scene_map != null: projectile_scenes = data.bullet_scene_map.to_dict()
 	
 
 # Called when the node enters the scene tree for the first time.
@@ -105,9 +109,9 @@ func _ready() -> void:
 ## Return a new bullet instanced based on the passed scene key. The bullet will return pre-initialized.
 func instantiate_bullet_by_key(key: SceneKey, spawn_pos: Vector2, index: SpriteConstants.Z_INDEX, target_node: Node2D = null) -> Bullet:
 	# Returns a new bullet instance based on the key.
-	if bullet_scenes.has(key):
-		var new_bullet = bullet_scenes[key].bullet_scene.instantiate() as Bullet
-		new_bullet.initialize(self, bullet_scenes[key], spawn_pos, index, target_node)
+	if projectile_scenes.has(key):
+		var new_bullet = projectile_scenes[key].bullet_scene.instantiate() as Bullet
+		new_bullet.initialize(self, projectile_scenes[key], spawn_pos, index, target_node)
 		return new_bullet
 	else:
 		print_debug("Bullet scene not found for: ", str(key))
@@ -120,7 +124,31 @@ func instantiate_bullet_by_key(key: SceneKey, spawn_pos: Vector2, index: SpriteC
 # 		print_debug("No level up texts found for weapon: ", name)
 # 		return ""
 
-func level_up() -> void: gained_level.emit(level)
+## Level up the weapon - increase the new level, emit the signal indicating our new level, and update the weapon with all augments from the data.
+func level_up() -> void:
+	level += 1
+	gained_level.emit(level)
+	# Check to see if our new level has any augments to apply to the weapon.
+	if level > 1: # Level 1 is the base level and doesn't have any augments.
+		if level_up_augments[level - 2].size() > 0: # Index at - 2 to account for augments only beginning after the first level.
+			for augment in level_up_augments[level - 2]:
+				# print_debug("Applying augment: ", augment)
+				if augment is Augment: # Sanity check to make sure we didn't get a null or invalid augment.
+					augment.apply_augment(self) # Apply the augment to the weapon, passing in ourself as the target.
+				else: push_error("Invalid augment found for weapon: ", name, " at level: ", level, " augment: ", augment)
+
+
+	
+# ## Return the level up augments from the weapon data. This is used for level up affects applied to a weapon.[br]
+# ## Pass in the weapons' new level. A level one or zero will return an empty array.[br]
+# ## Internally, the augments for level [i]n[/i] is at index([i]n[/i]-2).
+# func get_level_up_augments(current_level: int) -> Array[WeaponAugment]:
+# 	if level_up_augments.size() == 0: return []
+# 	if current_level >= 2:
+# 		return level_up_augments[current_level-2]
+	
+# 	push_warning("Level up augments not found for weapon: ", name)
+# 	return []
 
 ## Updates the target based on the targetting type. Requires any overriding derived classes to call super._process!()
 func _process(_delta: float) -> void:

@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="ProjectileCountAugment" load_steps=2 format=3 uid="uid://cm435l0in8jwq"]
+
+[ext_resource type="Script" uid="uid://x80uudqpw3lt" path="res://scripts/augments/weapon_augments/projectile_count_augment.gd" id="1_435av"]
+
+[resource]
+script = ExtResource("1_435av")
+projectile_adjustment = 1

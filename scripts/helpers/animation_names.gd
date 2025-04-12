@@ -6,6 +6,7 @@ const IDLE = "idle"
 const WALK = "walk"
 const DEATH = "death"
 const ATTACK = "attack"
+const JUMP = "jump"
 const KNOCKBACK = "knockback"
 
 # Weapon Animations

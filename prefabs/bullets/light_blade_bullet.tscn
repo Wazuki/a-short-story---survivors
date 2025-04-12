@@ -3,6 +3,22 @@
 [ext_resource type="Script" uid="uid://dop5ck237q020" path="res://scripts/bullets/light_blade_bullet.gd" id="1_xaeed"]
 [ext_resource type="Texture2D" uid="uid://cx7x17rr3hc5b" path="res://assets/sprites/weapons/light sword sprites.png" id="2_x1500"]
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_4ousq"]
+atlas = ExtResource("2_x1500")
+region = Rect2(576, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1brlr"]
+atlas = ExtResource("2_x1500")
+region = Rect2(640, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fbgn0"]
+atlas = ExtResource("2_x1500")
+region = Rect2(704, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fxc8c"]
+atlas = ExtResource("2_x1500")
+region = Rect2(768, 0, 64, 64)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_g0pxj"]
 atlas = ExtResource("2_x1500")
 region = Rect2(0, 0, 64, 64)
@@ -39,24 +55,31 @@ region = Rect2(448, 0, 64, 64)
 atlas = ExtResource("2_x1500")
 region = Rect2(512, 0, 64, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_4ousq"]
-atlas = ExtResource("2_x1500")
-region = Rect2(576, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_1brlr"]
-atlas = ExtResource("2_x1500")
-region = Rect2(640, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_fbgn0"]
-atlas = ExtResource("2_x1500")
-region = Rect2(704, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_fxc8c"]
-atlas = ExtResource("2_x1500")
-region = Rect2(768, 0, 64, 64)
-
 [sub_resource type="SpriteFrames" id="SpriteFrames_e31jg"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": null
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4ousq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1brlr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fbgn0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fxc8c")
+}, {
+"duration": 1.0,
+"texture": null
+}],
+"loop": false,
+"name": &"main_slash",
+"speed": 12.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": null
@@ -147,7 +170,7 @@ script = ExtResource("1_xaeed")
 [node name="Spritesheet" type="AnimatedSprite2D" parent="."]
 unique_name_in_owner = true
 sprite_frames = SubResource("SpriteFrames_e31jg")
-animation = &"slash1"
+animation = &"main_slash"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 unique_name_in_owner = true

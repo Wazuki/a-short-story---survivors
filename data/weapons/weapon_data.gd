@@ -19,9 +19,11 @@ var target_type: int ## Type of target based on the TargetType enum
 @export var damage: float ## Starting damage of the weapon
 @export var weapon_range: float ## Range of the weapon (its collider)
 @export var speed: float ## Starting speed of the weapon - could be attack speed, projectile speed, etc.
+@export var projectile_count: int = 1 ## The number of projectiles that will be fired
 @export var cooldown: float ## How often the weapon can attack
 @export var crit_chance: float = 0.0 ## The base critical chance of the weapon
 @export var crit_mod: float = 0.0 ## The base critical damage modifier of the weapon
+@export var level_up_augments: Array[Array] ## The augments that will be applied to the weapon when it levels up [max 5]
 
 @export_category("Scene and Bullet Data")
 @export var weapon_scene: PackedScene ## The scene for the weapon
@@ -43,4 +45,3 @@ func get_level_up_text(current_level: int) -> String:
 	else:
 		print_debug("No level up texts found for weapon: ", name)
 		return ""
-		
