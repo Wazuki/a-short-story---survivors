@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://c756hxrovtgc5"]
+[gd_scene load_steps=12 format=3 uid="uid://c756hxrovtgc5"]
 
 [ext_resource type="PackedScene" uid="uid://bivcmhjsdsyy2" path="res://scenes/characters/player.tscn" id="2_po0ka"]
 [ext_resource type="PackedScene" uid="uid://dmtmv04oyd6hl" path="res://scenes/world/level.tscn" id="2_x5ify"]
@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://dfdjdnbqurvar" path="res://scenes/ui/progress_tracker.tscn" id="7_7vrjw"]
 [ext_resource type="Texture2D" uid="uid://cdawaub8gn4r1" path="res://unused_assets/wenrexa/Icons/24.png" id="7_uohvc"]
 [ext_resource type="PackedScene" uid="uid://remf34e7bwbp" path="res://prefabs/ui/healthbar.tscn" id="9_bil8f"]
+[ext_resource type="PackedScene" uid="uid://drldmb7e1n7ip" path="res://prefabs/ui/unlock_screen.tscn" id="10_tcjrq"]
 
 [node name="GameScene" type="Node2D"]
 
@@ -140,7 +141,8 @@ layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/normal_font_size = 256
 bbcode_enabled = true
-text = "[center]GAME OVER[/center]"
+text = "[center]OPERATION TERMINATED[/center]"
+fit_content = true
 
 [node name="Spacer2" type="Control" parent="UI/GameOverUI/MarginContainer/Panel/VBoxContainer"]
 layout_mode = 2
@@ -177,6 +179,9 @@ offset_right = -16.0
 offset_bottom = 57.0
 grow_horizontal = 0
 icon = ExtResource("7_uohvc")
+
+[node name="UnlockScreen" parent="UI" instance=ExtResource("10_tcjrq")]
+visible = false
 
 [node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
 process_mode = 3

@@ -69,7 +69,7 @@ material = SubResource("ShaderMaterial_2x8sr")
 layout_mode = 2
 size_flags_vertical = 3
 texture = ExtResource("1_bnstv")
-expand_mode = 2
+expand_mode = 4
 stretch_mode = 5
 
 [node name="CharacerNameText" type="RichTextLabel" parent="MarginContainer/VBoxContainer"]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://d2lds6aupinx5"]
+[gd_scene load_steps=23 format=3 uid="uid://d2lds6aupinx5"]
 
 [ext_resource type="Script" uid="uid://be361hr1w38ld" path="res://scripts/characters/enemies/enemy.gd" id="1_tqx47"]
 [ext_resource type="PackedScene" uid="uid://remf34e7bwbp" path="res://prefabs/ui/healthbar.tscn" id="2_qanmn"]
@@ -13,6 +13,7 @@
 [ext_resource type="Script" uid="uid://ckp6ox7be3gsc" path="res://scripts/states/enemy/enemy_idle.gd" id="11_lummi"]
 [ext_resource type="Script" uid="uid://bv6qtxpppyc2c" path="res://scripts/states/enemy/enemy_walk.gd" id="12_m48vf"]
 [ext_resource type="Script" uid="uid://4geq1i1satr4" path="res://scripts/states/enemy/enemy_attack.gd" id="13_pmfm8"]
+[ext_resource type="Script" uid="uid://bj3mhwp2r1b48" path="res://scripts/states/enemy/enemy_knockback.gd" id="14_bipts"]
 [ext_resource type="Script" uid="uid://bw6udya2vnion" path="res://scripts/status_effects/status_effect_manager.gd" id="14_qanmn"]
 
 [sub_resource type="Gradient" id="Gradient_xkwav"]
@@ -84,7 +85,9 @@ scale = Vector2(0.05, 0.05)
 unique_name_in_owner = true
 texture_filter = 1
 sprite_frames = ExtResource("3_bipts")
-animation = &"idle"
+animation = &"knockback"
+frame = 3
+frame_progress = 1.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 unique_name_in_owner = true
@@ -143,6 +146,10 @@ metadata/_custom_type_script = "uid://bv6qtxpppyc2c"
 [node name="EnemyAttack" type="Node" parent="StateMachine"]
 script = ExtResource("13_pmfm8")
 metadata/_custom_type_script = "uid://4geq1i1satr4"
+
+[node name="EnemyKnockback" type="Node" parent="StateMachine"]
+script = ExtResource("14_bipts")
+metadata/_custom_type_script = "uid://bj3mhwp2r1b48"
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
 unique_name_in_owner = true

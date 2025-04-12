@@ -62,13 +62,16 @@ vertical_alignment = 1
 [node name="TabBar" type="TabBar" parent="MarginContainer/Panel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 current_tab = 0
-tab_count = 2
-tab_0/title = "All"
+tab_count = 3
+tab_0/title = "ALL"
 tab_0/tooltip = "Show all available unlocks."
 tab_0/icon = ExtResource("1_3v5fg")
-tab_1/title = "Characters"
+tab_1/title = "OPERATIVES"
 tab_1/tooltip = "Show only character unlocks."
 tab_1/icon = ExtResource("1_3v5fg")
+tab_2/title = "ARSENAL"
+tab_2/tooltip = "Show only weapon unlocks."
+tab_2/icon = ExtResource("1_3v5fg")
 
 [node name="Panel" type="Panel" parent="MarginContainer/Panel/MarginContainer/VBoxContainer"]
 layout_mode = 2

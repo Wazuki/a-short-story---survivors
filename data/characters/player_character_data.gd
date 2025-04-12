@@ -7,7 +7,8 @@ class_name PlayerCharacterData
 var starting_weapon: int
 @export var level_up_text: String
 #@export var unlock_quest_path: String
-@export var unlock_quest: QuestResource
+@export var unlock_quest_resource: QuestResource
+var unlock_quest: QuestResource = null
 var is_unlocked: bool = false
 
 signal unlocked
@@ -45,7 +46,7 @@ func lock() -> void:
 ## Checks to see if the character is unlocked or not and perform the appropriate call.[br]
 ## Characters with null quests (from a quest path ==func determine_lock_status(character: Character) -> void:
 func determine_lock_status() -> void:
-	#if unlock_quest != null: print_debug("Checking quest status for " + unlock_quest.name)
+	#if unlock_quest_resource != null: print_debug("Checking quest status for " + unlock_quest_resource.name)
 	if unlock_quest == null or unlock_quest.completed: unlock()
 	else: lock()
 	#print_debug("Lock status for " + character_name + ": " + str(is_unlocked))

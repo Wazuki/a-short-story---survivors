@@ -4,7 +4,7 @@ extends StatusEffect
 const SLOW_COLOR = Color.AZURE
 # const SLOW_PARTICLES = preload("res://prefabs/effects/slow_particles.tscn")
 
-## Apply a slow to the target where [intsenity] is a float percent reduction[br]
+## Apply a slow to the target where [intensity] is a float percent reduction[br]
 ## i.e., 0.15 = 15% speed reduction.
 func apply(target) -> void:
 	# Reduce the speed of the target

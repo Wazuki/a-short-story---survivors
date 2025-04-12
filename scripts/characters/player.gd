@@ -38,7 +38,7 @@ signal health_depleted
 
 func _ready() -> void:
 	level_up_text_reset_pos = %LevelUpText.position
-	GameController.game_ended.connect(reset_player_pos) # Reset the player's start position when the game ends.
+	GameController.game_state_changed.connect(_on_game_state_changed) # Connect the game state changed signal to the player.
 	state_machine.initialize(AnimationNames.IDLE) # Initialize the state machine with the IDLE animation since the player starts with no input.
 
 func initialize(character: PlayerCharacterData) -> void:
@@ -208,11 +208,15 @@ func _on_player_collider_area_entered(area: Area2D) -> void:
 func _on_player_collider_area_exited(area:Area2D) -> void:
 	if area is Enemy and enemies_touching.has(area.get_instance_id()): enemies_touching.erase(area.get_instance_id())
 
-## Reset the player's position to the starting position to allow for smoother behind-the-scenes starting transitions.
-func reset_player_pos() -> void: 
-	process_mode = Node.PROCESS_MODE_ALWAYS
-	global_position = PLAYER_START_POS
-	process_mode = Node.PROCESS_MODE_PAUSABLE
+## Assess the current game state and reset the player if the game is over.[br]
+## Uses match for future expandability.
+func _on_game_state_changed(state: GameController.GameState) -> void: 
+	match state:
+		GameController.GameState.GAME_OVER: 
+			process_mode = Node.PROCESS_MODE_ALWAYS
+			global_position = PLAYER_START_POS
+			process_mode = Node.PROCESS_MODE_PAUSABLE
+		_: return # Do nothing for other states.
 
 ## Function to animate the tween the level up text for each character's leveling phrase.
 func show_level_up_text() -> void:

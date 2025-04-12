@@ -37,6 +37,7 @@ var cooldown_panel
 
 # Targeting Data - Variables to keep track of what our closest targets are for that type of weapon.
 @export var collision_shape: CollisionShape2D ## The collision shape of the weapon, used to determine the weapon's range.
+var weapon_range: float ## The range of the weapon, used to change the size of the collider.
 var highest_hp_enemy_in_range: Enemy = null
 var closest_enemy: Enemy = null
 var enemies_in_range = {} ## An [int]-[Enemy] dictionary that tracks enemies in our colliders. Use [method get_instance_id()] to get the instance ID.
@@ -78,6 +79,7 @@ func initialize(data: WeaponData) -> void:
 	crit_chance = data.crit_chance
 	crit_mod = data.crit_mod
 
+	weapon_range = data.weapon_range
 	target_type = data.target_type as TargetType
 	if data.bullet_scene_map != null: bullet_scenes = data.bullet_scene_map.to_dict()
 	
@@ -97,7 +99,7 @@ func _ready() -> void:
 	
 	add_child(cooldown_timer)
 	# cooldown_timer.wait_time = cooldown
-
+	update_weapon_range() # Update the weapon range collider to match the weapon range.
 	ready_to_fire = false
 
 ## Return a new bullet instanced based on the passed scene key. The bullet will return pre-initialized.
@@ -231,16 +233,10 @@ func fire_weapon() -> void:
 	# print_debug(get_parent().name + " is firing!")
 	if cooldown_timer.is_stopped():
 		ready_to_fire = false
+		cooldown_timer.wait_time = cooldown # Reset the cooldown timer to the actual cooldown in case we leveled up.
 		cooldown_timer.start()
 		fire.emit()
 	# print_debug("fire")
-
-## Deprecated. Will be tied into the new weapon data system.
-func set_stats(base_damage: float, base_speed: float, base_cooldown: float) -> void:
-	level = 1
-	damage = base_damage
-	speed = base_speed
-	cooldown = base_cooldown
 
 func _on_weapon_timer_timeout() -> void:
 	ready_to_fire = true
@@ -255,5 +251,16 @@ func damage_calc() -> float:
 		return damage * crit_mod
 	else: return damage
 
+## Update the [%WeaponRange]'s [shape] to match the weapon range.
+func update_weapon_range() -> void:
+	%WeaponRange.shape.radius = weapon_range
+
 func get_weapon_range() -> float: return %WeaponRange.shape.radius ## Returns the weapon range (the radius of the collider)
 func is_overhaul_enabled() -> bool: return level >= OVERHAUL_LEVEL ## Check to see if we've reached the level of our overhaul.
+
+## Deprecated. Will be tied into the new weapon data system.
+# func set_stats(base_damage: float, base_speed: float, base_cooldown: float) -> void:
+# 	level = 1
+# 	damage = base_damage
+# 	speed = base_speed
+# 	cooldown = base_cooldown

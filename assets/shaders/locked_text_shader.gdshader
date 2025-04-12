@@ -10,7 +10,7 @@ void fragment() {
 
     // Generate random displacement
     float scramble = fract(sin(dot(uv.xy + time, vec2(12.9898, 78.233))) * 43758.5453);
-    
+
     // Apply scrambling effect based on intensity
     if (scramble < intensity) {
         uv.x += random_shift.x * (fract(sin(uv.y * 100.0 + time) * 43758.5453) - 0.5);

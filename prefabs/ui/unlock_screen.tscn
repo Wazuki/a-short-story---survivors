@@ -1,0 +1,36 @@
+[gd_scene load_steps=2 format=3 uid="uid://drldmb7e1n7ip"]
+
+[ext_resource type="Script" uid="uid://d1if5ni75pr1h" path="res://prefabs/ui/unlock_screen.gd" id="1_h6ls1"]
+
+[node name="UnlockScreen" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_h6ls1")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"FullScreenMenuMagin"
+
+[node name="UnlockContainer" type="VBoxContainer" parent="MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+alignment = 1
+
+[node name="CloseResultsButton" type="Button" parent="MarginContainer/UnlockContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "AUTHORIZE"
+
+[connection signal="pressed" from="MarginContainer/UnlockContainer/CloseResultsButton" to="." method="_on_close_results_button_pressed"]

@@ -1,6 +1,8 @@
 class_name ProgressTrackerPanel
 extends Panel
 
+const QuestType = ProgressTracker.QuestType ## Enum from the ProgressTracker class.
+
 var reward_text: String = "[color=ffc857]REWARD: [/color]"
 var objective_text: String = "[color=red]OBJECTIVE: [/color]"
 
@@ -8,6 +10,7 @@ var progress: float
 var quest_objective_value_key: String
 var quest_objective_value: Variant
 var quest: QuestResource
+var quest_type: QuestType
 
 # Take in quest object.
 # Objective metadata icon_path has path to quest icon
@@ -26,15 +29,16 @@ var quest: QuestResource
 ## [b]Quest Reward:[/b] [reward: String][br]
 func initialize(selected_quest: QuestResource) -> void:
 	# Assign the quest variable and extract the first objective. From there, extract the metadata for the quest information.
-	self.quest = selected_quest
+	quest = selected_quest
 	var current_quest_objective = quest.get_active_objectives()[0] # Retrieve the first objective. Our quests should typically only have one.
 	var extracted_objective_text = current_quest_objective.description # Extract the quest description.
-	var extracted_reward_text = current_quest_objective.get_meta("reward") # Extract the reward text from the metadata.
+	var extracted_reward_text = quest.start_node.get_meta("reward") # Extract the reward text from the metadata.
 	#var icon_path = current_quest_objective.get_meta("icon_path") # Extract the icon path to a variable.
-	%QuestIcon.texture = load(current_quest_objective.get_meta("icon_path")) # Load the icon for the quest.
+	%QuestIcon.texture = load(quest.start_node.get_meta("icon_path")) # Load the icon for the quest.
 	# Combine the base text values and colors with the extracted texts.
 	%QuestObjective.text = objective_text + extracted_objective_text
 	%QuestReward.text = reward_text + extracted_reward_text
+	quest_type = quest.start_node.get_meta("type") as QuestType # Retrieve the quest type from the metadata, used for sorting.
 	# Returns the variable from the first condition of the quest - the quest requirement value.
 	quest_objective_value = current_quest_objective.conditions[0].value
 	quest_objective_value_key = current_quest_objective.conditions[0].key

@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://cjjbdq25xs0c" path="res://data/characters/player_character_data.gd" id="2_pqj13"]
 [ext_resource type="SpriteFrames" uid="uid://di5rvc2j526nw" path="res://assets/sprites/characters/huntress/huntress_sprite_frames.tres" id="3_kqq0v"]
 [ext_resource type="Script" uid="uid://dt0pa4luip6h5" path="res://data/characters/stat_map.gd" id="4_ls37n"]
-[ext_resource type="Resource" uid="uid://bu0it3rqkh436" path="res://data/quests/unlock_huntress.tres" id="6_pqj13"]
+[ext_resource type="Resource" uid="uid://bu0it3rqkh436" path="res://data/quests/characters/unlock_huntress.tres" id="6_pqj13"]
 
 [sub_resource type="Resource" id="Resource_ls37n"]
 script = ExtResource("4_ls37n")
@@ -19,7 +19,7 @@ metadata/_custom_type_script = "uid://dt0pa4luip6h5"
 script = ExtResource("2_pqj13")
 starting_weapon = 3
 level_up_text = "[color=green]The hunt continues.[/color]"
-unlock_quest = ExtResource("6_pqj13")
+unlock_quest_resource = ExtResource("6_pqj13")
 character_name = "Huntress"
 description = "\\nA bow of both worlds.\\nTBD"
 spritesheet = ExtResource("3_kqq0v")

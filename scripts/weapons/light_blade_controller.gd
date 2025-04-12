@@ -119,7 +119,7 @@ func level_up() -> void:
 			slashes = 3
 		6:
 			# Level 6: Reduce cooldown between slashes or extend reach on last slam?
-			cooldown *= 9
+			cooldown *= 0.9
 			final_slash_scale *= 1.5
 		7:
 			# Level 7: Last slash gets extra effect: knockback

@@ -43,8 +43,20 @@ func _ready() -> void:
 
 	# Connect our signals to the GameManager's game_started and game_over signals to spawn and cleanup enemies quickly.
 	if not GameController.is_node_ready(): await GameController.ready
-	GameController.game_started.connect(begin_enemy_spawn)
-	GameController.game_ended.connect(cleanup_enemies)
+	GameController.game_state_changed.connect(_on_game_state_changed)
+	#GameController.game_started.connect(begin_enemy_spawn)
+	#GameController.game_ended.connect(cleanup_enemies)
+
+## Helper function for analyzing the game state changing and determining what to do next.
+func _on_game_state_changed(state: GameController.GameState) -> void:
+	#print_debug("New game state from enemy manager: " + str(state))
+	# Called when the game state changes. This is used to reset the enemy manager when the game starts or ends.
+	match state:
+		GameController.GameState.IN_GAME: startup_enemies()
+		GameController.GameState.GAME_OVER: cleanup_enemies()
+		_: return # Do nothing for other states.
+	# print_debug("Enemy difficulty: " + str(enemy_difficulty))
+
 
 ## Start the enemy timers to spawn enemies.
 func begin_enemy_spawn() -> void:

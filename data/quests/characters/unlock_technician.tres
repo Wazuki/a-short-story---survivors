@@ -8,7 +8,7 @@
 [ext_resource type="Script" uid="uid://b37aev4imc074" path="res://addons/questify/scripts/model/quest_node.gd" id="6_sic4r"]
 [ext_resource type="Script" uid="uid://bhqxygnm6kw4n" path="res://addons/questify/scripts/model/quest_resource.gd" id="7_7yb6g"]
 
-[sub_resource type="Resource" id="Resource_qpwg2"]
+[sub_resource type="Resource" id="Resource_1iwhd"]
 script = ExtResource("2_ylna1")
 type = "variable:>="
 key = "damage"
@@ -18,51 +18,52 @@ graph_editor_position = Vector2(480, 600)
 graph_editor_size = Vector2(377, 309)
 metadata/value = 10000.0
 
-[sub_resource type="Resource" id="Resource_trj6r"]
+[sub_resource type="Resource" id="Resource_jwff2"]
 script = ExtResource("3_dbq4d")
 description = "Deal 10,000 damage."
 id = "elHXNzbxIv"
 optional = false
 graph_editor_position = Vector2(1120, 120)
 graph_editor_size = Vector2(480, 640)
-metadata/icon_path = "res://assets/sprites/characters/technician/technician_icon.tres"
-metadata/reward = "Mobilize Technician."
 
-[sub_resource type="Resource" id="Resource_jecmi"]
+[sub_resource type="Resource" id="Resource_7whww"]
 script = ExtResource("1_mufyx")
-from = SubResource("Resource_qpwg2")
-to = SubResource("Resource_trj6r")
+from = SubResource("Resource_1iwhd")
+to = SubResource("Resource_jwff2")
 edge_type = 1
 
-[sub_resource type="Resource" id="Resource_aoin0"]
+[sub_resource type="Resource" id="Resource_n1yjs"]
 script = ExtResource("4_7sqn6")
-name = "Unlock Technician"
-description = "Unlock Technician by dealing 10,000 damage."
+name = "Liberate Technician"
+description = "Liberate Technician by dealing 10,000 damage."
 id = "9WNZlyos1F"
 optional = false
-graph_editor_position = Vector2(480, 40)
-graph_editor_size = Vector2(280, 516)
+graph_editor_position = Vector2(480, -40)
+graph_editor_size = Vector2(360, 620)
+metadata/icon_path = "res://assets/sprites/characters/technician/technician_icon.tres"
+metadata/reward = "Technician liberated."
+metadata/type = 0.0
 
-[sub_resource type="Resource" id="Resource_8je4r"]
+[sub_resource type="Resource" id="Resource_1al8r"]
 script = ExtResource("1_mufyx")
-from = SubResource("Resource_aoin0")
-to = SubResource("Resource_trj6r")
+from = SubResource("Resource_n1yjs")
+to = SubResource("Resource_jwff2")
 edge_type = 0
 
-[sub_resource type="Resource" id="Resource_u2txp"]
+[sub_resource type="Resource" id="Resource_flync"]
 script = ExtResource("5_3x4bp")
 id = "X_C1KqWviH"
 optional = false
 graph_editor_position = Vector2(1760, 260)
 graph_editor_size = Vector2(141, 78)
 
-[sub_resource type="Resource" id="Resource_3rofn"]
+[sub_resource type="Resource" id="Resource_hx6no"]
 script = ExtResource("1_mufyx")
-from = SubResource("Resource_trj6r")
-to = SubResource("Resource_u2txp")
+from = SubResource("Resource_jwff2")
+to = SubResource("Resource_flync")
 edge_type = 0
 
 [resource]
 script = ExtResource("7_7yb6g")
-nodes = Array[ExtResource("6_sic4r")]([SubResource("Resource_u2txp"), SubResource("Resource_trj6r"), SubResource("Resource_qpwg2"), SubResource("Resource_aoin0")])
-edges = Array[ExtResource("1_mufyx")]([SubResource("Resource_jecmi"), SubResource("Resource_8je4r"), SubResource("Resource_3rofn")])
+nodes = Array[ExtResource("6_sic4r")]([SubResource("Resource_flync"), SubResource("Resource_jwff2"), SubResource("Resource_1iwhd"), SubResource("Resource_n1yjs")])
+edges = Array[ExtResource("1_mufyx")]([SubResource("Resource_7whww"), SubResource("Resource_1al8r"), SubResource("Resource_hx6no")])

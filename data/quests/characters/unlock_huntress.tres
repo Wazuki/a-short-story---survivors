@@ -8,7 +8,7 @@
 [ext_resource type="Script" uid="uid://b37aev4imc074" path="res://addons/questify/scripts/model/quest_node.gd" id="6_st132"]
 [ext_resource type="Script" uid="uid://bhqxygnm6kw4n" path="res://addons/questify/scripts/model/quest_resource.gd" id="7_hbbx0"]
 
-[sub_resource type="Resource" id="Resource_5btt8"]
+[sub_resource type="Resource" id="Resource_v7xen"]
 script = ExtResource("2_6x7ot")
 type = "variable:>="
 key = "kills"
@@ -18,51 +18,52 @@ graph_editor_position = Vector2(480, 600)
 graph_editor_size = Vector2(377, 309)
 metadata/value = 1000.0
 
-[sub_resource type="Resource" id="Resource_y8pkj"]
+[sub_resource type="Resource" id="Resource_aaxfv"]
 script = ExtResource("3_mu8md")
-description = "Slay 1000 foes."
+description = "Eliminate 1000 foes."
 id = "elHXNzbxIv"
 optional = false
 graph_editor_position = Vector2(1120, 120)
 graph_editor_size = Vector2(460, 720)
-metadata/reward = "Mobilize Huntress."
-metadata/icon_path = "res://assets/sprites/characters/huntress/huntress_icon.tres"
 
-[sub_resource type="Resource" id="Resource_7anrj"]
+[sub_resource type="Resource" id="Resource_v0xyx"]
 script = ExtResource("1_idut6")
-from = SubResource("Resource_5btt8")
-to = SubResource("Resource_y8pkj")
+from = SubResource("Resource_v7xen")
+to = SubResource("Resource_aaxfv")
 edge_type = 1
 
-[sub_resource type="Resource" id="Resource_ikwel"]
+[sub_resource type="Resource" id="Resource_2p13a"]
 script = ExtResource("4_b5a7t")
-name = "Unlock Huntress"
-description = "Unlock Huntress by slaying 1000 foes."
+name = "Liberate Huntress"
+description = "Liberate Huntress by eliminating 1000 foes."
 id = "9WNZlyos1F"
 optional = false
-graph_editor_position = Vector2(480, 40)
-graph_editor_size = Vector2(280, 516)
+graph_editor_position = Vector2(460, -100)
+graph_editor_size = Vector2(380, 660)
+metadata/reward = "Huntress liberated."
+metadata/icon_path = "res://assets/sprites/characters/huntress/huntress_icon.tres"
+metadata/type = false
 
-[sub_resource type="Resource" id="Resource_mhbpl"]
+[sub_resource type="Resource" id="Resource_5h5fw"]
 script = ExtResource("1_idut6")
-from = SubResource("Resource_ikwel")
-to = SubResource("Resource_y8pkj")
+from = SubResource("Resource_2p13a")
+to = SubResource("Resource_aaxfv")
 edge_type = 0
 
-[sub_resource type="Resource" id="Resource_o6om4"]
+[sub_resource type="Resource" id="Resource_m5o4c"]
 script = ExtResource("5_ajpuh")
 id = "X_C1KqWviH"
 optional = false
 graph_editor_position = Vector2(1760, 260)
 graph_editor_size = Vector2(141, 78)
 
-[sub_resource type="Resource" id="Resource_g6qj0"]
+[sub_resource type="Resource" id="Resource_l86x2"]
 script = ExtResource("1_idut6")
-from = SubResource("Resource_y8pkj")
-to = SubResource("Resource_o6om4")
+from = SubResource("Resource_aaxfv")
+to = SubResource("Resource_m5o4c")
 edge_type = 0
 
 [resource]
 script = ExtResource("7_hbbx0")
-nodes = Array[ExtResource("6_st132")]([SubResource("Resource_o6om4"), SubResource("Resource_y8pkj"), SubResource("Resource_5btt8"), SubResource("Resource_ikwel")])
-edges = Array[ExtResource("1_idut6")]([SubResource("Resource_7anrj"), SubResource("Resource_mhbpl"), SubResource("Resource_g6qj0")])
+nodes = Array[ExtResource("6_st132")]([SubResource("Resource_v7xen"), SubResource("Resource_m5o4c"), SubResource("Resource_aaxfv"), SubResource("Resource_2p13a")])
+edges = Array[ExtResource("1_idut6")]([SubResource("Resource_v0xyx"), SubResource("Resource_5h5fw"), SubResource("Resource_l86x2")])
