@@ -16,7 +16,7 @@ var stun_duration: float
 var arc_chance: float
 var strike_modulus: int ## The number of chains before a lightning strike is spawned.
 
-var stun_effect: Stun
+var stun_effect: Stun ## The Stun effect applied at [APPLY_STUN_LEVEL]
 
 ## Initialize the weapon statistics before being added to the scene tree.
 func initialize(data: WeaponData) -> void:
@@ -29,7 +29,7 @@ func initialize(data: WeaponData) -> void:
 	arc_chance = data.initial_arc_split_chance
 	strike_modulus = data.lightning_strike_modulus
 	# Create the stun status effect
-	stun_effect = Stun.new(stun_duration)
+	stun_effect = data.stun_effect
 
 
 # func reset() -> void:

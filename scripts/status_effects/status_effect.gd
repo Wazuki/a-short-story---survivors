@@ -2,8 +2,8 @@ class_name StatusEffect
 extends  Resource
 # Base class for status effects to apply to character and enemy alike.
 
-var duration: float ## The duration of the atstus effect.
-var intensity: float ## How intense the status effect is (varied based on the type of status effect)
+@export var duration: float ## The duration of the atstus effect.
+@export var intensity: float ## How intense the status effect is (varied based on the type of status effect)
 
 ## Initialize the values of the status effect.[br]
 ## [param time] is [duration], [param magnitude] is [intensity] of effect

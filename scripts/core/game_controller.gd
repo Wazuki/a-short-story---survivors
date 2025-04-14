@@ -13,6 +13,7 @@ var game_time_elapsed: float = 0.0 ## Tracks the total IN-GAME time elapsed. Thi
 @onready var player_health_bar = get_node("/root/GameScene/UI/PlayerHealthBar")
 @onready var level_up_UI = get_node("/root/GameScene/UI/LevelUpUI")
 @onready var character_select_UI = get_node("/root/GameScene/UI/CharacterSelectUI")
+@onready var camera_controller = get_node("/root/GameScene/MainCamera")
 
 
 @onready var game_over_UI: PanelContainer = get_node("/root/GameScene/UI/GameOverUI")

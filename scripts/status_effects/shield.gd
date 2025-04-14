@@ -22,6 +22,6 @@ func remove(_target) -> void:
 	#print_debug("Shield connection: " + str(debug))
 	super.remove(_target)
 	shield_destroyed.emit() # Tell our listeners our shield was destroyed.
-	shield_sprite.call_deferred("queue_free") # Remove the shield sprite from the target.
+	#shield_sprite.call_deferred("queue_free") # Remove the shield sprite from the target.
 	Utils.create_tween(shield_sprite, "self_modulate", Color(1.0, 1.0, 1.0, 0.0), SHIELD_FADE_TIME, shield_sprite.queue_free) # Tweens the shield sprite to fade out over 0.25 seconds and then destroy the shield.
 

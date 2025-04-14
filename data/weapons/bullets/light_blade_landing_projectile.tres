@@ -1,11 +1,13 @@
-[gd_resource type="Resource" script_class="BulletData" load_steps=3 format=3 uid="uid://c6rw24wuylurx"]
+[gd_resource type="Resource" load_steps=3 format=3 uid="uid://c6rw24wuylurx"]
 
-[ext_resource type="Script" uid="uid://cv36dt247myo1" path="res://data/weapons/bullets/bullet_data.gd" id="1_negur"]
 [ext_resource type="PackedScene" uid="uid://donin3crsyv65" path="res://prefabs/bullets/light_blade_landing_projectile.tscn" id="1_pnrng"]
+[ext_resource type="Script" uid="uid://3f4a3ildutxr" path="res://data/weapons/bullets/light_blade_landing_projectile.gd" id="2_pnrng"]
 
 [resource]
-script = ExtResource("1_negur")
-name = "Light Blade Landing AOE"
+script = ExtResource("2_pnrng")
+knockback_strength = 0.0
+knockback_duration = 0.0
+name = "Light Blade Bullet"
 damage_modifier = 1.0
 damage_cooldown = 0.0
 speed = 0.0

@@ -112,7 +112,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"default",
-"speed": 32.0
+"speed": 64.0
 }]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_loq2q"]
@@ -129,6 +129,8 @@ metadata/_custom_type_script = "uid://dhndwso1we0i7"
 scale = Vector2(1.5, 1.5)
 sprite_frames = SubResource("SpriteFrames_llsii")
 autoplay = "default"
+frame = 15
+frame_progress = 1.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_loq2q")

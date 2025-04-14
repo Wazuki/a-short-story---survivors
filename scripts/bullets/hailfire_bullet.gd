@@ -66,6 +66,7 @@ func _on_area_entered(area:Area2D) -> void:
 	# Check to make sure we don't have this enemy in our effected area's to prevent accidentally damaging the same enemy twice.
 	if affected_areas.has(area.get_instance_id()): return
  	# Call to the base Bullet which will automatically calculate our damage.
+	# TODO - might need to look at this if multiple bullets call it per frame.
 	weapon.knockback_status.set_origin(global_position) # Set the knockback's origin to our pos so it applies correctly.
 	damage_target(area, weapon.knockback_status) # Also pass in the knockback status from the weapon to apply knockback.
 	affected_areas.set(area.get_instance_id(), area)

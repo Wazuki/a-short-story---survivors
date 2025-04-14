@@ -14,26 +14,24 @@ extends Weapon
 # const LEVEL_UP_COOLDOWN = 0.99
 # const LEVEL_UP_SCALE = 1.03
 # const MAX_SLASHES = 3
-const JUMP_SPEED = 1000.0 # The speed at which the player will jump after the last slash.
+const JUMP_SPEED = 750.0 # The speed at which the player will jump after the last slash.
 
 var light_blade_bullet: Bullet
-var final_slash_scale: Vector2
-var final_slash_damage_mod: float
 var current_slash: int = 0 ## The current slash we are on. This is used to determine the slash animation and damage.
 var currently_slashing: bool = false ## Determines if we are currently attacking or not to prevent a transition to the next attack.
 var last_target_pos: Vector2 = Vector2.ZERO ## The global position of the last target we attacked.
 var jump_time: float = 0.0 ## How long the player can stay in the air after the last slash.
 var can_jump: bool = false ## Determines if we can leap into the air as part of the overhaul.
+var knockback_status: Knockback ## The knockback effect caused by the overhaul
 
 ## Initialize the weapon statistics before being added to the scene tree.
 func initialize(data: WeaponData) -> void:
 	super.initialize(data)
 	# Call any remaining specific intialization below.
 	projectile_count = data.projectile_count
-	weapon_scale = Vector2(data.initial_scale, data.initial_scale)
-	final_slash_scale = Vector2(data.final_slash_scale, data.final_slash_scale)
-	final_slash_damage_mod = data.final_slash_damage_mod
 	jump_time = data.jump_time
+
+	knockback_status = data.knockback_status
 	# Instantiate the main bullet for the weappon since this is a melee weapon.
 	light_blade_bullet = instantiate_bullet_by_key(SceneKey.BULLET, global_position, SpriteConstants.Z_INDEX.LIGHT_BLADE)
 	

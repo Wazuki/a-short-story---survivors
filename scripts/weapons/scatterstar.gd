@@ -7,8 +7,8 @@ const HEALING_LEVEL = 5 ## Level att which the Nano-Infused Shells passive unloc
 var shots_per_cooldown: int ## How many shots can be fired before the weapon goes on cooldown.
 var disorient_chance: float ## The chance for the weapon to disorient once unlocked.
 var disorient_duration: float ## How long a target is disoriented for.
-var knockback_strength: float ## The strength of the weapon's knockback
 var heal_per_hit: float ## How much is healed per enemy hit by the Nano-Infused Shells passive.
+var knockback_status: Knockback ## The Knockback status effect that hits enemies on every projectile.
 
 # Internal variables for state tracking.
 var scatterstar_bullet
@@ -23,9 +23,9 @@ func initialize(data: WeaponData) -> void:
 	shots_per_cooldown = data.shots_per_cooldown
 	disorient_chance = data.disorient_chance
 	disorient_duration = data.disorient_duration
-	knockback_strength = data.knockback_strength
 	heal_per_hit = data.heal_per_hit
 
+	knockback_status = data.knockback_status
 	scatterstar_bullet = instantiate_bullet_by_key(SceneKey.BULLET, global_position, SpriteConstants.Z_INDEX.SCATTERSTAR)
 
 ## Add the bullet as a child now thatt it's in the scene tree.
@@ -60,7 +60,7 @@ func level_up() -> void:
 		2: # Disorient level unlock.
 			pass
 		3: # Increased knockback and Disorient chance.
-			knockback_strength *= 2
+			knockback_status.intensity *= 2
 			disorient_chance += 0.25
 		4: # Increased disorient duration and cooldown
 			disorient_duration += 0.25

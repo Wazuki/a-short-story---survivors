@@ -1,23 +1,30 @@
-[gd_resource type="Resource" load_steps=7 format=3 uid="uid://cff10v2v5nlgv"]
+[gd_resource type="Resource" load_steps=9 format=3 uid="uid://cff10v2v5nlgv"]
 
 [ext_resource type="Resource" uid="uid://c5os3a1wcn3mg" path="res://data/weapons/bullets/scatterstar_bullet_data.tres" id="1_4cy35"]
 [ext_resource type="Texture2D" uid="uid://c3gjacuppaqgl" path="res://assets/UI/icons/scatterstar_icon.tres" id="1_27og5"]
 [ext_resource type="Script" uid="uid://besfugoahx8v7" path="res://data/weapons/weapon_scene_map.gd" id="2_ok0nd"]
 [ext_resource type="Script" uid="uid://svxjlgaxeqyf" path="res://data/weapons/scatterstar_data.gd" id="2_t26ei"]
 [ext_resource type="PackedScene" uid="uid://bxobiefi6gneh" path="res://prefabs/weapons/scatterstar.tscn" id="3_t26ei"]
+[ext_resource type="Script" uid="uid://clpj4pp5oda5h" path="res://scripts/status_effects/knockback.gd" id="4_ok0nd"]
 
 [sub_resource type="Resource" id="Resource_481sx"]
 script = ExtResource("2_ok0nd")
 bullet_scene = ExtResource("1_4cy35")
 metadata/_custom_type_script = "uid://besfugoahx8v7"
 
+[sub_resource type="Resource" id="Resource_cu6wc"]
+script = ExtResource("4_ok0nd")
+duration = 0.5
+intensity = 20.0
+metadata/_custom_type_script = "uid://clpj4pp5oda5h"
+
 [resource]
 script = ExtResource("2_t26ei")
 shots_per_cooldown = 2
 disorient_chance = 0.25
 disorient_duration = 0.5
-knockback_strength = 20.0
 heal_per_hit = 2.0
+knockback_status = SubResource("Resource_cu6wc")
 name = "Scatterstar"
 description = "A close-range scatter weapon capable of knockback, disorienting enemies, and healing the user."
 icon = ExtResource("1_27og5")
@@ -27,10 +34,10 @@ target_type = 1
 damage = 80.0
 weapon_range = 75.0
 speed = 0.0
-projectile_count = null
+projectile_count = 1
 cooldown = 3.0
 crit_chance = 0.0
 crit_mod = 0.0
-level_up_augments = null
+level_up_augments = Array[Array]([])
 weapon_scene = ExtResource("3_t26ei")
 bullet_scene_map = SubResource("Resource_481sx")

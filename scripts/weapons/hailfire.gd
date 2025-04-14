@@ -12,7 +12,6 @@ var base_fire_rate: float ## How maybe bullets should be fired each second.
 var current_fire_rate: float ## The current adjusted rate of fire.
 var max_fire_rate: float ## The maximum rate of fire per second.
 var shots_per_attack: int ## How maybe bullets to spawn before reloading (e.g., goes on cooldown)
-var knockback_value: float ## The knockback modifier for this weapon.
 var bounce_value: float ## The bounce value for the weapon.
 
 # Attack Sequence Properties
@@ -22,7 +21,7 @@ var bullets_fired: int
 var firing: bool = false ## Used to handle the current weapon state.
 var fire_timer: float = 0.0
 var ramp_speed: float = 3.0
-var knockback_status: Knockback
+var knockback_status: Knockback ## The knockback status that affects every bullet
 
 ## Initializes the weapon from the data. Accepts [data: WeaponData]
 func initialize(data: WeaponData) -> void:
@@ -34,11 +33,10 @@ func initialize(data: WeaponData) -> void:
 	ramp_speed = data.ramp_speed
 	max_fire_rate = data.max_fire_rate
 	shots_per_attack = data.shots_per_attack
-	knockback_value = data.knockback_value
 	bounce_value = data.bounce_value
 
-	# Create the knockback status.
-	knockback_status = Knockback.new(1.0, knockback_value) # Temporary hard-coded duration values.
+	# Copy the knockback status from the data
+	knockback_status = data.knockback_status
 
 ## Determine the weapon firing logic.
 func _physics_process(delta: float) -> void:
@@ -140,6 +138,6 @@ func level_up() -> void:
 			# Level 7: "Suppressing Fire" - Increase knockback and fire rate, bullets bounce *twice*
 			base_fire_rate += 2
 			max_fire_rate += 2
-			knockback_value *= 2
+			knockback_status.intensity *= 2
 			pass
 	fire_weapon()

@@ -4,9 +4,9 @@ extends WeaponData
 @export_category("Chain Lightning Specifics")
 @export var initial_max_chains: int = 2 ## Initial number of times chain lightning can chain
 @export var initial_jump_speed: float = 0.125 ## How long it takes each lightning bolt to travel
-@export var initial_stun_duration: float = 0.2 ## How long the target is stunned for (Level 4)
 @export var initial_arc_split_chance: float = 0.25 ## The chance for a lightning bolt to split (Level 5)
 @export var lightning_strike_modulus: int = 4 ## The number of chains before a lightning strike is spawned (Level 7)
+@export var stun_effect: Stun ## The Stun status effect to apply.
 
 ## Chain lightning modifiers dictionary for chain number: chain damage modifier] [int: float]
 @export var chain_modifiers = {}

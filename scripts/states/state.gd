@@ -34,3 +34,4 @@ func physics_update(_delta): pass
 func flip_sprite(velocity: Vector2) -> void:
 	if velocity.x != 0:
 		actor.animation_player.flip_h = velocity.x < 0 # Flip the sprite to the left if velocity.x is less than zero (-x)
+	

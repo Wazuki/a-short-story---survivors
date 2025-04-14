@@ -30,6 +30,7 @@ var total_level_ups = 0
 @export var state_machine: StateMachine
 @onready var player_info_text : RichTextLabel = get_node("/root/GameScene/UI/PlayerInfoContainer/Panel/MarginContainer/PlayerInfoText")
 @onready var animation_player: AnimatedSprite2D = %Spritesheet
+@onready var trail_particles: GPUParticles2D = %TrailParticles ## The particles used for the trailing ghosting image
 
 signal gained_xp(amount)
 signal gained_level
@@ -61,6 +62,9 @@ func initialize(character: PlayerCharacterData) -> void:
 
 	# Set the player's z-index and position
 	z_index = SpriteConstants.Z_INDEX.PLAYER
+
+	# Set the trail particle's texture to the character's icon
+	trail_particles.texture = character.icon
 	
 
 func _physics_process(delta: float) -> void:

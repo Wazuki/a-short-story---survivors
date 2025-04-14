@@ -23,28 +23,28 @@ var inner_ring
 var inner_ring_scale: Vector2
 var max_inner_ring_scale : Vector2
 
-var slow_status_effect: Slow
-
-var slow_value: float
 var overhaul_growth_rate: Vector2
 var max_scale: Vector2
 var expanding: bool = false
 var can_shield: bool = false
 var shield_cooldown: float
 
+var shield_status: Shield ## The shield status to apply to the player when unlocked.
+var slow_status: Slow ## The slow status to apply to enemies when hit.
+
 # var inner_ring_enemies = {}
 
 func initialize(data: WeaponData) -> void:
 	super.initialize(data)
 	# Set any Waldos-specific variables as well!
-	slow_value = data.slow_value
 	inner_ring_scale = data.inner_ring_scale
 	max_inner_ring_scale = data.max_inner_ring_scale
 	overhaul_growth_rate = data.overhaul_growth_rate
 	max_scale = data.max_scale
 	shield_cooldown = data.shield_cooldown
-	# Instantiate the slow status effect.
-	slow_status_effect = Slow.new(1, slow_value)
+	# Instantiate the status effects
+	shield_status = data.shield_status
+	slow_status = data.slow_status
 	#slow_status_effect.initialize(1, slow_value) # Small slow. TODO - implement this properly like, immediately.
 	#print_debug("Slow: " + str(slow_status_effect.duration) + "s, " + str(slow_status_effect.intensity))
 	
@@ -54,10 +54,10 @@ func _physics_process(delta: float) -> void:
 	# Check if we can apply a shield to the player.
 	if is_shield_enabled():
 		# Set all the shield variables BEFORE passing it to the player!
-		var shield = Shield.new(99999)
-		GameController.player.effect_manager.apply_effect(shield)
+		#var shield = Shield.new(99999)
+		GameController.player.effect_manager.apply_effect(shield_status)
 		# Connect the new shield instance in the effect manager to the signal to restart the shield.
-		GameController.player.effect_manager.connect_signal(typeof(shield), "shield_destroyed", %ShieldTimer.start)
+		GameController.player.effect_manager.connect_signal(typeof(shield_status), "shield_destroyed", %ShieldTimer.start)
 		can_shield = false # Disable the shield effect until it's removed by a signal and the timer refires.
 		# Set the shield timer
 		%ShieldTimer.wait_time = shield_cooldown
@@ -93,7 +93,7 @@ func _physics_process(delta: float) -> void:
 func deal_damage(enemies: Array) -> void:
 	for e in enemies:
 		if e.dead: continue
-		if is_slow_enabled(): e.take_damage(damage, slow_status_effect)
+		if is_slow_enabled(): e.take_damage(damage, slow_status)
 		else: e.take_damage(damage)
 		#e.take_damage(damage)
 		#if is_slow_enabled(): e.apply_slow(slow_value)
