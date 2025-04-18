@@ -22,9 +22,9 @@ var mini_slam_scale: Vector2
 
 # var slow_enabled = false
 # var overhaul_enabled: bool = false
-var slam_bullet: Bullet # Main slam bullet.
+var slam_bullet: Projectile # Main slam bullet.
 @onready var shockwave_anim_player: AnimationPlayer = $SlamShockwave/ShockwaveAnimPlayer
-# @onready var slam_bullet = %SlamBullet as Bullet
+# @onready var slam_bullet = %SlamBullet as Projectile
 
 func initialize(data: WeaponData) -> void:
 	super.initialize(data)
@@ -37,9 +37,9 @@ func initialize(data: WeaponData) -> void:
 	# Mini-slam specific
 	mini_slam_offset = data.mini_slam_offset
 	mini_slam_scale = data.mini_slam_scale
-	mini_slam_damage_modifier = data.bullet_scene_map.to_dict()[SceneKey.SECONDARY_BULLET].damage_modifier
+	mini_slam_damage_modifier = data.projectile_scene_map.to_dict()[SceneKey.SECONDARY_PROJECTILE].damage_modifier
 	# Because this is a melee weapon we need to instantiate the bullet here and add it to the scene tree at ready.
-	slam_bullet = instantiate_bullet_by_key(SceneKey.BULLET, global_position, SpriteConstants.Z_INDEX.SLAM) as Bullet
+	slam_bullet = instantiate_projectile_by_key(SceneKey.PROJECTILE, global_position, SpriteConstants.Z_INDEX.SLAM) as Projectile
 
 
 
@@ -128,7 +128,7 @@ func spawn_mini_slams() -> void:
 	
 	for cycle in range(slam_cycles):
 		for s in range(MINI_SLAM_COUNT):
-			var new_slam = instantiate_bullet_by_key(SceneKey.SECONDARY_BULLET, global_position, SpriteConstants.Z_INDEX.SLAM) as Bullet
+			var new_slam = instantiate_projectile_by_key(SceneKey.SECONDARY_PROJECTILE, global_position, SpriteConstants.Z_INDEX.SLAM) as Projectile
 			new_slam.set_stats(damage * mini_slam_damage_modifier, speed)
 			# Scale the mini-slams from 0.25-0.65 (clamped) based on the current slam scale and a set minimum.
 			var mini_slam_adjusted_scale: float = clampf(mini_slam_offset * (slam_bullet.scale.x / weapon_scale.x), 0.25, mini_slam_scale.x)

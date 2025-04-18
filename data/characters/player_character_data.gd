@@ -3,7 +3,7 @@ class_name PlayerCharacterData
 
 # @export_enum("Health", "Armor", "Speed", "Damage") var stat: int
 
-@export_enum("SLAM", "LIGHT_BLADE", "WALDOS", "ARROW", "CHAIN_LIGHTNING", "HAILSTORM", "SCATTERSTAR")
+@export_enum("SLAM", "LIGHT_BLADE", "WALDOS", "ARROW", "CHAIN_LIGHTNING", "HAILSTORM", "SCATTERSTAR", "BLACK_HOLE")
 var starting_weapon: int
 @export var level_up_text: String
 #@export var unlock_quest_path: String

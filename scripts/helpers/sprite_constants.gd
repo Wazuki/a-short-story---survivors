@@ -7,6 +7,7 @@ class_name SpriteConstants ## Tracks the sprite
 enum Z_INDEX { 
     TERRAIN = -99, 
     JUMP_CIRCLE = -50,
+    BLACK_HOLE = -25,
     LIGHTNING_STRIKE = 5,
     LANDING_CIRCLE = 8,
     SLAM = 10,

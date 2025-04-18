@@ -124,7 +124,7 @@ func level_up() -> void:
 			pass # Handled internally by consts.
 		5:
 			# Level 5: Add inner core that deals bonus damage
-			inner_ring = instantiate_bullet_by_key(SceneKey.BULLET, global_position, SpriteConstants.Z_INDEX.INNER_WALDOS)
+			inner_ring = instantiate_projectile_by_key(SceneKey.PROJECTILE, global_position, SpriteConstants.Z_INDEX.INNER_WALDOS)
 			call_deferred("add_child", inner_ring)
 			# # Assign the inner ring to the RemoteTransform2D so it'll follow the main waldos without scaling. Defer everything since not in tree yet.
 			# %RemoteTransform2D.set_deferred("remote_path", inner_ring.call_deferred("get_path"))

@@ -7,7 +7,7 @@ var weapon_database = preload("res://data/weapons/weapon_database.tres")
 # TODO IMPLEMENTATIONS
 # Waldos
 
-var weapon_data: Dictionary = {}
+var weapon_data: Dictionary = {} ## Dictionary of [<WeaponEnums.Type, WeaponData>] for all weapons.
 var active_weapons: Dictionary = {} ## List of all active weapons in the game. Structure is [<WeaponType, Weapon>]
 
 func _ready() -> void:
@@ -118,6 +118,7 @@ func is_weapon_valid_level_up_option(t: WeaponEnums.Type) -> bool:
 	if active_weapons.has(t):
 		if active_weapons[t].level >= MAX_WEAPON_LEVEL: return false
 		return true
+	elif weapon_data[t].unlock_quest == null: return true # TEMPORARY - TODO check if the quest is completed too!
 	return false # Currently only weapons the player has "active" (starting weapons) are valid level up options.
 
 ## Instructs the weapon to level up based on the type of weapon passed in. If the weapon is not active it will be instantiated.

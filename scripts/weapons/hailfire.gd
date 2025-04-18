@@ -11,13 +11,13 @@ var fire_angle: float ## The angle variance that the bullets will have, from (-f
 var base_fire_rate: float ## How maybe bullets should be fired each second.
 var current_fire_rate: float ## The current adjusted rate of fire.
 var max_fire_rate: float ## The maximum rate of fire per second.
-var shots_per_attack: int ## How maybe bullets to spawn before reloading (e.g., goes on cooldown)
+var projectiles_per_attack: int ## How maybe bullets to spawn before reloading (e.g., goes on cooldown)
 var bounce_value: float ## The bounce value for the weapon.
 
 # Attack Sequence Properties
 var current_target: Node2D
 var last_target_pos: Vector2
-var bullets_fired: int
+var projectiles_fired: int
 var firing: bool = false ## Used to handle the current weapon state.
 var fire_timer: float = 0.0
 var ramp_speed: float = 3.0
@@ -32,7 +32,7 @@ func initialize(data: WeaponData) -> void:
 	base_fire_rate = data.base_fire_rate
 	ramp_speed = data.ramp_speed
 	max_fire_rate = data.max_fire_rate
-	shots_per_attack = data.shots_per_attack
+	projectiles_per_attack = data.projectiles_per_attack
 	bounce_value = data.bounce_value
 
 	# Copy the knockback status from the data
@@ -72,22 +72,22 @@ func fire_bullet() -> void:
 	#rotation_degrees += randf_range(-fire_angle, fire_angle) # Adjust the angle somewhat to compensate for "spread" from the fire angle.
 
 	# Instantiate the bullet based on our data and our target and position.
-	var new_bullet = instantiate_bullet_by_key(SceneKey.BULLET, global_position, SpriteConstants.Z_INDEX.HAILFIRE, current_target)
-	WeaponManager.call_deferred("add_child", new_bullet)
-	new_bullet.call_deferred("apply_firing_angle_variance", randf_range(-fire_angle, fire_angle)) # Adjust the angle of the bullet to compensate for the spread.
+	var new_projectile = instantiate_projectile_by_key(SceneKey.PROJECTILE, global_position, SpriteConstants.Z_INDEX.HAILFIRE, current_target)
+	WeaponManager.call_deferred("add_child", new_projectile)
+	new_projectile.call_deferred("apply_firing_angle_variance", randf_range(-fire_angle, fire_angle)) # Adjust the angle of the bullet to compensate for the spread.
 	#new_bullet.set_deferred("top_level", true)
 	
 	# Increment the bullet counter. If it's the first bullet, play the firstt sound. Otherwise play the audio from each bullet.
-	bullets_fired +=1
-	if bullets_fired == 1: %HailfireFirstShot.play()
-	else: new_bullet.play_attack_sound()
+	projectiles_fired +=1
+	if projectiles_fired == 1: %HailfireFirstShot.play()
+	else: new_projectile.play_attack_sound()
 
 	# Check if we've fired all our bullets. If so we should go on cooldown, end the firing sequence, and reset the fire rate.
-	if bullets_fired >= shots_per_attack:
+	if projectiles_fired >= projectiles_per_attack:
 		# Play the tail shot.
 		%HailfireLastShotTail.play()
 		# Reset all the variables used for shooting.
-		bullets_fired = 0
+		projectiles_fired = 0
 		current_fire_rate = base_fire_rate
 		current_target = null
 		fire_timer = 0
@@ -117,7 +117,7 @@ func level_up() -> void:
 	match level:
 		2:
 			# Level 2: "Extended Magazine" - Increase total number of shots 
-			shots_per_attack += 15
+			projectiles_per_attack += 15
 			pass
 		3:
 			# Level 3: "Recoil Compensation" - Reduced spread 

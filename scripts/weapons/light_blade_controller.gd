@@ -1,22 +1,8 @@
 extends Weapon
 
-# const BASE_DAMAGE = 5
-# # const BASE_SPEED = 1.0
-# const BASE_COOLDOWN = 1.0
-# const BASE_SLASHES = 2
-# const BASE_SCALE = Vector2.ONE
-# const FINAL_SLASH_DAMAGE_MOD = 1.5
-
-# Level up stats
-# const LEVEL_UP_DAMAGE = 1.2
-# const LEVEL_UP_SPEED = 1.2
-# const LEVEL_UP_SLASHES_MOD = 5
-# const LEVEL_UP_COOLDOWN = 0.99
-# const LEVEL_UP_SCALE = 1.03
-# const MAX_SLASHES = 3
 const JUMP_SPEED = 750.0 # The speed at which the player will jump after the last slash.
 
-var light_blade_bullet: Bullet
+var light_blade_projectile: Projectile
 var current_slash: int = 0 ## The current slash we are on. This is used to determine the slash animation and damage.
 var currently_slashing: bool = false ## Determines if we are currently attacking or not to prevent a transition to the next attack.
 var last_target_pos: Vector2 = Vector2.ZERO ## The global position of the last target we attacked.
@@ -33,19 +19,19 @@ func initialize(data: WeaponData) -> void:
 
 	knockback_status = data.knockback_status
 	# Instantiate the main bullet for the weappon since this is a melee weapon.
-	light_blade_bullet = instantiate_bullet_by_key(SceneKey.BULLET, global_position, SpriteConstants.Z_INDEX.LIGHT_BLADE)
+	light_blade_projectile = instantiate_projectile_by_key(SceneKey.PROJECTILE, global_position, SpriteConstants.Z_INDEX.LIGHT_BLADE)
 	
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	super._ready()
 	# Now that we're in the scene tree, add the light blade bullet as a child of our weapon.
-	add_child(light_blade_bullet)
+	add_child(light_blade_projectile)
 
 	# Connect to the jump signal of the player's state machine.
 	GameController.player.state_machine.connect_signal_to_state(AnimationNames.JUMP, "jump_ended", end_jump)
 
-	#light_blade_bullet.get_child("Spritesheet").connect("animation_finished", end_slash)
+	#light_blade_projectile.get_child("Spritesheet").connect("animation_finished", end_slash)
 	#spritesheet.connect("animation_finished", end_slash)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -53,6 +39,7 @@ func _physics_process(_delta: float) -> void:
 	#super._physics_process(_delta)
 	if ready_to_fire and not currently_slashing and (not enemies_in_range.is_empty() or last_target_pos != Vector2.ZERO): # TODO - Consider revisiting this check.
 		begin_attack_sequence.emit() # Tell the listeners (Cooldown Panel et al) that we have started attacking.
+		rotation_degrees = 0 # Reset the rotation back to zero before we attack
 		slash()
 
 func slash() -> void:
@@ -68,29 +55,29 @@ func slash() -> void:
 		look_at(last_target_pos)
 
 		%Slash.play()
-		light_blade_bullet.damage = damage
-		light_blade_bullet.scale = weapon_scale
-		light_blade_bullet.cause_knockback = false
+		light_blade_projectile.damage = damage
+		light_blade_projectile.scale = weapon_scale
+		light_blade_projectile.cause_knockback = false
 
 		# Adjust our rotation to account for new slash direction.
 		# 360 / slash count = angle between slashes
 		rotation_degrees += (360.0 / projectile_count) * current_slash # We adjust our rotation since our slash is angled at -90 degrees.
-
+		#print_debug("Rotation: " + str(rotation_degrees))
 
 		# # Set the damage based on the current slash and play the correct sound
 		# if current_slash == 3: 
 		# 	%BigSlash.play()
-		# 	light_blade_bullet.damage = damage * final_slash_damage_mod
-		# 	light_blade_bullet.scale = final_slash_scale
-		# 	if is_overhaul_enabled(): light_blade_bullet.cause_knockback = true # In theory, this will only ever be called at level 7 so no need to change it otherwise since it'llb e false from previous calls
+		# 	light_blade_projectile.damage = damage * final_slash_damage_mod
+		# 	light_blade_projectile.scale = final_slash_scale
+		# 	if is_overhaul_enabled(): light_blade_projectile.cause_knockback = true # In theory, this will only ever be called at level 7 so no need to change it otherwise since it'llb e false from previous calls
 		# else: 
 		# 	%Slash.play()
-		# 	light_blade_bullet.damage = damage
-		# 	light_blade_bullet.scale = weapon_scale
-		# 	light_blade_bullet.cause_knockback = false
+		# 	light_blade_projectile.damage = damage
+		# 	light_blade_projectile.scale = weapon_scale
+		# 	light_blade_projectile.cause_knockback = false
 
 		current_slash += 1 # Increment the slash at the end to avoid affecting the rotation.
-		light_blade_bullet.play_slash_animation(1) # TODO - more slash animations to re-add.
+		light_blade_projectile.play_slash_animation(1) # TODO - more slash animations to re-add.
 		# %LightBlade.damage_enemies_in_slash()
 		# print_debug("Slash " + str(current_slash))
 
@@ -99,7 +86,7 @@ func slash() -> void:
 
 func end_slash() -> void: 
 	currently_slashing = false
-	light_blade_bullet.reset_damaged_enemies()
+	light_blade_projectile.reset_damaged_enemies()
 
 	
 	# If we are using the overhaul, we can jump after the last slash.
@@ -110,7 +97,7 @@ func end_slash() -> void:
 
 func reset_attack_chain() -> void:
 	# Reset the timer and the slash count.
-	light_blade_bullet.reset_animation()
+	light_blade_projectile.reset_animation()
 	fire_weapon()
 	current_slash = 0
 	last_target_pos = Vector2.ZERO # Reset the last target position
@@ -136,7 +123,7 @@ func end_jump() -> void:
 	# Deal damage to each enemy in weapon range.
 	# Instantiate the secondary bullet to deal damage to all enemies in the area.
 	
-	var jump_bullet = instantiate_bullet_by_key(SceneKey.IMPACT_EFFECT, global_position, SpriteConstants.Z_INDEX.LANDING_CIRCLE)
+	var jump_bullet = instantiate_projectile_by_key(SceneKey.IMPACT_EFFECT, global_position, SpriteConstants.Z_INDEX.LANDING_CIRCLE)
 	add_child(jump_bullet)
 	jump_bullet.top_level = true # Set it to top level so it doesn't follow the player.
 

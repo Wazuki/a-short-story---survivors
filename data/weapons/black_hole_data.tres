@@ -1,0 +1,34 @@
+[gd_resource type="Resource" load_steps=7 format=3 uid="uid://hunnyw3mxesm"]
+
+[ext_resource type="Texture2D" uid="uid://dodhat7s6qc66" path="res://assets/UI/icons/black_hole_icon.tres" id="1_ve0pw"]
+[ext_resource type="Resource" uid="uid://0erp6hvhah8s" path="res://data/weapons/projectiles/black_hole_projectile_data.tres" id="2_ii2j5"]
+[ext_resource type="Script" uid="uid://besfugoahx8v7" path="res://data/weapons/weapon_scene_map.gd" id="2_ve0pw"]
+[ext_resource type="Script" uid="uid://bi3j6gocvigo5" path="res://data/weapons/black_hole_data.gd" id="3_ii2j5"]
+[ext_resource type="PackedScene" uid="uid://f4tv7bffm3e1" path="res://prefabs/weapons/black_hole_weapon.tscn" id="4_xr2rj"]
+
+[sub_resource type="Resource" id="Resource_xalo1"]
+script = ExtResource("2_ve0pw")
+projectile_scene = ExtResource("2_ii2j5")
+metadata/_custom_type_script = "uid://besfugoahx8v7"
+
+[resource]
+script = ExtResource("3_ii2j5")
+start_size = Vector2(0.25, 0.25)
+max_size = Vector2(1, 1)
+grow_time = 1.0
+name = "Black Hole"
+description = "A vortex of dark energy that draws in enemies."
+icon = ExtResource("1_ve0pw")
+level_up_texts = Array[String](["Increased mass\\nDamage output intensifies", "Event Horizon Expands\\nCatch more targets", "Core Fluctuations Accelerated\\nDamage pusles more rapidly", "Vortex Stabilized\\nIncreased hold time on foes", "Collapse Kinetics Enhanced\\nForms more quickly", "Critical Collapse\\nGravitational Nova"])
+weapon_type = 7
+target_type = 5
+damage = 25.0
+weapon_range = 300.0
+speed = 50.0
+projectile_count = 1
+cooldown = 2.0
+crit_chance = 0.0
+crit_mod = 0.0
+level_up_augments = Array[Array]([])
+weapon_scene = ExtResource("4_xr2rj")
+projectile_scene_map = SubResource("Resource_xalo1")

@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://f4tv7bffm3e1"]
+
+[ext_resource type="Script" uid="uid://bqiu85hrk6h3p" path="res://scripts/weapons/black_hole_weapon.gd" id="1_apbof"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_yd0t2"]
+radius = 300.0
+
+[node name="BlackHole" type="Area2D" node_paths=PackedStringArray("collision_shape")]
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+script = ExtResource("1_apbof")
+collision_shape = NodePath("WeaponRange")
+metadata/_custom_type_script = "uid://djsxe1bhfgip3"
+
+[node name="WeaponRange" type="CollisionShape2D" parent="."]
+unique_name_in_owner = true
+shape = SubResource("CircleShape2D_yd0t2")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="area_exited" from="." to="." method="_on_area_exited"]

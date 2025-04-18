@@ -1,0 +1,88 @@
+[gd_scene load_steps=13 format=3 uid="uid://b2y08xslq1a4c"]
+
+[ext_resource type="Script" uid="uid://6kttn1vfla8r" path="res://scripts/projectiles/black_hole_projectile.gd" id="1_yl4a4"]
+[ext_resource type="Texture2D" uid="uid://b21y75fq1tury" path="res://assets/sprites/weapons/Black-hole.png" id="2_k8q86"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_phixf"]
+atlas = ExtResource("2_k8q86")
+region = Rect2(0, 0, 72, 72)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0jglx"]
+atlas = ExtResource("2_k8q86")
+region = Rect2(72, 0, 72, 72)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xwmkc"]
+atlas = ExtResource("2_k8q86")
+region = Rect2(144, 0, 72, 72)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eltak"]
+atlas = ExtResource("2_k8q86")
+region = Rect2(216, 0, 72, 72)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sytfj"]
+atlas = ExtResource("2_k8q86")
+region = Rect2(288, 0, 72, 72)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u2qpb"]
+atlas = ExtResource("2_k8q86")
+region = Rect2(360, 0, 72, 72)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f5c34"]
+atlas = ExtResource("2_k8q86")
+region = Rect2(432, 0, 72, 72)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q62fd"]
+atlas = ExtResource("2_k8q86")
+region = Rect2(504, 0, 72, 72)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_qktoh"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_phixf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0jglx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xwmkc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_eltak")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sytfj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u2qpb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f5c34")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q62fd")
+}],
+"loop": true,
+"name": &"default",
+"speed": 24.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_fg5ku"]
+radius = 20.0
+
+[node name="BlackHoleProjectile" type="Area2D"]
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+script = ExtResource("1_yl4a4")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_qktoh")
+autoplay = "default"
+frame_progress = 0.339979
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_fg5ku")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="area_exited" from="." to="." method="_on_area_exited"]

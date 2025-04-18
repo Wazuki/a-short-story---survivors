@@ -1,15 +1,16 @@
-[gd_resource type="Resource" load_steps=7 format=3 uid="uid://bc762v57pkix3"]
+[gd_resource type="Resource" load_steps=8 format=3 uid="uid://bc762v57pkix3"]
 
-[ext_resource type="Resource" uid="uid://dikqkml4wkd8l" path="res://data/weapons/bullets/arrow_bullet_data.tres" id="1_c4m3h"]
 [ext_resource type="Texture2D" uid="uid://dla2ldgy6t6yf" path="res://assets/UI/icons/arrow_icon.tres" id="1_j718u"]
+[ext_resource type="Resource" uid="uid://dikqkml4wkd8l" path="res://data/weapons/projectiles/arrow_projectile_data.tres" id="2_2ljtd"]
 [ext_resource type="Script" uid="uid://besfugoahx8v7" path="res://data/weapons/weapon_scene_map.gd" id="2_haslj"]
 [ext_resource type="Script" uid="uid://blur3auqr1auc" path="res://data/weapons/arrow_data.gd" id="2_ydbtc"]
 [ext_resource type="PackedScene" uid="uid://bxbdgbhy2c1jt" path="res://prefabs/weapons/arrow_controller.tscn" id="3_ydbtc"]
+[ext_resource type="Resource" uid="uid://1vqx54pfeayx" path="res://data/weapons/projectiles/mini_arrow_projectile_data.tres" id="4_pnr8e"]
 
-[sub_resource type="Resource" id="Resource_2ljtd"]
+[sub_resource type="Resource" id="Resource_72kjt"]
 script = ExtResource("2_haslj")
-bullet_scene = ExtResource("1_c4m3h")
-secondary_bullet_scene = ExtResource("1_c4m3h")
+projectile_scene = ExtResource("2_2ljtd")
+seconday_projectile_scene = ExtResource("4_pnr8e")
 metadata/_custom_type_script = "uid://besfugoahx8v7"
 
 [resource]
@@ -34,4 +35,4 @@ crit_chance = 0.0
 crit_mod = 0.0
 level_up_augments = Array[Array]([])
 weapon_scene = ExtResource("3_ydbtc")
-bullet_scene_map = SubResource("Resource_2ljtd")
+projectile_scene_map = SubResource("Resource_72kjt")

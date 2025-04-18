@@ -2,15 +2,15 @@
 
 [ext_resource type="Script" uid="uid://bxuac8a70yfh1" path="res://data/weapons/waldos_data.gd" id="1_2hmb7"]
 [ext_resource type="Texture2D" uid="uid://pyw41ngccl4o" path="res://assets/UI/icons/waldos_icon.tres" id="1_7yr2a"]
-[ext_resource type="Resource" uid="uid://dkr468i1rkhpp" path="res://data/weapons/bullets/inner_waldo_bullet_data.tres" id="1_thm6e"]
+[ext_resource type="Resource" uid="uid://dkr468i1rkhpp" path="res://data/weapons/projectiles/inner_waldo_projectile_data.tres" id="2_7ghqv"]
 [ext_resource type="PackedScene" uid="uid://c3oxmsxpdc8q6" path="res://prefabs/weapons/waldos.tscn" id="2_xdenm"]
 [ext_resource type="Script" uid="uid://besfugoahx8v7" path="res://data/weapons/weapon_scene_map.gd" id="2_xprbp"]
 [ext_resource type="Script" uid="uid://bp05hgd6xgrc4" path="res://scripts/status_effects/shield.gd" id="5_7ghqv"]
 [ext_resource type="Script" uid="uid://b1tlgo1r80ody" path="res://scripts/status_effects/slow.gd" id="6_1tffj"]
 
-[sub_resource type="Resource" id="Resource_7ghqv"]
+[sub_resource type="Resource" id="Resource_1tffj"]
 script = ExtResource("2_xprbp")
-bullet_scene = ExtResource("1_thm6e")
+projectile_scene = ExtResource("2_7ghqv")
 metadata/_custom_type_script = "uid://besfugoahx8v7"
 
 [sub_resource type="Resource" id="Resource_64xsq"]
@@ -49,4 +49,4 @@ crit_chance = 0.0
 crit_mod = 0.0
 level_up_augments = Array[Array]([])
 weapon_scene = ExtResource("2_xdenm")
-bullet_scene_map = SubResource("Resource_7ghqv")
+projectile_scene_map = SubResource("Resource_1tffj")

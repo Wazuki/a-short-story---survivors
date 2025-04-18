@@ -6,6 +6,7 @@ var enemy_database: EnemyDatabase = preload("res://data/characters/enemies/enemy
 var mob_spawn_point: PathFollow2D
 
 # Constants
+const BUCKET_SIZE = 128 ## The size used for bucket gridding
 const BASE_DIFFICULTY_INCREASE_TIME = 60.0 ## Rate at which the difficulty increases and more enemies spawn.
 const BASE_ENEMY_SPAWN_TIME = 0.5 ## Base rate at which new enemies spawn.
 var enemy_spawn_rate = BASE_ENEMY_SPAWN_TIME ## Current rate at which enemies spawn.
@@ -17,6 +18,7 @@ var enemy_difficulty_timer: Timer
 var total_enemies_spawned: int = 0
 var enemy_difficulty: int = 0
 
+var buckets: Dictionary = {} ## A <Vector2(bucket_x, bucket_y), Array[Enemy]> used for checking how many enemies are clustered together.
 var spawned_enemies = {}
 
 signal remove_invalid_enemy(instance_id: int)
@@ -129,6 +131,48 @@ func determine_enemy_type(enemy_count: int) -> EnemyData.EnemyType:
 	elif enemy_count % 12 == 0: return EnemyData.EnemyType.RANGED
 	else: return EnemyData.EnemyType.BASIC
 
+## Finds the largest cluster of enemies based on the buckets, taking in an [<instance_ID, Enemy>] Dictionary and returning the Enemy with the highest concentration of enemies nearby (the "best target")
+func find_cluster_center(enemies: Dictionary) -> Enemy:
+	var best_enemy = null
+	var best_count = -1
+
+	rebuild_buckets() # Rebuild the bucket dictionary before iterating.
+	
+	# Find what bucket each enemy is in and compare it against the buckets array
+	for key in enemies:
+		# Grab the bucket from the global position of the current enemy
+		var base_key = find_bucket(enemies[key].global_position)
+
+		# Check the nine neighboring buckets and count the number of enemies
+		var local_count = 0
+		for dx in [-1, 0, 1]:
+			for dy in [-1, 0, 1]:
+				var local_key = base_key + Vector2(dx, dy)
+				if buckets.has(local_key): local_count += buckets[local_key].size()
+
+		# If we have more enemies nearby set this enemy as the nwe "best" enemy
+		if local_count > best_count:
+			best_count = local_count
+			best_enemy = enemies[key]
+
+	return best_enemy
+
+## Rebuilds the enemy bucket list for tracking groups of enemies that are clustered close together.
+func rebuild_buckets() -> void:
+	buckets.clear()
+	for key in spawned_enemies:
+		if not is_instance_valid(spawned_enemies[key]): continue # Skip enemies that aren't valid
+
+		# Find the grid key based on the find_bucket(global_pos) helper function
+		var grid_key = find_bucket(spawned_enemies[key].global_position)
+
+		if not buckets.has(grid_key):
+			buckets[grid_key] = []
+		buckets[grid_key].append(spawned_enemies[key])
+
+
+## Helper function: accepts a global_position for [param pos] and returns a [Vector2] bucket grid key for tracking bucket locations
+func find_bucket(pos: Vector2) -> Vector2: return Vector2(floor(pos.x / BUCKET_SIZE), floor(pos.y / BUCKET_SIZE))
 
 # Signal connectors for tracking player variables.
 func _on_enemy_damaged(amount) -> void: DataManager.add_value("damage", amount)

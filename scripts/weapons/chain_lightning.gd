@@ -61,7 +61,7 @@ func fire_lightning() -> void:
 
 # TODO - refactor this to be more concise. This lightning spawning logic is rough.
 func spawn_new_lightning_bolt(target: Node2D) -> void:
-	var new_lightning = instantiate_bullet_by_key(SceneKey.BULLET, global_position, SpriteConstants.Z_INDEX.CHAIN_LIGHTNING, target) as LightningBullet
+	var new_lightning = instantiate_projectile_by_key(SceneKey.PROJECTILE, global_position, SpriteConstants.Z_INDEX.CHAIN_LIGHTNING, target) as LightningBullet
 	new_lightning.set_spawn_state(jump_speed, max_chains, 1, is_splittable())
 	add_child(new_lightning)
 	new_lightning.global_position = global_position
@@ -70,7 +70,7 @@ func spawn_new_lightning_bolt(target: Node2D) -> void:
 	new_lightning.jumping_ended.connect(fire_weapon)
 
 func spawn_chained_lightning_bolt(target: Node2D, chain_count: int, start_pos: Vector2) -> void:
-	var new_lightning = instantiate_bullet_by_key(SceneKey.BULLET, global_position, SpriteConstants.Z_INDEX.CHAIN_LIGHTNING, target) as LightningBullet
+	var new_lightning = instantiate_projectile_by_key(SceneKey.PROJECTILE, global_position, SpriteConstants.Z_INDEX.CHAIN_LIGHTNING, target) as LightningBullet
 	new_lightning.set_spawn_state(jump_speed, max_chains, chain_count, false)
 	add_child(new_lightning)
 	new_lightning.global_position = start_pos
@@ -83,7 +83,7 @@ func spawn_chained_lightning_bolt(target: Node2D, chain_count: int, start_pos: V
 func spawn_lightning_stike(spawn_pos: Vector2) -> void:
 	# Before spawning, make sure we don't overlap a damage field that's already on the board to reduce clutter.
 	if LightningStrike.can_spawn_strike_at_pos(spawn_pos, get_tree()):
-		var new_strike = instantiate_bullet_by_key(SceneKey.SECONDARY_BULLET, spawn_pos, SpriteConstants.Z_INDEX.LIGHTNING_STRIKE) as LightningStrike
+		var new_strike = instantiate_projectile_by_key(SceneKey.SECONDARY_PROJECTILE, spawn_pos, SpriteConstants.Z_INDEX.LIGHTNING_STRIKE) as LightningStrike
 		# Add it to the scene tree so everything hopefully instantiates properly.
 		get_tree().root.add_child(new_strike)
 		# get_node("/root/GameScene").add_child(new_strike)

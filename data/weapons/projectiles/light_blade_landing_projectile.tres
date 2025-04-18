@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ProjectileData" load_steps=3 format=3 uid="uid://c6rw24wuylurx"]
+
+[ext_resource type="PackedScene" uid="uid://donin3crsyv65" path="res://prefabs/projectiles/light_blade_landing_projectile.tscn" id="1_pnrng"]
+[ext_resource type="Script" uid="uid://cv36dt247myo1" path="res://data/weapons/projectiles/projectile_data.gd" id="2_dcwg3"]
+
+[resource]
+script = ExtResource("2_dcwg3")
+name = "Light Blade Landing"
+damage_modifier = 1.0
+damage_cooldown = 0.0
+speed = 0.0
+lifetime = 0.0
+projectile_scene = ExtResource("1_pnrng")
+metadata/_custom_type_script = "uid://cv36dt247myo1"

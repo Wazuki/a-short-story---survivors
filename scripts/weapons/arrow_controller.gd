@@ -88,7 +88,7 @@ func arrow() -> void:
 		fire_weapon()
 
 func spawn_arrow(target: Node2D, arrow_size: Vector2 = Vector2.ONE) -> void:
-	var new_arrow = instantiate_bullet_by_key(SceneKey.BULLET, global_position, SpriteConstants.Z_INDEX.ARROW, target)
+	var new_arrow = instantiate_projectile_by_key(SceneKey.PROJECTILE, global_position, SpriteConstants.Z_INDEX.ARROW, target)
 	# new_arrow.initialize(damage, speed, BASE_RANGE, pierce) # TODO - Range increase with level?
 	new_arrow.scale = arrow_size
 
@@ -106,7 +106,7 @@ func spawn_arrow(target: Node2D, arrow_size: Vector2 = Vector2.ONE) -> void:
 func spawn_split_arrows(spawn_pos: Vector2) -> void:
 	# Spawn 8 split arrows when killing a target.
 	for a in 8:
-		var new_arrow = instantiate_bullet_by_key(SceneKey.SECONDARY_BULLET, spawn_pos, SpriteConstants.Z_INDEX.ARROW)
+		var new_arrow = instantiate_projectile_by_key(SceneKey.SECONDARY_PROJECTILE, spawn_pos, SpriteConstants.Z_INDEX.ARROW)
 		# new_arrow.initialize(damage / 2, speed, BASE_RANGE, pierce)
 		new_arrow.scale = mini_arrow_scale # Set the mini arrow's scale directly.
 		# These calls MUST be deferred because enemies die during the physics process and we can only perform these during idle time.

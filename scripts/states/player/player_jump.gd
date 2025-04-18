@@ -43,6 +43,7 @@ func _enter_tree() -> void:
 ## The player will be launched into the air and will hang there for a set amount of time before falling back down.[br]
 ## [data] needs ["jump_speed"], ["jump_time"], ["landing_radius]"
 func enter(_previous_state_path: String = "", data := {}) -> void:
+	player.invincible = true # Mark the player as invincible since they cannot take damage while jumping.
 	# Set the animation and the direction of the jump sprite.
 	player.animation_player.play(JUMP)
 	flip_jump_particles()
@@ -138,14 +139,8 @@ func exit() -> void:
 	audio.stream = jump_up_sound
 	landing_circle.set_params(0)
 	inner_landing_circle.set_params(0)
-
+	player.invincible = false # Remove the player's invincibility tag. TODO - this should be handled differently (effect that considers the source?)
 	jump_ended.emit()
-
-########### NOTES ####
-# Tween.TRANS_QUAD or TRANS_CUBIC with EASE_OUT for launching up
-# EASE_IN for falling back down - makes it feel snappier
-# Screen shake (0.05s)? Slow-mo?
-# Camera bounce up-down upon landing? Adds weight
 
 ## Allows the player to move while in the air, ignoring zero-velocity to idle transition.
 func move(delta) -> void:

@@ -10,9 +10,9 @@ extends RefCounted
 @export var level_up_texts: Array[String] = [] ## The text for each level up (Max 7)
 
 @export_category("Enumerated Statistics")
-@export_enum("SLAM", "LIGHT_BLADE", "WALDOS", "ARROW", "CHAIN_LIGHTNING", "HAILSTORM", "SCATTERSTAR")
+@export_enum("SLAM", "LIGHT_BLADE", "WALDOS", "ARROW", "CHAIN_LIGHTNING", "HAILSTORM", "SCATTERSTAR", "BLACK_HOLE")
 var weapon_type: int ## Type of weapon based on the Weapon Type enum
-@export_enum("NONE", "CLOSEST", "HIGHEST_HP", "RANDOM", "CONTINUOUS")
+@export_enum("NONE", "CLOSEST", "HIGHEST_HP", "RANDOM", "CONTINUOUS", "BIGGEST_CLUSTER")
 var target_type: int ## Type of target based on the TargetType enum
 
 @export_category("Starting Stats")
@@ -25,9 +25,9 @@ var target_type: int ## Type of target based on the TargetType enum
 @export var crit_mod: float = 0.0 ## The base critical damage modifier of the weapon
 @export var level_up_augments: Array[Array] ## The augments that will be applied to the weapon when it levels up [max 5]
 
-@export_category("Scene and Bullet Data")
+@export_category("Scene and Projectile Data")
 @export var weapon_scene: PackedScene ## The scene for the weapon
-@export var bullet_scene_map: WeaponSceneMap
+@export var projectile_scene_map: WeaponSceneMap
 @export var unlock_quest: QuestResource
 
 ## Return the level up texts from the weapon data. This is used for the level up GUI.[br]

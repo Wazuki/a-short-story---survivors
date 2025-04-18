@@ -22,6 +22,7 @@ var level
 var xp_to_next_level
 var level_up_text = "Level Up!"
 var level_up_text_reset_pos
+var invincible: bool = false ## Indicates if the player is unable to be damaged.
 
 var total_level_ups = 0
 # var enemy_damage_rate = 5.0
@@ -107,6 +108,8 @@ func _physics_process(delta: float) -> void:
 ## Adjusts the player healer bar as well. If died, emit the health_depleted signal.[br]
 ## Also checks if the player has the Shield status effect.
 func take_damage(damage: float) -> void:
+	# First check if the player is invincible as that overrides everything else.
+	if invincible: return
 	# Check if the player has the shield effect and remove it if so automatically. If not, the player should continue to take damage.
 	if effect_manager.remove_effect(typeof(Shield)):
 		print_debug("Shield absorbed damage!")

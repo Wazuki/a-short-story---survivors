@@ -1,0 +1,43 @@
+[gd_scene load_steps=5 format=4 uid="uid://bkolel61gxpva"]
+
+[ext_resource type="Texture2D" uid="uid://c4pfikd54u4o8" path="res://slash.png" id="1_jkyfk"]
+[ext_resource type="Texture2D" uid="uid://ccd6hln1og330" path="res://basic_sword.png" id="2_dmoff"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_ttkip"]
+particle_flag_disable_z = true
+gravity = Vector3(0, 0, 0)
+color = Color(0.526231, 0.000193823, 0.524766, 1)
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_uous4"]
+_surfaces = [{
+"2d": true,
+"aabb": AABB(-52, -26, 0, 104, 52, 0),
+"attribute_data": PackedByteArray("J3YiPwAAAADMzMw+AAAAAMEPnD7FTmw9rtSKPsVObD3phd49FDuxPvADvz0UO7E+X+iFPMVOLD8AAAAAxU4sPwAAAAAAAIA/Uiu1PgAAgD/sxM4+ZmZmP7ET+z65kVs/rtQaPyd2Yj8MvSA/J3ZiPxQ7MT/wA38/AACAPwAAgD8AAIA/O7EzPxQ7cT+RG/k+FDtxP0du5D4UO1E/jtxIPhQ7UT+1Uis+J3YiP8mNXDw="),
+"format": 34393296913,
+"index_count": 60,
+"index_data": PackedByteArray("FQAUABMAEwASABEAEQAQAA8ADwAOAA0ADQAMAAsACgAJAAgACAAHAAYABgAFAAQABAADAAIAAgABAAAAFQATABEAEQAPAA0ACwAKAAgACAAGAAQABAACAAAAFQARAA0ACwAIAAQABAAAABUAFQANAAsACwAEABUA"),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 22,
+"vertex_data": PackedByteArray("AABgQQAA0MFoZibBAADQwWZmosEAALjBZma+wQAAuMHNzCLCAAAAwTMzKcIAAADBMzNJwgAAEEEAAFDCAAAQQQAAUMIAANBBNDNzwQAA0EEAACDBZmamQQAAgL/MzJRBaGYuQQAAoEHQzFRBAACgQQAAoEFmZs5BAABQQgAA0EEAAFBCAAAoQQAAOEJAMzO/AAA4QjAzM8AAAARCzcx8wQAABEJmZorBAABgQWZmysE=")
+}]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="."]
+position = Vector2(0, -30)
+amount = 1
+texture = ExtResource("1_jkyfk")
+lifetime = 0.7
+process_material = SubResource("ParticleProcessMaterial_ttkip")
+
+[node name="Slash" type="MeshInstance2D" parent="."]
+visible = false
+position = Vector2(0, -30)
+mesh = SubResource("ArrayMesh_uous4")
+texture = ExtResource("1_jkyfk")
+
+[node name="BasicSword" type="Sprite2D" parent="."]
+position = Vector2(30, 0)
+rotation = 1.5708
+texture = ExtResource("2_dmoff")

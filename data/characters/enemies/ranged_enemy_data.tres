@@ -1,6 +1,6 @@
 [gd_resource type="Resource" load_steps=6 format=3 uid="uid://b0p3kumgxyg2v"]
 
-[ext_resource type="PackedScene" uid="uid://vdpcbf0b1fs3" path="res://prefabs/bullets/enemy_bullet.tscn" id="1_uhmga"]
+[ext_resource type="PackedScene" uid="uid://vdpcbf0b1fs3" path="res://prefabs/projectiles/enemy_projectile.tscn" id="1_uhmga"]
 [ext_resource type="Script" uid="uid://c7j0fa7qjysyq" path="res://data/characters/enemies/ranged_enemy_data.gd" id="2_aup0w"]
 [ext_resource type="SpriteFrames" uid="uid://c5hesxioqtbmd" path="res://assets/sprites/characters/enemies/ranged_enemy.tres" id="2_uhmga"]
 [ext_resource type="Script" uid="uid://dt0pa4luip6h5" path="res://data/characters/stat_map.gd" id="4_56a7k"]

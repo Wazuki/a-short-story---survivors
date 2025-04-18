@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ProjectileData" load_steps=3 format=3 uid="uid://0erp6hvhah8s"]
+
+[ext_resource type="PackedScene" uid="uid://b2y08xslq1a4c" path="res://prefabs/projectiles/black_hole_projectile.tscn" id="1_015ln"]
+[ext_resource type="Script" uid="uid://cv36dt247myo1" path="res://data/weapons/projectiles/projectile_data.gd" id="2_ev2a6"]
+
+[resource]
+script = ExtResource("2_ev2a6")
+name = "Black Hole Projectile"
+damage_modifier = 0.333
+damage_cooldown = 0.25
+speed = 0.0
+lifetime = 2.0
+projectile_scene = ExtResource("1_015ln")

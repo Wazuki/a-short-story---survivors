@@ -1,0 +1,7 @@
+[gd_resource type="AtlasTexture" load_steps=2 format=3 uid="uid://dodhat7s6qc66"]
+
+[ext_resource type="Texture2D" uid="uid://og4ow7xfr8ld" path="res://assets/UI/icons/9-Black-hole.png" id="1_v5exy"]
+
+[resource]
+atlas = ExtResource("1_v5exy")
+region = Rect2(0, 0, 32, 32)

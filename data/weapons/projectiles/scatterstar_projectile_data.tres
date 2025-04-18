@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ProjectileData" load_steps=3 format=3 uid="uid://c5os3a1wcn3mg"]
+
+[ext_resource type="PackedScene" uid="uid://mks6krr0c1pa" path="res://prefabs/projectiles/scatterstar_projectile.tscn" id="1_0ka1u"]
+[ext_resource type="Script" uid="uid://cv36dt247myo1" path="res://data/weapons/projectiles/projectile_data.gd" id="1_c2538"]
+
+[resource]
+script = ExtResource("1_c2538")
+name = "Scatterstar Projectile"
+damage_modifier = 1.0
+damage_cooldown = 0.0
+speed = 0.0
+lifetime = 0.0
+projectile_scene = ExtResource("1_0ka1u")
+metadata/_custom_type_script = "uid://cv36dt247myo1"

@@ -11,7 +11,7 @@ var heal_per_hit: float ## How much is healed per enemy hit by the Nano-Infused 
 var knockback_status: Knockback ## The Knockback status effect that hits enemies on every projectile.
 
 # Internal variables for state tracking.
-var scatterstar_bullet
+var scatterstar_projectile
 var current_shot = 0
 
 
@@ -26,16 +26,16 @@ func initialize(data: WeaponData) -> void:
 	heal_per_hit = data.heal_per_hit
 
 	knockback_status = data.knockback_status
-	scatterstar_bullet = instantiate_bullet_by_key(SceneKey.BULLET, global_position, SpriteConstants.Z_INDEX.SCATTERSTAR)
+	scatterstar_projectile = instantiate_projectile_by_key(SceneKey.PROJECTILE, global_position, SpriteConstants.Z_INDEX.SCATTERSTAR)
 
 ## Add the bullet as a child now thatt it's in the scene tree.
 func _ready() -> void:
 	super._ready()
-	add_child(scatterstar_bullet)
+	add_child(scatterstar_projectile)
 
 
 func _physics_process(_delta: float) -> void:
-	if ready_to_fire and not scatterstar_bullet.is_sprite_playing() and closest_enemy != null: shoot()
+	if ready_to_fire and not scatterstar_projectile.is_sprite_playing() and closest_enemy != null: shoot()
 
 ## Fires the weapon.
 func shoot() -> void:
@@ -44,7 +44,7 @@ func shoot() -> void:
 	current_shot += 1
 	# Shoot at it once.
 	look_at(closest_enemy.global_position)
-	scatterstar_bullet.shoot()
+	scatterstar_projectile.shoot()
 	%ScatterstarSounds.play()
 
 	# At the very end

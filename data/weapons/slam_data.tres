@@ -1,16 +1,16 @@
 [gd_resource type="Resource" load_steps=8 format=3 uid="uid://ctstshqbk5vtk"]
 
-[ext_resource type="Resource" uid="uid://dgxyjbfhu7may" path="res://data/weapons/bullets/slam_bullet_data.tres" id="1_48kil"]
 [ext_resource type="Script" uid="uid://besfugoahx8v7" path="res://data/weapons/weapon_scene_map.gd" id="1_wnpfg"]
+[ext_resource type="Resource" uid="uid://dgxyjbfhu7may" path="res://data/weapons/projectiles/slam_projectile_data.tres" id="2_48kil"]
 [ext_resource type="Texture2D" uid="uid://bdm0l4d00vqw7" path="res://assets/UI/icons/slam_icon.tres" id="2_cbere"]
 [ext_resource type="Script" uid="uid://dkdk3q8q1nr7b" path="res://data/weapons/slam_data.gd" id="2_g77it"]
-[ext_resource type="Resource" uid="uid://cmqcxhxjfropd" path="res://data/weapons/bullets/mini_slam_bullet_data.tres" id="3_c2vru"]
 [ext_resource type="PackedScene" uid="uid://bdhnec2pb7ddj" path="res://prefabs/weapons/slam_weapon_controller.tscn" id="3_cbere"]
+[ext_resource type="Resource" uid="uid://cmqcxhxjfropd" path="res://data/weapons/projectiles/mini_slam_projectile_data.tres" id="4_c2vru"]
 
-[sub_resource type="Resource" id="Resource_48kil"]
+[sub_resource type="Resource" id="Resource_8yw7s"]
 script = ExtResource("1_wnpfg")
-bullet_scene = ExtResource("1_48kil")
-secondary_bullet_scene = ExtResource("3_c2vru")
+projectile_scene = ExtResource("2_48kil")
+seconday_projectile_scene = ExtResource("4_c2vru")
 metadata/_custom_type_script = "uid://besfugoahx8v7"
 
 [resource]
@@ -37,4 +37,4 @@ crit_chance = 0.0
 crit_mod = 0.0
 level_up_augments = Array[Array]([])
 weapon_scene = ExtResource("3_cbere")
-bullet_scene_map = SubResource("Resource_48kil")
+projectile_scene_map = SubResource("Resource_8yw7s")

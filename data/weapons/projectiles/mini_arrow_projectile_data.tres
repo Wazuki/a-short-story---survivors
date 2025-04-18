@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ProjectileData" load_steps=3 format=3 uid="uid://1vqx54pfeayx"]
+
+[ext_resource type="PackedScene" uid="uid://vq6b006w6gq2" path="res://prefabs/projectiles/arrow_projectile.tscn" id="1_ifj41"]
+[ext_resource type="Script" uid="uid://cv36dt247myo1" path="res://data/weapons/projectiles/projectile_data.gd" id="2_0nghk"]
+
+[resource]
+script = ExtResource("2_0nghk")
+name = "Mini Arrow Projectile"
+damage_modifier = 0.5
+damage_cooldown = 0.0
+speed = 500.0
+lifetime = 0.0
+projectile_scene = ExtResource("1_ifj41")
+metadata/_custom_type_script = "uid://cv36dt247myo1"

@@ -85,7 +85,7 @@ func initialize(data: WeaponData) -> void:
 
 	weapon_range = data.weapon_range
 	target_type = data.target_type as TargetType
-	if data.bullet_scene_map != null: projectile_scenes = data.bullet_scene_map.to_dict()
+	if data.projectile_scene_map != null: projectile_scenes = data.projectile_scene_map.to_dict()
 	
 
 # Called when the node enters the scene tree for the first time.
@@ -107,14 +107,14 @@ func _ready() -> void:
 	ready_to_fire = false
 
 ## Return a new bullet instanced based on the passed scene key. The bullet will return pre-initialized.
-func instantiate_bullet_by_key(key: SceneKey, spawn_pos: Vector2, index: SpriteConstants.Z_INDEX, target_node: Node2D = null) -> Bullet:
+func instantiate_projectile_by_key(key: SceneKey, spawn_pos: Vector2, index: SpriteConstants.Z_INDEX, target_node: Node2D = null) -> Projectile:
 	# Returns a new bullet instance based on the key.
 	if projectile_scenes.has(key):
-		var new_bullet = projectile_scenes[key].bullet_scene.instantiate() as Bullet
-		new_bullet.initialize(self, projectile_scenes[key], spawn_pos, index, target_node)
-		return new_bullet
+		var new_projectile = projectile_scenes[key].projectile_scene.instantiate() as Projectile
+		new_projectile.initialize(self, projectile_scenes[key], spawn_pos, index, target_node)
+		return new_projectile
 	else:
-		print_debug("Bullet scene not found for: ", str(key))
+		print_debug("Projectile scene not found for: ", str(key))
 	return null
 
 # ## Return the level up texts from the weapon data. This is used for the level up GUI.
@@ -130,6 +130,7 @@ func level_up() -> void:
 	gained_level.emit(level)
 	# Check to see if our new level has any augments to apply to the weapon.
 	if level > 1: # Level 1 is the base level and doesn't have any augments.
+		#if level_up_augments == null: print_debug("No augments found for " + name + " at level " + str(level))
 		if level_up_augments[level - 2].size() > 0: # Index at - 2 to account for augments only beginning after the first level.
 			for augment in level_up_augments[level - 2]:
 				# print_debug("Applying augment: ", augment)
@@ -196,6 +197,11 @@ func get_random_target_in_range() -> Enemy:
 
 	return null
 
+## Returns the enemy with the largest cluster of targets nearby.
+func get_enemy_with_largest_cluster_in_range() -> Enemy:
+	if enemies_in_range.is_empty(): return null
+
+	return EnemyManager.find_cluster_center(enemies_in_range)
 
 
 ## When the enemy enters range, add them to the [enemies_in_range] dictionary. Then, if we target by HP, sort the dictionary by max HP.

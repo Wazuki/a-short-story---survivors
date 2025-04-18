@@ -1,0 +1,16 @@
+[gd_resource type="Resource" load_steps=3 format=3 uid="uid://xpd7doxx2l0n"]
+
+[ext_resource type="Script" uid="uid://cfv1jpe5bdf0" path="res://data/weapons/projectiles/light_blade_projectile.gd" id="1_3ew7s"]
+[ext_resource type="PackedScene" uid="uid://bo0obxyme762a" path="res://prefabs/projectiles/light_blade_projectile.tscn" id="1_pb816"]
+
+[resource]
+script = ExtResource("1_3ew7s")
+offset_position = Vector2(20, 0)
+offset_rotation = -1.5708
+name = "Light Blade Projectile"
+damage_modifier = 1.0
+damage_cooldown = 0.0
+speed = 0.0
+lifetime = 0.0
+projectile_scene = ExtResource("1_pb816")
+metadata/_custom_type_script = "uid://cv36dt247myo1"
