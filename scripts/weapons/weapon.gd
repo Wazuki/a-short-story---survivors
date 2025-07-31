@@ -3,9 +3,11 @@ class_name  Weapon
 extends Area2D
 
 # Quick access enums:
-const SceneKey = WeaponEnums.SceneKey # Assigns the WeaponEnums enum for quick access.
-const Type = WeaponEnums.Type # Assigns the WeaponData enum for quick access.
-const TargetType = WeaponEnums.TargetType # Assigns the WeaponData enum for quick access.
+const SceneKey = WeaponEnums.SceneKey # Assigns the SceneKey enum for quick access.
+const Type = WeaponEnums.Type # Assigns the Type enum for quick access.
+const TargetType = WeaponEnums.TargetType # Assigns the TargetType enum for quick access.
+const Tag = WeaponEnums.Tag # Assigns the Tag enum for quick access.
+
 #const Stat = CharacterData.Stat # Assigns the CharacterData enum for quick access.
 
 # Other offset constants
@@ -15,7 +17,7 @@ const FRAME_UPDATE_OFFSET = 6 ## The number of frames between each targeting upd
 # Descriptive elements
 var description: String
 var icon: AtlasTexture
-var level_up_texts: Array[String] = [] ## The text for each level up (Max 7)
+var level_up_texts: Array[String] = [] ## The text for each level up (Max 7) - Deprecated. Will be replaced with the new hybrid system.
 
 # Enumerated Statistics
 var weapon_type: Type ## The type of weapon based on the Weapon Type enum.
@@ -40,23 +42,32 @@ var cooldown_panel
 # Targeting Data - Variables to keep track of what our closest targets are for that type of weapon.
 @export var collision_shape: CollisionShape2D ## The collision shape of the weapon, used to determine the weapon's range.
 var weapon_range: float ## The range of the weapon, used to change the size of the collider.
-var highest_hp_enemy_in_range: Enemy = null
-var closest_enemy: Enemy = null
+var highest_hp_enemy_in_range: BaseEnemy = null
+var closest_enemy: BaseEnemy = null
 var enemies_in_range = {} ## An [int]-[Enemy] dictionary that tracks enemies in our colliders. Use [method get_instance_id()] to get the instance ID.
 
 # Packed scenes
 var projectile_scenes: Dictionary = {} ## Dictionary of packed scenes for the weapon. Should be scene name, packed scene.
 
-## Deprecated. Will be tied into the new weapon data system.
-# var first_level_up: bool = true:
-# 	get:
-# 		return first_level_up
-# 	set(value):
-# 		first_level_up = value
-# 		if not first_level_up: create_cooldown_panel.emit() # Emit the signal only if we are now false - theoretically should only be called once?
+# Level Up Bonuses/Multipliers
+var damage_multiplier: float = 1.0 ## The multiplier for the damage of the weapon. Effective damage = damage * damage_multiplier
+var cast_speed_multiplier: float = 1.0 ## The multiplier for the cast speed of the weapon. Effective cooldown = cooldown / cast_speed_multiplier
+var scale_multiplier: float = 1.0 ## The multiplier for the scale of the weapon. Effective scale = weapon_scale * scale_multiplier
+var duration_multiplier: float = 1.0 ## The multiplier for the duration of the weapon's effects. Effective duration = duration * duration_multiplier
+var range_multiplier: float = 1.0 ## The multiplier for the range of the weapon. Used for ranged weapons that only fire when an enemy enters the range collider. Effective range = weapon_range * range_multiplier
+
+## See [member WeaponData.unique_weapon_augments] for more information on the weapon data.
+var unique_level_augments: Dictionary = {} 
+var tags: Array[Tag] = [] ## The tags that describe the weapon's characteristics. Used for filtering weapons in the level up UI and for determining what upgrades the weapon can receive from the random pool.
+
+# Range? Lifetime? Similar to duration? Player upgrades? PHYS, MAG, ARMOR, HEALTH, SPD, etc
+# Weapon-specific? pierce_count_bonus? bounce_count_bonus? status effect bonuses? Crit applies directly to weapon?
+# Spread-angle bonus? Ramp rate? Shield strength? tick rate (for dot stuff? how often it affects? Is this the same as speed or duration? Unify and be sure.)
+# Character takes up 0.02% of screen in spell brigade (area wise)
+# Cooldowns should have a minimum cap (such as cooldown = max(base_cooldown * (1 - cast_speed_multiplier), 0.1)) to prevent weapons from being spammed too quickly.
 
 
-
+# Signals
 signal fire
 signal critical_hit
 #signal create_cooldown_panel
@@ -86,6 +97,9 @@ func initialize(data: WeaponData) -> void:
 	weapon_range = data.weapon_range
 	target_type = data.target_type as TargetType
 	if data.projectile_scene_map != null: projectile_scenes = data.projectile_scene_map.to_dict()
+
+	tags = data.tags.duplicate(true) # Duplicate to prevent modifying the original data along with a deep copy to preserve each object in the array.
+	unique_level_augments = data.unique_level_augments.duplicate(true) # Duplicate to prevent modifying the original data along with a deep copy to preserve each object in the array.
 	
 
 # Called when the node enters the scene tree for the first time.
@@ -131,6 +145,9 @@ func level_up() -> void:
 	# Check to see if our new level has any augments to apply to the weapon.
 	if level > 1: # Level 1 is the base level and doesn't have any augments.
 		#if level_up_augments == null: print_debug("No augments found for " + name + " at level " + str(level))
+		if level_up_augments == null or level_up_augments.size() == 0: 
+			print_debug("No augments found for " + name + " at level " + str(level))
+			return # If there are no augments, return early.
 		if level_up_augments[level - 2].size() > 0: # Index at - 2 to account for augments only beginning after the first level.
 			for augment in level_up_augments[level - 2]:
 				# print_debug("Applying augment: ", augment)
@@ -180,11 +197,11 @@ func get_highest_hp_target() -> void:
 	if not enemies_in_range.is_empty():
 		if highest_hp_enemy_in_range == null: highest_hp_enemy_in_range = enemies_in_range.values().pick_random() # If we don't have a highest hp enemy anymore set to a random enemy.
 		for enemy_ID in enemies_in_range:
-			if enemies_in_range[enemy_ID].stats[CharacterData.Stat.HEALTH] > highest_hp_enemy_in_range.stats[CharacterData.Stat.HEALTH]:
+			if enemies_in_range[enemy_ID].stats.health > highest_hp_enemy_in_range.stats.health:
 				highest_hp_enemy_in_range = enemies_in_range[enemy_ID]
 
 ## Returns a random valid enemy from the enemies in range collection.
-func get_random_target_in_range() -> Enemy:
+func get_random_target_in_range() -> BaseEnemy:
 	if enemies_in_range.is_empty(): return null
 
 	# Duplicate the key array and then pick a random one - if we get a valid target, return it. Otherwise, erase the invalid enemy and try again.
@@ -198,7 +215,7 @@ func get_random_target_in_range() -> Enemy:
 	return null
 
 ## Returns the enemy with the largest cluster of targets nearby.
-func get_enemy_with_largest_cluster_in_range() -> Enemy:
+func get_enemy_with_largest_cluster_in_range() -> BaseEnemy:
 	if enemies_in_range.is_empty(): return null
 
 	return EnemyManager.find_cluster_center(enemies_in_range)
@@ -206,14 +223,14 @@ func get_enemy_with_largest_cluster_in_range() -> Enemy:
 
 ## When the enemy enters range, add them to the [enemies_in_range] dictionary. Then, if we target by HP, sort the dictionary by max HP.
 func _on_area_entered(area:Area2D) -> void:
-	if area is Enemy:
+	if area is BaseEnemy:
 		# If this weapon targest the enemy with the highest HP, check if we have a highest HP enemy. If we don't, assign this area to it. Otherwise compare it to the highest and adjust the container if it is the new highest HP enemy.
 		if target_type == TargetType.HIGHEST_HP:
 			if highest_hp_enemy_in_range == null or enemies_in_range.is_empty(): # Or if the enemies dict is enmpty
 				highest_hp_enemy_in_range = area
 			else:
 				# Get the HP of the current enemy. If this new enemy's HP is greater, they're the new highest HP enemy.
-				if area.stats[CharacterData.Stat.HEALTH] > highest_hp_enemy_in_range.stats[CharacterData.Stat.HEALTH]:
+				if area.stats.health > highest_hp_enemy_in_range.stats.health:
 					highest_hp_enemy_in_range = area
 
 		

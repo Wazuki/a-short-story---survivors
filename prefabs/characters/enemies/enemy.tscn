@@ -19,7 +19,7 @@
 [sub_resource type="Gradient" id="Gradient_xkwav"]
 colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
 
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_8drnm"]
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_bipts"]
 gradient = SubResource("Gradient_xkwav")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_hoy00"]
@@ -35,7 +35,7 @@ damping_min = 500.0
 damping_max = 800.0
 scale_max = 2.0
 color = Color(0.533333, 0.0313726, 0.0313726, 1)
-color_ramp = SubResource("GradientTexture1D_8drnm")
+color_ramp = SubResource("GradientTexture1D_bipts")
 hue_variation_min = -2.23517e-08
 hue_variation_max = -2.23517e-08
 
@@ -56,7 +56,7 @@ stream_2/stream = ExtResource("7_nhj82")
 stream_3/stream = ExtResource("8_tt2i8")
 
 [node name="Enemy" type="Area2D" groups=["Enemies"]]
-z_index = 100
+z_as_relative = false
 y_sort_enabled = true
 position = Vector2(0, -6)
 collision_layer = 2
@@ -120,10 +120,6 @@ stream = ExtResource("4_o7c7e")
 [node name="AttackSounds" type="AudioStreamPlayer2D" parent="."]
 unique_name_in_owner = true
 stream = SubResource("AudioStreamRandomizer_h6a0t")
-
-[node name="DisplacementTimer" type="Timer" parent="."]
-unique_name_in_owner = true
-wait_time = 2.0
 
 [node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("actor")]
 unique_name_in_owner = true

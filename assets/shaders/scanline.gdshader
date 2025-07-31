@@ -7,7 +7,7 @@ void fragment() {
     vec2 uv = UV;
     float line = sin((-uv.y + TIME * speed) * 20.0) * 0.5 + 0.5; // Adjust frequency with * 20.0
     vec4 original = texture(TEXTURE, uv);
-    
+
     vec4 scanline = mix(original, scanline_color, line * 0.5); // Blend effect
     COLOR = scanline;
 }

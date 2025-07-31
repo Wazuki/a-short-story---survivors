@@ -8,7 +8,7 @@ var max_chains: int
 var can_split: bool = false
 
 var hit_targets: Array[Node2D]
-var current_jump_target: Enemy
+var current_jump_target: BaseEnemy
 
 signal jumping_ended
 

@@ -90,9 +90,9 @@ func display_character_info(panel: Panel) -> void:
 	%CharacterNameText.text = panel.character.character_name
 	# Concat a string of the character's description and then their stats (Health, Armor, Speed)
 	%CharacterInfoText.text = Utils.replace_line_breaks(panel.character.description)
-	%CharacterInfoText.text += "\n\nHealth: " + str(panel.character.get_stat(PlayerCharacterData.Stat.HEALTH))
-	%CharacterInfoText.text += "\n\nArmor: " + str(panel.character.get_stat(PlayerCharacterData.Stat.ARMOR))
-	%CharacterInfoText.text += "\n\nSpeed: " + str(panel.character.get_stat(PlayerCharacterData.Stat.SPEED))
+	%CharacterInfoText.text += "\n\nHealth: " + str(panel.character.stats.max_health)
+	%CharacterInfoText.text += "\n\nArmor: " + str(panel.character.stats.armor)
+	%CharacterInfoText.text += "\n\nSpeed: " + str(panel.character.stats.speed)
 
 	# Assign the character's starting weapon information to the left panel.
 	var starting_weapon = WeaponManager.get_weapon_data_by_type(panel.character.starting_weapon)

@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="AdditiveCritChanceAugment" load_steps=2 format=3 uid="uid://dl5bfln5bu6pm"]
+
+[ext_resource type="Script" uid="uid://bk1113ugoos4a" path="res://scripts/augments/weapon_augments/additive_crit_chance_augment.gd" id="1_ox56h"]
+
+[resource]
+script = ExtResource("1_ox56h")
+crit_chance_increase = 0.25
+metadata/_custom_type_script = "uid://bk1113ugoos4a"

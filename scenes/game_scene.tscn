@@ -1,8 +1,9 @@
-[gd_scene load_steps=12 format=3 uid="uid://c756hxrovtgc5"]
+[gd_scene load_steps=13 format=3 uid="uid://c756hxrovtgc5"]
 
 [ext_resource type="PackedScene" uid="uid://bivcmhjsdsyy2" path="res://scenes/characters/player.tscn" id="2_po0ka"]
 [ext_resource type="PackedScene" uid="uid://dmtmv04oyd6hl" path="res://scenes/world/level.tscn" id="2_x5ify"]
 [ext_resource type="PackedScene" uid="uid://2mcqwy0rar2b" path="res://scenes/main_camera.tscn" id="3_qmrv4"]
+[ext_resource type="PackedScene" uid="uid://dijt8cn3y4a4c" path="res://prefabs/ui/player_ui_container.tscn" id="4_rvs2r"]
 [ext_resource type="PackedScene" uid="uid://cfdtpyse3s0tr" path="res://scenes/ui/character_select_ui.tscn" id="5_navxo"]
 [ext_resource type="PackedScene" uid="uid://clb7lgpy4ix3o" path="res://scenes/ui/level_up_ui.tscn" id="6_kdryc"]
 [ext_resource type="PackedScene" uid="uid://cqph8d6325sto" path="res://scenes/ui/main_menu.tscn" id="7_6e45b"]
@@ -17,22 +18,89 @@
 [node name="Level" parent="." instance=ExtResource("2_x5ify")]
 position = Vector2(0, 0)
 
-[node name="Player" parent="." instance=ExtResource("2_po0ka")]
+[node name="GroundEffects" type="Node2D" parent="."]
+z_index = -1
+z_as_relative = false
+y_sort_enabled = true
+
+[node name="YSort" type="Node2D" parent="."]
+z_as_relative = false
+y_sort_enabled = true
+
+[node name="Player" parent="YSort" instance=ExtResource("2_po0ka")]
 unique_name_in_owner = true
-z_index = 1
 position = Vector2(964, 540)
+
+[node name="OverheadEffects" type="Node2D" parent="."]
+z_index = 1
+z_as_relative = false
+y_sort_enabled = true
 
 [node name="MainCamera" parent="." node_paths=PackedStringArray("target") instance=ExtResource("3_qmrv4")]
 position = Vector2(964, 540)
-target = NodePath("../Player")
+target = NodePath("../YSort/Player")
 
 [node name="UI" type="CanvasLayer" parent="."]
 
-[node name="PlayerHealthBar" parent="UI" instance=ExtResource("9_bil8f")]
-offset_left = -781.0
-offset_top = -522.0
-offset_right = 155.0
-offset_bottom = -397.0
+[node name="PlayerUIContainer" parent="UI" instance=ExtResource("4_rvs2r")]
+
+[node name="old_PlayerUIElements" type="Control" parent="UI"]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_right = 195.0
+offset_bottom = 461.0
+
+[node name="PlayerInfoContainer" type="PanelContainer" parent="UI/old_PlayerUIElements"]
+visible = false
+layout_mode = 0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 171.0
+offset_bottom = 212.0
+
+[node name="Panel" type="Panel" parent="UI/old_PlayerUIElements/PlayerInfoContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/old_PlayerUIElements/PlayerInfoContainer/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="PlayerInfoText" type="RichTextLabel" parent="UI/old_PlayerUIElements/PlayerInfoContainer/Panel/MarginContainer"]
+process_mode = 3
+layout_mode = 2
+bbcode_enabled = true
+text = "[p align=\"center\"]Level: 1
+XP: 1
+TNL: 10
+HP: 100"
+
+[node name="PlayerHealthBar" parent="UI/old_PlayerUIElements" instance=ExtResource("9_bil8f")]
+visible = false
+layout_mode = 1
+offset_left = -74.5
+offset_top = 216.5
+offset_right = 861.5
+offset_bottom = 341.5
+rotation = -1.5708
+
+[node name="PlayerExperienceBar" parent="UI/old_PlayerUIElements" instance=ExtResource("9_bil8f")]
+visible = false
+layout_mode = 1
+offset_left = -32.5
+offset_top = 216.5
+offset_right = 903.5
+offset_bottom = 341.5
+rotation = -1.5708
+script = null
 
 [node name="GameTimeLabel" type="RichTextLabel" parent="UI"]
 anchors_preset = 5
@@ -60,36 +128,6 @@ grow_horizontal = 2
 grow_vertical = 0
 size_flags_vertical = 8
 alignment = 1
-
-[node name="PlayerInfoContainer" type="PanelContainer" parent="UI"]
-offset_left = 10.0
-offset_top = 10.0
-offset_right = 171.0
-offset_bottom = 212.0
-
-[node name="Panel" type="Panel" parent="UI/PlayerInfoContainer"]
-layout_mode = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="UI/PlayerInfoContainer/Panel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
-
-[node name="PlayerInfoText" type="RichTextLabel" parent="UI/PlayerInfoContainer/Panel/MarginContainer"]
-process_mode = 3
-layout_mode = 2
-bbcode_enabled = true
-text = "[p align=\"center\"]Level: 1
-XP: 1
-TNL: 10
-HP: 100"
 
 [node name="LevelUpUI" parent="UI" instance=ExtResource("6_kdryc")]
 unique_name_in_owner = true

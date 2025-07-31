@@ -23,7 +23,11 @@ var target_type: int ## Type of target based on the TargetType enum
 @export var cooldown: float ## How often the weapon can attack
 @export var crit_chance: float = 0.0 ## The base critical chance of the weapon
 @export var crit_mod: float = 0.0 ## The base critical damage modifier of the weapon
-@export var level_up_augments: Array[Array] ## The augments that will be applied to the weapon when it levels up [max 5]
+## A dictionary of unique level augments that are applied to the weapon at specific levels. Used for unique weapons that have special effects at certain levels.[br]
+## [b]Structure:[/b] [<int, Array<WeaponAugment>] where the int is the level and the array is the augments to apply at that level.[br]
+## [b]NOTE:[/b] [u]ALL[/u] weapons should have a level 7 augment representing their overhaul options (if multiple available)!
+@export var unique_level_augments: Dictionary = { 3: [], 5: [], 7: []} 
+@export var tags: Array[WeaponEnums.Tag] = [] ## Tags that describe the weapon's characteristics, as well as what upgrades it can receive from the random pool.
 
 @export_category("Scene and Projectile Data")
 @export var weapon_scene: PackedScene ## The scene for the weapon

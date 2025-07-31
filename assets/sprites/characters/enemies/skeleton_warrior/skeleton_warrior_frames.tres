@@ -1,0 +1,359 @@
+[gd_resource type="SpriteFrames" load_steps=82 format=3 uid="uid://sonf6410qhsi"]
+
+[ext_resource type="Texture2D" uid="uid://cp1thdbvpvnpl" path="res://assets/sprites/characters/enemies/skeleton_warrior/attack/frame1.png" id="1_p0fu8"]
+[ext_resource type="Texture2D" uid="uid://c5xsu0vahu6xe" path="res://assets/sprites/characters/enemies/skeleton_warrior/attack/frame2.png" id="2_5bbh5"]
+[ext_resource type="Texture2D" uid="uid://clpskjbt8vg2u" path="res://assets/sprites/characters/enemies/skeleton_warrior/attack/frame3.png" id="3_s2dhn"]
+[ext_resource type="Texture2D" uid="uid://ml5y62noeudr" path="res://assets/sprites/characters/enemies/skeleton_warrior/attack/frame4.png" id="4_c2wjx"]
+[ext_resource type="Texture2D" uid="uid://0nf1cwwycy3b" path="res://assets/sprites/characters/enemies/skeleton_warrior/attack/frame5.png" id="5_b187f"]
+[ext_resource type="Texture2D" uid="uid://dc8u1aukynwew" path="res://assets/sprites/characters/enemies/skeleton_warrior/attack/frame6.png" id="6_wadae"]
+[ext_resource type="Texture2D" uid="uid://dcnfh5yjqigq4" path="res://assets/sprites/characters/enemies/skeleton_warrior/attack/frame7.png" id="7_mf2du"]
+[ext_resource type="Texture2D" uid="uid://6tr15e5yospc" path="res://assets/sprites/characters/enemies/skeleton_warrior/attack/frame8.png" id="8_1vpkd"]
+[ext_resource type="Texture2D" uid="uid://c3awbcjftaja1" path="res://assets/sprites/characters/enemies/skeleton_warrior/attack/frame9.png" id="9_81duy"]
+[ext_resource type="Texture2D" uid="uid://n8yhui4i1wss" path="res://assets/sprites/characters/enemies/skeleton_warrior/attack/frame10.png" id="10_sstqj"]
+[ext_resource type="Texture2D" uid="uid://df2n68lqonmn5" path="res://assets/sprites/characters/enemies/skeleton_warrior/attack/frame11.png" id="11_gmfn6"]
+[ext_resource type="Texture2D" uid="uid://cg8hi6b7ni11v" path="res://assets/sprites/characters/enemies/skeleton_warrior/attack/frame12.png" id="12_npc3q"]
+[ext_resource type="Texture2D" uid="uid://dqg3s0m8361an" path="res://assets/sprites/characters/enemies/skeleton_warrior/attack/frame13.png" id="13_xivqa"]
+[ext_resource type="Texture2D" uid="uid://cxtnv8j8t8vt5" path="res://assets/sprites/characters/enemies/skeleton_warrior/attack/frame14.png" id="14_05srn"]
+[ext_resource type="Texture2D" uid="uid://ckjrb0ro25wm5" path="res://assets/sprites/characters/enemies/skeleton_warrior/attack/frame15.png" id="15_yjon0"]
+[ext_resource type="Texture2D" uid="uid://bda1lvxml5c1c" path="res://assets/sprites/characters/enemies/skeleton_warrior/attack/frame16.png" id="16_fkjd3"]
+[ext_resource type="Texture2D" uid="uid://bf8i60qm12322" path="res://assets/sprites/characters/enemies/skeleton_warrior/attack/frame17.png" id="17_q2sni"]
+[ext_resource type="Texture2D" uid="uid://m17b8jq40tta" path="res://assets/sprites/characters/enemies/skeleton_warrior/attack/frame18.png" id="18_cbw74"]
+[ext_resource type="Texture2D" uid="uid://webpkqtf8qiv" path="res://assets/sprites/characters/enemies/skeleton_warrior/attack/frame19.png" id="19_nb38w"]
+[ext_resource type="Texture2D" uid="uid://dyjqyfryfyec6" path="res://assets/sprites/characters/enemies/skeleton_warrior/block/frame1.png" id="20_dq0xi"]
+[ext_resource type="Texture2D" uid="uid://b47ocasocstjj" path="res://assets/sprites/characters/enemies/skeleton_warrior/block/frame2.png" id="21_ooddd"]
+[ext_resource type="Texture2D" uid="uid://jp22xfjvskr8" path="res://assets/sprites/characters/enemies/skeleton_warrior/block/frame3.png" id="22_jwyqg"]
+[ext_resource type="Texture2D" uid="uid://bib6o460omgnq" path="res://assets/sprites/characters/enemies/skeleton_warrior/block/frame4.png" id="23_iedxn"]
+[ext_resource type="Texture2D" uid="uid://vvxf5gv8ilma" path="res://assets/sprites/characters/enemies/skeleton_warrior/block/frame5.png" id="24_lmdbx"]
+[ext_resource type="Texture2D" uid="uid://dnup60chyg3bv" path="res://assets/sprites/characters/enemies/skeleton_warrior/block/frame6.png" id="25_wvfuy"]
+[ext_resource type="Texture2D" uid="uid://birxn7pi05svv" path="res://assets/sprites/characters/enemies/skeleton_warrior/block/frame7.png" id="26_5vphm"]
+[ext_resource type="Texture2D" uid="uid://ni24xebmwur0" path="res://assets/sprites/characters/enemies/skeleton_warrior/block/frame8.png" id="27_d70hb"]
+[ext_resource type="Texture2D" uid="uid://davba6xjau42f" path="res://assets/sprites/characters/enemies/skeleton_warrior/block/frame9.png" id="28_0a2k7"]
+[ext_resource type="Texture2D" uid="uid://dxu4ho2iv6lv2" path="res://assets/sprites/characters/enemies/skeleton_warrior/block/frame10.png" id="29_s2upk"]
+[ext_resource type="Texture2D" uid="uid://dlm1g5fegq6ty" path="res://assets/sprites/characters/enemies/skeleton_warrior/block/frame11.png" id="30_msiqh"]
+[ext_resource type="Texture2D" uid="uid://dv424tquhfsb2" path="res://assets/sprites/characters/enemies/skeleton_warrior/block/frame12.png" id="31_o8qar"]
+[ext_resource type="Texture2D" uid="uid://cosyqcuhwc3ci" path="res://assets/sprites/characters/enemies/skeleton_warrior/die/frame1.png" id="32_piy4p"]
+[ext_resource type="Texture2D" uid="uid://ci54wigjn4pcb" path="res://assets/sprites/characters/enemies/skeleton_warrior/die/frame2.png" id="33_1km32"]
+[ext_resource type="Texture2D" uid="uid://bpy4lsdex6f4p" path="res://assets/sprites/characters/enemies/skeleton_warrior/die/frame3.png" id="34_kosen"]
+[ext_resource type="Texture2D" uid="uid://nla6n7ycvfbr" path="res://assets/sprites/characters/enemies/skeleton_warrior/die/frame4.png" id="35_8lapf"]
+[ext_resource type="Texture2D" uid="uid://dllamde7mwfsj" path="res://assets/sprites/characters/enemies/skeleton_warrior/die/frame5.png" id="36_lfqfi"]
+[ext_resource type="Texture2D" uid="uid://dt34or0xu2851" path="res://assets/sprites/characters/enemies/skeleton_warrior/die/frame6.png" id="37_2uby5"]
+[ext_resource type="Texture2D" uid="uid://h53s3wb3bjh8" path="res://assets/sprites/characters/enemies/skeleton_warrior/die/frame7.png" id="38_jw1rg"]
+[ext_resource type="Texture2D" uid="uid://brl2w4gq2d4g3" path="res://assets/sprites/characters/enemies/skeleton_warrior/die/frame8.png" id="39_wf36y"]
+[ext_resource type="Texture2D" uid="uid://hb0axmljk8oa" path="res://assets/sprites/characters/enemies/skeleton_warrior/die/frame9.png" id="40_n054u"]
+[ext_resource type="Texture2D" uid="uid://dd3oplqwxitas" path="res://assets/sprites/characters/enemies/skeleton_warrior/die/frame10.png" id="41_gshy2"]
+[ext_resource type="Texture2D" uid="uid://ck424ct430t1g" path="res://assets/sprites/characters/enemies/skeleton_warrior/die/frame11.png" id="42_spdhi"]
+[ext_resource type="Texture2D" uid="uid://bdgf5wetoru0" path="res://assets/sprites/characters/enemies/skeleton_warrior/die/frame12.png" id="43_g4imp"]
+[ext_resource type="Texture2D" uid="uid://dd4f18mb1eg5q" path="res://assets/sprites/characters/enemies/skeleton_warrior/die/frame13.png" id="44_1h212"]
+[ext_resource type="Texture2D" uid="uid://b4ndmgl3io7r5" path="res://assets/sprites/characters/enemies/skeleton_warrior/die/frame14.png" id="45_xwcja"]
+[ext_resource type="Texture2D" uid="uid://dxqwr8e16yoyg" path="res://assets/sprites/characters/enemies/skeleton_warrior/die/frame15.png" id="46_s7tai"]
+[ext_resource type="Texture2D" uid="uid://d3f7ldi38nqb0" path="res://assets/sprites/characters/enemies/skeleton_warrior/die/frame16.png" id="47_m8t35"]
+[ext_resource type="Texture2D" uid="uid://coomvrvtim7rj" path="res://assets/sprites/characters/enemies/skeleton_warrior/die/frame17.png" id="48_qaxyg"]
+[ext_resource type="Texture2D" uid="uid://dqmov5m2pj0yo" path="res://assets/sprites/characters/enemies/skeleton_warrior/die/frame18.png" id="49_dkcau"]
+[ext_resource type="Texture2D" uid="uid://i63j32sosu8b" path="res://assets/sprites/characters/enemies/skeleton_warrior/die/frame19.png" id="50_fuc7l"]
+[ext_resource type="Texture2D" uid="uid://dj4gs5t8bsudc" path="res://assets/sprites/characters/enemies/skeleton_warrior/die/frame20.png" id="51_j0v85"]
+[ext_resource type="Texture2D" uid="uid://dakmejda2hiln" path="res://assets/sprites/characters/enemies/skeleton_warrior/die/frame21.png" id="52_wpgev"]
+[ext_resource type="Texture2D" uid="uid://7bqwftcgetjg" path="res://assets/sprites/characters/enemies/skeleton_warrior/get_hit/frame1.png" id="53_2jc8s"]
+[ext_resource type="Texture2D" uid="uid://j0musijmk0vi" path="res://assets/sprites/characters/enemies/skeleton_warrior/get_hit/frame2.png" id="54_1sbhh"]
+[ext_resource type="Texture2D" uid="uid://s0twkenoc2c6" path="res://assets/sprites/characters/enemies/skeleton_warrior/get_hit/frame3.png" id="55_y1sye"]
+[ext_resource type="Texture2D" uid="uid://bmwdqqnhqfx7" path="res://assets/sprites/characters/enemies/skeleton_warrior/get_hit/frame4.png" id="56_tvbmo"]
+[ext_resource type="Texture2D" uid="uid://l2koy3qbtme7" path="res://assets/sprites/characters/enemies/skeleton_warrior/get_hit/frame5.png" id="57_vadn5"]
+[ext_resource type="Texture2D" uid="uid://bcgtr7me4ki6x" path="res://assets/sprites/characters/enemies/skeleton_warrior/get_hit/frame6.png" id="58_se8t1"]
+[ext_resource type="Texture2D" uid="uid://bndtsvc3vacdp" path="res://assets/sprites/characters/enemies/skeleton_warrior/get_hit/frame7.png" id="59_ebm50"]
+[ext_resource type="Texture2D" uid="uid://b5qhhloxo0qaq" path="res://assets/sprites/characters/enemies/skeleton_warrior/get_hit/frame8.png" id="60_g676c"]
+[ext_resource type="Texture2D" uid="uid://1hduyo5rd50q" path="res://assets/sprites/characters/enemies/skeleton_warrior/get_hit/frame9.png" id="61_306ap"]
+[ext_resource type="Texture2D" uid="uid://cavkqkdmoklab" path="res://assets/sprites/characters/enemies/skeleton_warrior/get_hit/frame10.png" id="62_upltw"]
+[ext_resource type="Texture2D" uid="uid://cfun1d58thpui" path="res://assets/sprites/characters/enemies/skeleton_warrior/get_hit/frame11.png" id="63_gaujh"]
+[ext_resource type="Texture2D" uid="uid://csl7iv15k5fc8" path="res://assets/sprites/characters/enemies/skeleton_warrior/get_hit/frame12.png" id="64_imp7f"]
+[ext_resource type="Texture2D" uid="uid://d02ni0bps3p00" path="res://assets/sprites/characters/enemies/skeleton_warrior/get_hit/frame13.png" id="65_lh3n6"]
+[ext_resource type="Texture2D" uid="uid://iytk81avsrch" path="res://assets/sprites/characters/enemies/skeleton_warrior/idle/frame1.png" id="66_y0qw7"]
+[ext_resource type="Texture2D" uid="uid://bgyav2p5j7r3q" path="res://assets/sprites/characters/enemies/skeleton_warrior/idle/frame2.png" id="67_8cpmg"]
+[ext_resource type="Texture2D" uid="uid://073rnnpqqn7v" path="res://assets/sprites/characters/enemies/skeleton_warrior/idle/frame3.png" id="68_lcvxw"]
+[ext_resource type="Texture2D" uid="uid://c6t05iwcs8pe5" path="res://assets/sprites/characters/enemies/skeleton_warrior/idle/frame4.png" id="69_e5up0"]
+[ext_resource type="Texture2D" uid="uid://d1peacqj1tswd" path="res://assets/sprites/characters/enemies/skeleton_warrior/idle/frame5.png" id="70_i5s5s"]
+[ext_resource type="Texture2D" uid="uid://vrfhi7b7rdi" path="res://assets/sprites/characters/enemies/skeleton_warrior/idle/frame6.png" id="71_wmaxt"]
+[ext_resource type="Texture2D" uid="uid://b7afwinxycie3" path="res://assets/sprites/characters/enemies/skeleton_warrior/idle/frame7.png" id="72_mj5a2"]
+[ext_resource type="Texture2D" uid="uid://c6gocvjronvgp" path="res://assets/sprites/characters/enemies/skeleton_warrior/idle/frame8.png" id="73_8fjex"]
+[ext_resource type="Texture2D" uid="uid://fl7u62xwqd5s" path="res://assets/sprites/characters/enemies/skeleton_warrior/run/frame1.png" id="74_vomt3"]
+[ext_resource type="Texture2D" uid="uid://cnucpoccg3xt2" path="res://assets/sprites/characters/enemies/skeleton_warrior/run/frame2.png" id="75_nxdtx"]
+[ext_resource type="Texture2D" uid="uid://ddjfuo84rjkhu" path="res://assets/sprites/characters/enemies/skeleton_warrior/run/frame3.png" id="76_nsi5h"]
+[ext_resource type="Texture2D" uid="uid://jt2ntagbwxqu" path="res://assets/sprites/characters/enemies/skeleton_warrior/run/frame4.png" id="77_7tctl"]
+[ext_resource type="Texture2D" uid="uid://c0c5kqyhify0p" path="res://assets/sprites/characters/enemies/skeleton_warrior/run/frame5.png" id="78_r8ikk"]
+[ext_resource type="Texture2D" uid="uid://k1ivb2lekon2" path="res://assets/sprites/characters/enemies/skeleton_warrior/run/frame6.png" id="79_2vw4y"]
+[ext_resource type="Texture2D" uid="uid://dam0shjyh4lhj" path="res://assets/sprites/characters/enemies/skeleton_warrior/run/frame7.png" id="80_nldda"]
+[ext_resource type="Texture2D" uid="uid://b8oedxaduo24q" path="res://assets/sprites/characters/enemies/skeleton_warrior/run/frame8.png" id="81_e2hol"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_p0fu8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_5bbh5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_s2dhn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_c2wjx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_b187f")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_wadae")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_mf2du")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_1vpkd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_81duy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_sstqj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_gmfn6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_npc3q")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_xivqa")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_05srn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_yjon0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_fkjd3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_q2sni")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_cbw74")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_nb38w")
+}],
+"loop": false,
+"name": &"attack",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("20_dq0xi")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_ooddd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_jwyqg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_iedxn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_lmdbx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("25_wvfuy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("26_5vphm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("27_d70hb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("28_0a2k7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("29_s2upk")
+}, {
+"duration": 1.0,
+"texture": ExtResource("30_msiqh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("31_o8qar")
+}],
+"loop": false,
+"name": &"block",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("32_piy4p")
+}, {
+"duration": 1.0,
+"texture": ExtResource("33_1km32")
+}, {
+"duration": 1.0,
+"texture": ExtResource("34_kosen")
+}, {
+"duration": 1.0,
+"texture": ExtResource("35_8lapf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("36_lfqfi")
+}, {
+"duration": 1.0,
+"texture": ExtResource("37_2uby5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("38_jw1rg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("39_wf36y")
+}, {
+"duration": 1.0,
+"texture": ExtResource("40_n054u")
+}, {
+"duration": 1.0,
+"texture": ExtResource("41_gshy2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("42_spdhi")
+}, {
+"duration": 1.0,
+"texture": ExtResource("43_g4imp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("44_1h212")
+}, {
+"duration": 1.0,
+"texture": ExtResource("45_xwcja")
+}, {
+"duration": 1.0,
+"texture": ExtResource("46_s7tai")
+}, {
+"duration": 1.0,
+"texture": ExtResource("47_m8t35")
+}, {
+"duration": 1.0,
+"texture": ExtResource("48_qaxyg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("49_dkcau")
+}, {
+"duration": 1.0,
+"texture": ExtResource("50_fuc7l")
+}, {
+"duration": 1.0,
+"texture": ExtResource("51_j0v85")
+}, {
+"duration": 1.0,
+"texture": ExtResource("52_wpgev")
+}],
+"loop": false,
+"name": &"death",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("53_2jc8s")
+}, {
+"duration": 1.0,
+"texture": ExtResource("54_1sbhh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("55_y1sye")
+}, {
+"duration": 1.0,
+"texture": ExtResource("56_tvbmo")
+}, {
+"duration": 1.0,
+"texture": ExtResource("57_vadn5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("58_se8t1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("59_ebm50")
+}, {
+"duration": 1.0,
+"texture": ExtResource("60_g676c")
+}, {
+"duration": 1.0,
+"texture": ExtResource("61_306ap")
+}, {
+"duration": 1.0,
+"texture": ExtResource("62_upltw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("63_gaujh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("64_imp7f")
+}, {
+"duration": 1.0,
+"texture": ExtResource("65_lh3n6")
+}],
+"loop": true,
+"name": &"hit",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("66_y0qw7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("67_8cpmg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("68_lcvxw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("69_e5up0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("70_i5s5s")
+}, {
+"duration": 1.0,
+"texture": ExtResource("71_wmaxt")
+}, {
+"duration": 1.0,
+"texture": ExtResource("72_mj5a2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("73_8fjex")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("74_vomt3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("75_nxdtx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("76_nsi5h")
+}, {
+"duration": 1.0,
+"texture": ExtResource("77_7tctl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("78_r8ikk")
+}, {
+"duration": 1.0,
+"texture": ExtResource("79_2vw4y")
+}, {
+"duration": 1.0,
+"texture": ExtResource("80_nldda")
+}, {
+"duration": 1.0,
+"texture": ExtResource("81_e2hol")
+}],
+"loop": false,
+"name": &"walk",
+"speed": 10.0
+}]

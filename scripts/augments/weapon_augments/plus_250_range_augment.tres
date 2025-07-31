@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="AdditiveRangeAugment" load_steps=2 format=3 uid="uid://mnklg2pdrgbm"]
+
+[ext_resource type="Script" uid="uid://bebxxjmer3hsc" path="res://scripts/augments/weapon_augments/additive_range_augment.gd" id="1_8vuod"]
+
+[resource]
+script = ExtResource("1_8vuod")
+range_modifier = 250.0
+metadata/_custom_type_script = "uid://bebxxjmer3hsc"

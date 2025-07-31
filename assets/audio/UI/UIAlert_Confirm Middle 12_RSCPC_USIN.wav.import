@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://c0xtwtbk23lwi"
+path="res://.godot/imported/UIAlert_Confirm Middle 12_RSCPC_USIN.wav-0dfee5a8361587481b28a143d4ac2cfb.sample"
+
+[deps]
+
+source_file="res://assets/audio/UI/UIAlert_Confirm Middle 12_RSCPC_USIN.wav"
+dest_files=["res://.godot/imported/UIAlert_Confirm Middle 12_RSCPC_USIN.wav-0dfee5a8361587481b28a143d4ac2cfb.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

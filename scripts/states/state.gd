@@ -9,7 +9,7 @@ const JUMP = AnimationNames.JUMP
 const KNOCKBACK = AnimationNames.KNOCKBACK
 
 var allows_attack_transition = false ## Tracks whether or not a state can transition to attacking from the current state.
-
+var anim_prefix: String = "" ## The animation library namme used to concatenate with our global animation names.
 var actor
 
 ## Emitted when a state finished and want to transition to the next state.
@@ -33,5 +33,5 @@ func physics_update(_delta): pass
 ## Flips sprites based on the velocity - left [-x/false] or right [+x/true]
 func flip_sprite(velocity: Vector2) -> void:
 	if velocity.x != 0:
-		actor.animation_player.flip_h = velocity.x < 0 # Flip the sprite to the left if velocity.x is less than zero (-x)
+		actor.spritesheet.flip_h = velocity.x < 0 # Flip the sprite to the left if velocity.x is less than zero (-x)
 	

@@ -16,7 +16,7 @@ var lifetime: float = 0.0 ## Tracks lifetime of a projectile (if applicable). 0 
 # var lifetime_dependent: bool = false
 
 # Other Parameters
-var affected_areas: Dictionary ## Dictionary [<instance ID, Enemy>] of bodies that the weapon is affecting. Used to avoid tons of physics calls.
+var affected_areas: Dictionary ## Dictionary [<instance ID, BaseEnemy>] of bodies that the weapon is affecting. Used to avoid tons of physics calls.
 
 
 ## [b]Set the static config for the spawned projectile.[/b][br]

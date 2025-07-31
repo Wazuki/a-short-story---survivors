@@ -1,0 +1,135 @@
+[gd_scene load_steps=15 format=3 uid="uid://bdgeuce768yq4"]
+
+[ext_resource type="Script" uid="uid://bm6rtjkyp66cw" path="res://scripts/core/hurtbox.gd" id="1_2xgk1"]
+[ext_resource type="Script" uid="uid://2gcejq1382gm" path="res://scripts/characters/enemies/base_enemy.gd" id="1_aaxkw"]
+[ext_resource type="Script" uid="uid://dxj4lxbc3tbcs" path="res://scripts/core/hitbox.gd" id="1_qvb8p"]
+[ext_resource type="Script" uid="uid://bhgklwud55i1l" path="res://scripts/states/enemy/enemy_state_machine.gd" id="2_qvb8p"]
+[ext_resource type="Script" uid="uid://bw6udya2vnion" path="res://scripts/status_effects/status_effect_manager.gd" id="3_1a6fw"]
+[ext_resource type="Script" uid="uid://4geq1i1satr4" path="res://scripts/states/enemy/enemy_attack.gd" id="4_3e2na"]
+[ext_resource type="Script" uid="uid://k1tajfe83cqn" path="res://scripts/core/range2d.gd" id="4_cleew"]
+[ext_resource type="Script" uid="uid://d1gk31klqp7er" path="res://scripts/states/enemy/enemy_death.gd" id="5_aaxkw"]
+[ext_resource type="Script" uid="uid://ckp6ox7be3gsc" path="res://scripts/states/enemy/enemy_idle.gd" id="6_cleew"]
+[ext_resource type="Script" uid="uid://bj3mhwp2r1b48" path="res://scripts/states/enemy/enemy_knockback.gd" id="7_hp6wu"]
+[ext_resource type="Script" uid="uid://bv6qtxpppyc2c" path="res://scripts/states/enemy/enemy_walk.gd" id="8_o8nwd"]
+
+[sub_resource type="Gradient" id="Gradient_1a6fw"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_8drnm"]
+gradient = SubResource("Gradient_1a6fw")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_dl8nj"]
+lifetime_randomness = 1.0
+particle_flag_disable_z = true
+emission_shape = 1
+emission_sphere_radius = 25.0
+direction = Vector3(0, 1, 0)
+initial_velocity_min = 200.0
+initial_velocity_max = 400.0
+gravity = Vector3(0, 0, 0)
+damping_min = 500.0
+damping_max = 800.0
+scale_max = 2.0
+color = Color(0.533333, 0.0313726, 0.0313726, 1)
+color_ramp = SubResource("GradientTexture1D_8drnm")
+hue_variation_min = -2.23517e-08
+hue_variation_max = -2.23517e-08
+
+[node name="BaseEnemy" type="Area2D"]
+z_as_relative = false
+y_sort_enabled = true
+collision_layer = 2
+script = ExtResource("1_aaxkw")
+metadata/_custom_type_script = "uid://2gcejq1382gm"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+unique_name_in_owner = true
+
+[node name="HurtParticles" type="GPUParticles2D" parent="."]
+unique_name_in_owner = true
+emitting = false
+amount = 20
+lifetime = 0.8
+one_shot = true
+explosiveness = 1.0
+randomness = 0.5
+process_material = SubResource("ParticleProcessMaterial_dl8nj")
+
+[node name="SpriteRoot" type="Node2D" parent="."]
+unique_name_in_owner = true
+
+[node name="Spritesheet" type="AnimatedSprite2D" parent="SpriteRoot"]
+unique_name_in_owner = true
+
+[node name="Hitbox" type="Area2D" parent="."]
+script = ExtResource("1_qvb8p")
+metadata/_custom_type_script = "uid://dxj4lxbc3tbcs"
+
+[node name="Hurtbox" type="Area2D" parent="."]
+script = ExtResource("1_2xgk1")
+metadata/_custom_type_script = "uid://bm6rtjkyp66cw"
+
+[node name="AttackRange" type="Area2D" parent="."]
+unique_name_in_owner = true
+collision_layer = 0
+monitoring = false
+monitorable = false
+script = ExtResource("4_cleew")
+metadata/_custom_type_script = "uid://k1tajfe83cqn"
+
+[node name="Audio" type="Node2D" parent="."]
+
+[node name="DeathSound" type="AudioStreamPlayer2D" parent="Audio"]
+unique_name_in_owner = true
+
+[node name="AttackSounds" type="AudioStreamPlayer2D" parent="Audio"]
+unique_name_in_owner = true
+
+[node name="NavAgent" type="NavigationAgent2D" parent="."]
+unique_name_in_owner = true
+
+[node name="StateMachine" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("2_qvb8p")
+metadata/_custom_type_script = "uid://bhgklwud55i1l"
+
+[node name="EnemyAttack" type="Node" parent="StateMachine"]
+script = ExtResource("4_3e2na")
+metadata/_custom_type_script = "uid://4geq1i1satr4"
+
+[node name="EnemyDeath" type="Node" parent="StateMachine"]
+script = ExtResource("5_aaxkw")
+metadata/_custom_type_script = "uid://d1gk31klqp7er"
+
+[node name="EnemyIdle" type="Node" parent="StateMachine"]
+script = ExtResource("6_cleew")
+metadata/_custom_type_script = "uid://ckp6ox7be3gsc"
+
+[node name="EnemyKnockback" type="Node" parent="StateMachine"]
+script = ExtResource("7_hp6wu")
+metadata/_custom_type_script = "uid://bj3mhwp2r1b48"
+
+[node name="EnemyWalk" type="Node" parent="StateMachine"]
+script = ExtResource("8_o8nwd")
+metadata/_custom_type_script = "uid://bv6qtxpppyc2c"
+
+[node name="StatusEffectManager" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("3_1a6fw")
+metadata/_custom_type_script = "uid://bw6udya2vnion"
+
+[node name="UI Elements" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4

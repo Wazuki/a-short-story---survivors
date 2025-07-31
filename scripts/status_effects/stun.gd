@@ -6,7 +6,7 @@ const STUN_COLOR = Color.CYAN
 ## Stun the target, preventing moving and attacking.
 func apply(target) -> void:
 	# Set the speed of the target to 0.
-	target.stats[CharacterData.Stat.SPEED] = 0 # Stops the target from moving.
+	target.stats.speed= 0 # Stops the target from moving.
 	# Modulate the target a little for now to show they're stunned
 	target.modulate = STUN_COLOR
 	target.stunned = true
@@ -16,5 +16,5 @@ func apply(target) -> void:
 func remove(target) -> void:
 	super.remove(target)
 	target.modulate = Color.WHITE
-	target.reset_speed()
+	target.stats.reset_speed()
 	target.stunned = false

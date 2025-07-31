@@ -45,7 +45,7 @@ func _enter_tree() -> void:
 func enter(_previous_state_path: String = "", data := {}) -> void:
 	player.invincible = true # Mark the player as invincible since they cannot take damage while jumping.
 	# Set the animation and the direction of the jump sprite.
-	player.animation_player.play(JUMP)
+	player.animation_player.play(anim_prefix + JUMP)
 	flip_jump_particles()
 	set_jump_particle_y_velocity(JUMP_UP_EMIT_DIR) # Set the emit direction of the particles
 	player.trail_particles.emitting = true

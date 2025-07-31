@@ -8,7 +8,8 @@ func _enter_tree() -> void: name = IDLE
 ## Play the idle animation.
 func enter(_previous_state_path: String = "", _data := {}) -> void:
 	player.velocity = Vector2.ZERO
-	player.animation_player.play(IDLE)
+	#if anim_prefix == "": push_error("Anim_prefix is null!")
+	player.animation_player.play(anim_prefix + IDLE)
 
 ## If the player applies any movement, transition to the Walk state.
 func physics_update(_delta) -> void:

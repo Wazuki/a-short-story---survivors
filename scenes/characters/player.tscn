@@ -2,9 +2,9 @@
 
 [ext_resource type="Script" uid="uid://bnx6epykj7o3t" path="res://scripts/characters/player.gd" id="1_py671"]
 [ext_resource type="Texture2D" uid="uid://bguee08c3f17c" path="res://assets/sprites/characters/valkyrie/valkyrie_icon.tres" id="2_5jukt"]
+[ext_resource type="AnimationLibrary" uid="uid://dhn1th4dyntto" path="res://assets/sprites/characters/player_animation_library.tres" id="2_vwwfy"]
 [ext_resource type="AudioStream" uid="uid://h0ln3dnbqsfw" path="res://assets/audio/BLLTRico_Ricochet Metallic_04.wav" id="3_lihhf"]
 [ext_resource type="PackedScene" uid="uid://remf34e7bwbp" path="res://prefabs/ui/healthbar.tscn" id="3_ydbw3"]
-[ext_resource type="Texture2D" uid="uid://cpnfuea0fu8oo" path="res://assets/UI/04.png" id="4_mndlr"]
 [ext_resource type="AudioStream" uid="uid://b505215xfthyh" path="res://assets/audio/High-Tech Gadget Activate.wav" id="4_rg687"]
 [ext_resource type="SpriteFrames" uid="uid://ikijgiwetusk" path="res://assets/sprites/characters/valkyrie/valkyrie_sprite_frames.tres" id="4_vwwfy"]
 [ext_resource type="AudioStream" uid="uid://db3xpb1qqhqnv" path="res://assets/audio/Holographic Interaction-32.wav" id="5_g5n55"]
@@ -54,6 +54,38 @@ damping_max = 800.0
 scale_max = 1.5
 color = Color(0.926789, 0.0783968, 0.164611, 1)
 alpha_curve = SubResource("CurveTexture_xhtjm")
+
+[sub_resource type="Animation" id="Animation_dg40j"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PlayerSpriteParent/Spritesheet:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"jump"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("PlayerSpriteParent/Spritesheet:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_7xgtv"]
+_data = {
+&"RESET": SubResource("Animation_dg40j")
+}
 
 [sub_resource type="Shader" id="Shader_dg40j"]
 code = "// NOTE: Shader automatically converted from Godot Engine 4.4.1.stable's CanvasItemMaterial.
@@ -111,14 +143,6 @@ alpha_curve = SubResource("CurveTexture_vwwfy")
 anim_speed_min = 1.0
 anim_speed_max = 1.0
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_onk5g"]
-atlas = ExtResource("4_mndlr")
-region = Rect2(3, 67, 42, 11)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_dw51s"]
-atlas = ExtResource("4_mndlr")
-region = Rect2(55, 118, 34, 5)
-
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ejt68"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_lihhf"]
@@ -144,7 +168,8 @@ stream_14/stream = ExtResource("15_7xgtv")
 stream_15/stream = ExtResource("16_6rclf")
 
 [node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("sprite_parent", "effect_manager", "state_machine")]
-z_index = 100
+z_as_relative = false
+y_sort_enabled = true
 collision_layer = 5
 motion_mode = 1
 platform_on_leave = 2
@@ -166,6 +191,14 @@ one_shot = true
 explosiveness = 1.0
 process_material = SubResource("ParticleProcessMaterial_k4v7y")
 
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+unique_name_in_owner = true
+libraries = {
+&"": SubResource("AnimationLibrary_7xgtv"),
+&"player": ExtResource("2_vwwfy")
+}
+autoplay = "player/idle"
+
 [node name="PlayerSpriteParent" type="Node2D" parent="."]
 
 [node name="TrailParticles" type="GPUParticles2D" parent="PlayerSpriteParent"]
@@ -185,34 +218,12 @@ material = ExtResource("9_f2e50")
 sprite_frames = ExtResource("4_vwwfy")
 animation = &"jump"
 autoplay = "idle"
-frame = 2
-frame_progress = 1.0
 
 [node name="HealthBar" parent="." instance=ExtResource("3_ydbw3")]
 unique_name_in_owner = true
 visible = false
 offset_top = -26.0
 offset_bottom = -19.0
-
-[node name="XPBar" type="TextureProgressBar" parent="."]
-unique_name_in_owner = true
-visible = false
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -21.0
-offset_top = 17.0
-offset_right = 21.0
-offset_bottom = 57.0
-grow_horizontal = 2
-grow_vertical = 2
-max_value = 1.0
-step = 0.01
-texture_under = SubResource("AtlasTexture_onk5g")
-texture_progress = SubResource("AtlasTexture_dw51s")
-texture_progress_offset = Vector2(4, 3)
 
 [node name="PlayerCollider" type="Area2D" parent="."]
 unique_name_in_owner = true

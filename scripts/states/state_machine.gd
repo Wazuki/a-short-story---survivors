@@ -11,12 +11,19 @@ var current_state: State
 func initialize(animation_name: String) -> void:
 	# Throw an assert if we forgot to assign an actor to the StateMachine.
 	assert(actor != null, "StateMachine: actor must be set before calling iniitialize().")
+	# Grab the animation library anme from our actor's AnimationPlayer and use it as a prefix for our animations.
+	var anim_prefix = %AnimationPlayer.get_animation_library_list()[1] + "/" # Currently hardcoded to grab the second animation library in the list due to the first being a RESET track.
+	# TODO - maybe make this not hardcoded?
+
+	# Grab the animation library prefix from the animation player of the actor and assign it to our anim_prefix
+	#print_debug(anim_prefix)
 	#await actor.ready - this does NOT WORK because the actor is ALREADY ready!
 	#print_debug("Loading StateMachine for " + actor.name)
 	for child in get_children():
 		if child is State:
 			states[child.name] = child
 			child.actor = actor
+			child.anim_prefix = anim_prefix
 			child.initialize(self) # Pass ourself into the child for signal connection.
 	change_state(animation_name) # Default state of idle
 

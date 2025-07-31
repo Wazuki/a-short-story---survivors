@@ -1,0 +1,57 @@
+[gd_scene load_steps=9 format=3 uid="uid://wn0xnn7f5s5m"]
+
+[ext_resource type="PackedScene" uid="uid://bdgeuce768yq4" path="res://prefabs/characters/enemies/base_enemy.tscn" id="1_457yq"]
+[ext_resource type="AnimationLibrary" uid="uid://dnuwpct66qiw5" path="res://assets/sprites/characters/enemies/skeleton_warrior/skeleton_warrior_animation_library.res" id="2_oonlj"]
+[ext_resource type="SpriteFrames" uid="uid://sonf6410qhsi" path="res://assets/sprites/characters/enemies/skeleton_warrior/skeleton_warrior_frames.tres" id="3_k0vrv"]
+[ext_resource type="AudioStream" uid="uid://bm1wlckvgi1vy" path="res://assets/audio/skeleton/falling-bones-87568.mp3" id="4_oonlj"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_oonlj"]
+radius = 14.0357
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_k0vrv"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_457yq"]
+radius = 18.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_s1u5h"]
+radius = 34.0147
+
+[node name="SkeletonWarrior" instance=ExtResource("1_457yq")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." index="0"]
+position = Vector2(0, -3)
+shape = SubResource("CircleShape2D_oonlj")
+debug_color = Color(0, 0.624807, 0.525794, 0.42)
+
+[node name="AnimationPlayer" parent="." index="1"]
+libraries = {
+&"": SubResource("AnimationLibrary_k0vrv"),
+&"skeleton_warrior": ExtResource("2_oonlj")
+}
+autoplay = "skeleton_warrior/idle"
+
+[node name="SpriteRoot" parent="." index="3"]
+position = Vector2(10, -15)
+
+[node name="Spritesheet" parent="SpriteRoot" index="0"]
+sprite_frames = ExtResource("3_k0vrv")
+animation = &"idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox" index="0"]
+position = Vector2(0, -4)
+shape = SubResource("CircleShape2D_457yq")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackRange" index="0"]
+position = Vector2(1, -3)
+shape = SubResource("CircleShape2D_s1u5h")
+debug_color = Color(0.990623, 0, 0.276024, 0.42)
+
+[node name="DeathSound" parent="Audio" index="0"]
+stream = ExtResource("4_oonlj")
+volume_db = -10.0
+
+[node name="StateMachine" parent="." index="9" node_paths=PackedStringArray("actor")]
+actor = NodePath("..")
+
+[node name="StatusEffectManager" parent="." index="10" node_paths=PackedStringArray("target")]
+target = NodePath("..")

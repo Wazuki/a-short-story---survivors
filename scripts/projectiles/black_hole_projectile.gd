@@ -12,7 +12,7 @@ func _ready() -> void:
 	damage_timer = damage_cooldown # Set this to the current cooldown so we'll damage enemies when we first spawn.
 	if not get_overlapping_areas().is_empty():
 		for node in get_overlapping_areas():
-			if node is Enemy:
+			if node is BaseEnemy:
 				affected_areas.set(node.get_instance_id(), node)
 
 ## Deal damage to the enemies in the array if the damage timer has expired, then reset the timer.
@@ -26,7 +26,7 @@ func _physics_process(delta: float) -> void:
 
 ## Add the Enemy to the [affected_areas] Dict if they are a valid target.
 func _on_area_entered(area:Area2D) -> void:
-	if area is Enemy and is_instance_valid(area): affected_areas.set(area.get_instance_id(), area)
+	if area is BaseEnemy and is_instance_valid(area): affected_areas.set(area.get_instance_id(), area)
 
 ## Remove the Enemy from the [affected_areas] Dict if they leave the area.
 func _on_area_exited(area:Area2D) -> void:

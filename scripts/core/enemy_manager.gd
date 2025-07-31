@@ -46,6 +46,11 @@ func _ready() -> void:
 	# Connect our signals to the GameManager's game_started and game_over signals to spawn and cleanup enemies quickly.
 	if not GameController.is_node_ready(): await GameController.ready
 	GameController.game_state_changed.connect(_on_game_state_changed)
+
+	# Connect to the EventsBus to deploy signals. TODO - decouple these from this class!
+	Events.enemy_damaged.connect(_on_enemy_damaged)
+	Events.enemy_defeated.connect(_on_enemy_health_depleted)
+	
 	#GameController.game_started.connect(begin_enemy_spawn)
 	#GameController.game_ended.connect(cleanup_enemies)
 
@@ -74,15 +79,19 @@ func spawn_enemy() -> void:
 		mob_spawn_point.progress_ratio = randf()
 
 	# Spawn the enemy based on the EnemyDatabase stats.
-	var new_enemy = preload("res://prefabs/characters/enemies/enemy.tscn").instantiate()
+	var new_enemy_data = enemy_database.init_from_type(determine_enemy_type(total_enemies_spawned))
+	var new_enemy = new_enemy_data.prefab.instantiate()
 	add_child(new_enemy)
+	new_enemy.initialize(new_enemy_data)
+	#var new_enemy = preload("res://prefabs/characters/enemies/enemy.tscn").instantiate()
 
-	new_enemy.initialize(enemy_database.init_from_type(determine_enemy_type(total_enemies_spawned)))
+
+	#new_enemy.initialize(enemy_database.init_from_type(determine_enemy_type(total_enemies_spawned)))
 	new_enemy.global_position = mob_spawn_point.global_position 
 
 	# Connect any important signals to the GameController from the new enemy.
-	new_enemy.damaged.connect(_on_enemy_damaged)
-	new_enemy.enemy_died.connect(_on_enemy_health_depleted)
+	#new_enemy.damaged.connect(_on_enemy_damaged)
+	#new_enemy.enemy_died.connect(_on_enemy_health_depleted)
 
 	# Finally, add add the enemy to the spawned_enemies container.
 	spawned_enemies.set(new_enemy.get_instance_id(), new_enemy)
@@ -125,6 +134,9 @@ func _on_enemy_difficulty_timer_timeout() -> void:
 
 ## Determine what enemy type to spawn based on a counter (typically total enemies spawned).[br]
 func determine_enemy_type(enemy_count: int) -> EnemyData.EnemyType:
+	# TODO - remove me, temporary fix to get the game back. Always return our new Enemy skeleton
+	return EnemyData.EnemyType.SKELETON_WARRIOR
+
 	# Spawn a basic enemy. Every 12, a ranged enemy. Every 20 enemies, spawn an elite. Every 50, spawn a boss. 
 	if enemy_count % 50 == 0: return EnemyData.EnemyType.BOSS
 	elif enemy_count % 20 == 0: return EnemyData.EnemyType.ELITE
@@ -132,7 +144,7 @@ func determine_enemy_type(enemy_count: int) -> EnemyData.EnemyType:
 	else: return EnemyData.EnemyType.BASIC
 
 ## Finds the largest cluster of enemies based on the buckets, taking in an [<instance_ID, Enemy>] Dictionary and returning the Enemy with the highest concentration of enemies nearby (the "best target")
-func find_cluster_center(enemies: Dictionary) -> Enemy:
+func find_cluster_center(enemies) -> BaseEnemy:
 	var best_enemy = null
 	var best_count = -1
 
@@ -178,8 +190,12 @@ func find_bucket(pos: Vector2) -> Vector2: return Vector2(floor(pos.x / BUCKET_S
 func _on_enemy_damaged(amount) -> void: DataManager.add_value("damage", amount)
 
 ## Removes the enemy from each of the weapon's arrays if it has it.
-func _on_enemy_health_depleted(enemy: Enemy) -> void: 
-	DataManager.add_value("kills", 1)
+func _on_enemy_health_depleted(enemy) -> void: 
+	DataManager.add_value("kills", 1) # TODO - move to the data manger via listeners
+
+
 
 	# Emit the remove_invalid_enemy signal to tell any listeners (weapon etc) that this enemy is no longer a valid ref.
 	if spawned_enemies.has(enemy): remove_invalid_enemy.emit(enemy.get_instance_id())
+
+	

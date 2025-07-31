@@ -12,8 +12,8 @@ func initialize() -> void:
 		if enemy_stat_dict.has(data.get_type()): 
 			print_debug("Warning! Duplicate enemy type detected! Skipping " + data.character_name)
 		else:
-			data.initialize()
-			data.stats = data.stat_map.to_dict()
+			#data.initialize()
+			#data.stats = data.stat_map.to_dict()
 			enemy_stat_dict.set(data.get_type(), data)
 			#print_debug("Processed " + data.character_name)
 			#print_debug("Total stats: " + str(data.stats.size()) + " vs map: " + str(data.stat_map.to_dict().size()))

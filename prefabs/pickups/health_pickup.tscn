@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://b5n6erabt05wg"]
 
 [ext_resource type="Script" uid="uid://dyibidpj6v7d" path="res://scripts/pickups/health_pickup.gd" id="1_uwicw"]
-[ext_resource type="Texture2D" uid="uid://bi3810x4wyns4" path="res://assets/sprites/world/tilesets/chest/chest0_disabled.png" id="2_vdym8"]
+[ext_resource type="SpriteFrames" uid="uid://difvbyvk7win5" path="res://assets/sprites/world/pickups/health_frames.tres" id="2_snenn"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_140j5"]
 
@@ -13,10 +13,11 @@ collision_mask = 8
 monitoring = false
 script = ExtResource("1_uwicw")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(0, -3)
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 scale = Vector2(0.75, 0.75)
-texture = ExtResource("2_vdym8")
+sprite_frames = ExtResource("2_snenn")
+autoplay = "default"
+frame_progress = 0.883869
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_140j5")

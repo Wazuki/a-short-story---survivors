@@ -1,6 +1,8 @@
 class_name ExperienceOrb
 extends Pickup
 
+const ANIMATION_NAMES = ["small_experience", "med_experience", "big_experience"]
+
 const LARGE_XP_THRESHOLD = 10
 const HUGE_XP_THRESHOLD = 20
 
@@ -55,13 +57,15 @@ func set_value(v: int) -> void:
 	#Set the XP to different sprites based on how much XP they have
 	if value >= HUGE_XP_THRESHOLD:
 		# print_debug("Huge XP")
-		%Spritesheet.frame = 2
+		%Spritesheet.animation = ANIMATION_NAMES[2]
 		scale = Vector2.ONE * 2
 	elif value >= LARGE_XP_THRESHOLD:
 		# print_debug("Large XP")
-		%Spritesheet.frame = 1
+		%Spritesheet.animation = ANIMATION_NAMES[1]
 		scale = Vector2.ONE * 1.5
-	else: %Spritesheet.frame = 0
+	else: %Spritesheet.animation = ANIMATION_NAMES[0]
+
+	%Spritesheet.play()
 
 # # Once we touch the player, destroy self and give the player our XP
 # func _on_body_entered(body: Node2D) -> void:

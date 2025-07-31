@@ -47,6 +47,11 @@ projectile_count = 1
 cooldown = 0.5
 crit_chance = 0.0
 crit_mod = 0.0
-level_up_augments = Array[Array]([])
+unique_level_augments = {
+3: [],
+5: [],
+7: []
+}
+tags = Array[int]([3, 11, 15, 18])
 weapon_scene = ExtResource("2_xdenm")
 projectile_scene_map = SubResource("Resource_1tffj")

@@ -12,7 +12,7 @@ var max_chains: int ## Number of maximum times chain lightning can chain.
 var jump_speed: float ## How long it takes each lightning bolt to travel.
 
 # Modifiers that are level-dependent
-var stun_duration: float
+# var stun_duration: float
 var arc_chance: float
 var strike_modulus: int ## The number of chains before a lightning strike is spawned.
 
@@ -25,7 +25,7 @@ func initialize(data: WeaponData) -> void:
 	chain_modifiers = data.chain_modifiers
 	max_chains = data.initial_max_chains
 	jump_speed = data.initial_jump_speed
-	stun_duration = data.initial_stun_duration
+	# stun_duration = data.initial_stun_duration
 	arc_chance = data.initial_arc_split_chance
 	strike_modulus = data.lightning_strike_modulus
 	# Create the stun status effect

@@ -33,7 +33,7 @@ func _physics_process(delta: float) -> void:
 
 func _on_area_entered(area:Node2D) -> void:
 	#print_debug("Hit " + str(area.name))
-	if area != null and area is Enemy:
+	if area != null and area is BaseEnemy:
 		if not area.dead: # If we're using masks property, it should ONLY be an enemy!
 			#damage = weapon.damage_calc() ## TODO - move this to Arrow maybe? we're intiializing it anyway here
 			#area.take_damage(damage)

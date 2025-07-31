@@ -126,6 +126,9 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_4krdp")
+}, {
+"duration": 1.0,
+"texture": null
 }],
 "loop": false,
 "name": &"death",

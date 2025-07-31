@@ -9,3 +9,4 @@ func initialize(state_machine: StateMachine) -> void:
 	# print_debug(player.name + " is " + actor.name)
 	finished.connect(state_machine.change_state) # Retrieves the parent (the State Machine) and connects our finished signal to their change state callable
 	assert(player != null, "The PlayerState state type must be used only in the player scene and must be owned by the player node.")
+	#anim_prefix = state_machine.anim_prefix

@@ -1,11 +1,10 @@
-[gd_resource type="Resource" load_steps=11 format=3 uid="uid://cy5m857gnh87w"]
+[gd_resource type="Resource" load_steps=10 format=3 uid="uid://cy5m857gnh87w"]
 
 [ext_resource type="Resource" uid="uid://c6rw24wuylurx" path="res://data/weapons/projectiles/light_blade_landing_projectile.tres" id="1_4y0dd"]
 [ext_resource type="Script" uid="uid://besfugoahx8v7" path="res://data/weapons/weapon_scene_map.gd" id="1_dslp4"]
 [ext_resource type="Texture2D" uid="uid://blrx78f1corvf" path="res://assets/UI/icons/light_blade_icon.tres" id="2_1gy4b"]
 [ext_resource type="Script" uid="uid://der300tv65j34" path="res://data/weapons/light_blade_data.gd" id="3_jf1v7"]
 [ext_resource type="PackedScene" uid="uid://b31dds1jg253h" path="res://prefabs/weapons/light_blade_controller.tscn" id="4_4y0dd"]
-[ext_resource type="Resource" uid="uid://cm435l0in8jwq" path="res://scripts/augments/weapon_augments/plus_one_projectile_augment.tres" id="4_jf1v7"]
 [ext_resource type="Resource" uid="uid://xpd7doxx2l0n" path="res://data/weapons/projectiles/light_blade_projectile_data.tres" id="5_estav"]
 [ext_resource type="Script" uid="uid://clpj4pp5oda5h" path="res://scripts/status_effects/knockback.gd" id="5_s6seu"]
 
@@ -38,6 +37,11 @@ projectile_count = 2
 cooldown = 1.75
 crit_chance = 0.0
 crit_mod = 0.0
-level_up_augments = Array[Array]([[ExtResource("4_jf1v7")], [ExtResource("4_jf1v7")], [ExtResource("4_jf1v7")], [ExtResource("4_jf1v7")], [ExtResource("4_jf1v7")], [ExtResource("4_jf1v7")]])
+unique_level_augments = {
+3: [],
+5: [],
+7: []
+}
+tags = Array[int]([0, 5, 15, 18])
 weapon_scene = ExtResource("4_4y0dd")
 projectile_scene_map = SubResource("Resource_65t57")

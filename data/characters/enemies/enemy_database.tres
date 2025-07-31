@@ -1,13 +1,10 @@
-[gd_resource type="Resource" script_class="EnemyDatabase" load_steps=7 format=3 uid="uid://blv3swdmvjf2w"]
+[gd_resource type="Resource" script_class="EnemyDatabase" load_steps=4 format=3 uid="uid://blv3swdmvjf2w"]
 
 [ext_resource type="Script" uid="uid://i6r3ce075a8n" path="res://data/characters/enemies/enemy_data.gd" id="1_nka6p"]
 [ext_resource type="Script" uid="uid://b1ketgl0l2khh" path="res://data/characters/enemies/enemy_database.gd" id="1_nydi6"]
-[ext_resource type="Resource" uid="uid://d233t5p3tyggf" path="res://data/characters/enemies/basic_enemy_data.tres" id="2_xmabg"]
-[ext_resource type="Resource" uid="uid://boaf138km87q2" path="res://data/characters/enemies/boss_enemy_data.tres" id="3_ixcdw"]
-[ext_resource type="Resource" uid="uid://rfxb8kjjnu76" path="res://data/characters/enemies/elite_enemy_data.tres" id="4_rl5af"]
-[ext_resource type="Resource" uid="uid://b0p3kumgxyg2v" path="res://data/characters/enemies/ranged_enemy_data.tres" id="5_0ssdq"]
+[ext_resource type="Resource" uid="uid://dm40g8286wyu7" path="res://data/characters/enemies/skeleton_warrior_data.tres" id="2_nka6p"]
 
 [resource]
 script = ExtResource("1_nydi6")
-enemy_data = Array[ExtResource("1_nka6p")]([ExtResource("2_xmabg"), ExtResource("3_ixcdw"), ExtResource("4_rl5af"), ExtResource("5_0ssdq")])
+enemy_data = Array[ExtResource("1_nka6p")]([ExtResource("2_nka6p")])
 metadata/_custom_type_script = "uid://b1ketgl0l2khh"

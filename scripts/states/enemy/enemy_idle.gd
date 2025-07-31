@@ -12,7 +12,7 @@ func _enter_tree() -> void:
 ## Play the idle animation.
 func enter(_previous_state_path: String = "", _data := {}) -> void:
 	enemy.velocity = Vector2.ZERO
-	enemy.animation_player.play(IDLE)
+	enemy.animation_player.play(anim_prefix + IDLE)
 
 ## If the enemy has any velocity, start moving towards the player.
 func physics_update(_delta) -> void:

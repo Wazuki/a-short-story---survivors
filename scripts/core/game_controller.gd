@@ -9,8 +9,8 @@ var game_time_elapsed: float = 0.0 ## Tracks the total IN-GAME time elapsed. Thi
 
 
 # TODO These are all nodes we should consider changing how we acquire them.
-@onready var player = get_node("/root/GameScene/Player")
-@onready var player_health_bar = get_node("/root/GameScene/UI/PlayerHealthBar")
+@onready var player = get_node("/root/GameScene/YSort/Player")
+#@onready var player_health_bar = get_node("/root/GameScene/UI/PlayerHealthBar")
 @onready var level_up_UI = get_node("/root/GameScene/UI/LevelUpUI")
 @onready var character_select_UI = get_node("/root/GameScene/UI/CharacterSelectUI")
 @onready var camera_controller = get_node("/root/GameScene/MainCamera")
@@ -38,11 +38,18 @@ func _ready() -> void:
 	get_node("/root").call_deferred("remove_child",self)
 	get_node("/root/GameScene").call_deferred("add_child", self)
 	
+	# Connect the game signals to the game controller.
+	Events.spawn_experience.connect(spawn_experience_orb)
+
 	# Player connected signals.
-	player.connect("gained_xp", _on_player_gain_xp) # Called when the player gains xp.
-	player.connect("gained_level", _on_player_gain_level) # Called when the player gains a level.
+	Events.player_gained_xp.connect(_on_player_gain_xp)
+	Events.player_gained_level.connect(_on_player_gain_level)
+	# Events.player_damaged.connect(update_player_info_text)
+	Events.player_defeated.connect(game_over)
+	#player.connect("gained_xp", _on_player_gain_xp) # Called when the player gains xp.
+	#player.connect("gained_level", _on_player_gain_level) # Called when the player gains a level.
 	#player.connect("_health_depleted", game_over) # When the player dies
-	player.connect("health_changed", update_player_info_text) # When the player's health changes (but not zero)
+	#player.connect("health_changed", update_player_info_text) # When the player's health changes (but not zero)
 	
 	
 	# lol
@@ -83,22 +90,16 @@ func _on_player_gain_xp(amount) -> void: DataManager.add_value("experience", amo
 func _on_player_gain_level() -> void: DataManager.add_value("levels", 1)
 
 
-func update_player_info_text(health: float, max_health: float) -> void:
-	player_health_bar.health = health
-	player_health_bar.max_health = max_health
+# func update_player_info_text(health: float, max_health: float) -> void:
+# 	#player_health_bar.health = player.stats.health
+# 	#player_health_bar.max_health = player.stats.max_health
+# 	#player_health_bar.health = health
+# 	#player_health_bar.max_health = max_health
 
-	#player_health_bar.max_value = max_health
-	#player_health_bar.value = health
+# 	#player_health_bar.max_value = max_health
+# 	#player_health_bar.value = health
 
-func spawn_experience_orb(pos: Vector2, value: int) -> void:
-	var xp_orb = preload("res://prefabs/pickups/experience_orb.tscn").instantiate()
-	call_deferred("add_child", xp_orb)
-	# add_child(xp_orb)
-	xp_orb.initialize(pos, value) # 10 as a basic "large XP test"
-	# xp_orb.global_position = pos
-	# xp_orb.set_value(15) # Basic XP test
-	# spawned_xp.append(xp_orb)
-	# print("spawned xp")
+
 
 func spawn_health_pickup(pos: Vector2) -> void:
 	var health_pickup = preload("res://prefabs/pickups/health_pickup.tscn").instantiate()
@@ -119,7 +120,7 @@ func select_character(character: PlayerCharacterData) -> void:
 	# Hide the select character UI and start the game after setting the player's stats
 	character_select_UI.visible = false
 	player.initialize(character)
-	player_health_bar.init_health(player.health) # Initialize the player's health bar - sets all the values to max health.
+	#player_health_bar.init_health(player.stats.health) # Initialize the player's health bar - sets all the values to max health.
 
 
 	WeaponManager.create_weapon(character.starting_weapon) # Create the weapon based on the character's starting weapon.
@@ -246,3 +247,14 @@ func change_game_state(new_state: GameState) -> void:
 	current_state = new_state
 	game_state_changed.emit(current_state)
 	#print_debug("Game state changed to: " + str(GameState.keys()[current_state]))
+
+## Spawns an experience orb at the given position with the given value. [param pos] is the position to spawn the orb at, and [param value] is the value of the orb.
+func spawn_experience_orb(pos: Vector2, value: float) -> void:
+	var xp_orb = preload("res://prefabs/pickups/experience_orb.tscn").instantiate()
+	call_deferred("add_child", xp_orb)
+	# add_child(xp_orb)
+	xp_orb.initialize(pos, value) # 10 as a basic "large XP test"
+	# xp_orb.global_position = pos
+	# xp_orb.set_value(15) # Basic XP test
+	# spawned_xp.append(xp_orb)
+	# print("spawned xp")

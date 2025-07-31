@@ -8,7 +8,7 @@ const SLOW_COLOR = Color.AZURE
 ## i.e., 0.15 = 15% speed reduction.
 func apply(target) -> void:
 	# Reduce the speed of the target
-	target.stats[CharacterData.Stat.SPEED] *= (1.0 - intensity) # Invert the intensity (so 0.15 reduction becomes 0.85 total speed)
+	target.stats.speed *= (1.0 - intensity) # Invert the intensity (so 0.15 reduction becomes 0.85 total speed)
 	# Modulate the target a little for now to show they're slowed.
 	target.modulate = SLOW_COLOR
 	#print("Slowed " + target.name + " for " + str(duration) + "s; speed is now " + str(target.stats[CharacterData.Stat.SPEED]))
@@ -17,5 +17,5 @@ func apply(target) -> void:
 func remove(target) -> void:
 	super.remove(target)
 	target.modulate = Color.WHITE
-	target.reset_speed()
+	target.stats.reset_speed()
 	#print(target.name + " Is no longer slowed! Speed is " + str(target.stats[CharacterData.Stat.SPEED]))

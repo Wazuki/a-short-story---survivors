@@ -23,6 +23,7 @@ EnemyManager="*res://scripts/core/enemy_manager.gd"
 GameController="*res://scripts/core/game_controller.gd"
 DataManager="*res://scripts/core/data_manager.gd"
 WeaponManager="*res://scripts/core/weapon_manager.gd"
+Events="*res://scripts/core/event_bus.gd"
 
 [display]
 

@@ -12,7 +12,7 @@ func _enter_tree() -> void:
 ## If we are already in Knockback, we should add our knockback vectors together rather than discarding the previous velocity.
 func enter(previous_state_path: String = "", data := {}) -> void:
 	#print_debug("Entering " + name + " for " + enemy.name)
-	enemy.animation_player.play(KNOCKBACK)
+	enemy.animation_player.play(anim_prefix + KNOCKBACK)
 
 	# If we were previously in a knocked back state we should add our new knockback velocity instead of overwriting the old one
 	if previous_state_path == KNOCKBACK:

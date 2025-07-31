@@ -1,0 +1,139 @@
+[gd_scene load_steps=6 format=3 uid="uid://dijt8cn3y4a4c"]
+
+[ext_resource type="Texture2D" uid="uid://d0vpsypi0dr87" path="res://assets/UI/vbar-9patch.png" id="1_22h4b"]
+[ext_resource type="Script" uid="uid://dia4y66teu72" path="res://scripts/ui/player_ui.gd" id="1_rerd2"]
+[ext_resource type="Texture2D" uid="uid://cl8la167nd5ps" path="res://assets/UI/vbar-under-blue-9patch.png" id="1_rt4cp"]
+[ext_resource type="Texture2D" uid="uid://c3tkhs8i6v4ew" path="res://assets/UI/vbar-under-yellow-9patch.png" id="2_rt4cp"]
+[ext_resource type="Texture2D" uid="uid://xhk4j7cvu7bh" path="res://assets/UI/vbar-yellow-9patch.png" id="3_rerd2"]
+
+[node name="PlayerUIContainer" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1720.0
+offset_bottom = -680.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_rerd2")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"Margin8Px"
+
+[node name="Panel" type="Panel" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"Margin8Px"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/Panel/MarginContainer"]
+layout_mode = 2
+
+[node name="LevelLabel" type="RichTextLabel" parent="MarginContainer/Panel/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.15
+text = "Level: 1"
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HBoxLabels" type="HBoxContainer" parent="MarginContainer/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.15
+
+[node name="Spacer3" type="Control" parent="MarginContainer/Panel/MarginContainer/VBoxContainer/HBoxLabels"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.25
+
+[node name="HPLabel" type="RichTextLabel" parent="MarginContainer/Panel/MarginContainer/VBoxContainer/HBoxLabels"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "HP"
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Spacer2" type="Control" parent="MarginContainer/Panel/MarginContainer/VBoxContainer/HBoxLabels"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.25
+
+[node name="XPLabel" type="RichTextLabel" parent="MarginContainer/Panel/MarginContainer/VBoxContainer/HBoxLabels"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "XP"
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Spacer4" type="Control" parent="MarginContainer/Panel/MarginContainer/VBoxContainer/HBoxLabels"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.25
+
+[node name="HBoxBars" type="HBoxContainer" parent="MarginContainer/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Spacer" type="Control" parent="MarginContainer/Panel/MarginContainer/VBoxContainer/HBoxBars"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.25
+
+[node name="HPProgressBar" type="TextureProgressBar" parent="MarginContainer/Panel/MarginContainer/VBoxContainer/HBoxBars"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.01
+value = 0.5
+fill_mode = 3
+nine_patch_stretch = true
+stretch_margin_left = 4
+stretch_margin_top = 4
+stretch_margin_right = 4
+stretch_margin_bottom = 4
+texture_under = ExtResource("1_rt4cp")
+texture_progress = ExtResource("1_22h4b")
+
+[node name="Spacer2" type="Control" parent="MarginContainer/Panel/MarginContainer/VBoxContainer/HBoxBars"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.25
+
+[node name="XPProgressBar" type="TextureProgressBar" parent="MarginContainer/Panel/MarginContainer/VBoxContainer/HBoxBars"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.01
+value = 1.0
+fill_mode = 3
+nine_patch_stretch = true
+stretch_margin_left = 4
+stretch_margin_top = 4
+stretch_margin_right = 4
+stretch_margin_bottom = 4
+texture_under = ExtResource("2_rt4cp")
+texture_progress = ExtResource("3_rerd2")
+
+[node name="Spacer3" type="Control" parent="MarginContainer/Panel/MarginContainer/VBoxContainer/HBoxBars"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.25

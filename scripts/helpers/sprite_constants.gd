@@ -2,6 +2,7 @@ extends RefCounted
 class_name SpriteConstants ## Tracks the sprite
 
 #Be kind to yourself future me.
+## @deprecated Should no longer be used due to y-sort implementation. Reintegrated if need be.
 ## For ordering sprites on the Ordering -> z_index proprety. Sprite layering. [br]
 ## Remember[code]z_as_relative[/code] should be set to [i]false[/i] because it adds the parent's z-index to ours.
 enum Z_INDEX { 

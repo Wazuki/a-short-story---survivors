@@ -16,7 +16,7 @@ func _init():
 	#character_database._init()
 	characters = character_database.get_all_characters()
 	# Copy the stat_map to to the stats var for easy access.
-	for c in characters: c.stats = c.stat_map.to_dict()
+	# for c in characters: c.stats = c.stat_map.to_dict()
 
 ## Instantiate all quests, then connect the query_requested signal to Questify.
 func _ready() -> void:

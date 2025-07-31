@@ -49,13 +49,11 @@ func damage_affected_enemies() -> void:
 
 ## Adds any enemy that enters the area to our damaging dict.
 func _on_area_entered(area:Area2D) -> void:
-	if area is Enemy:
+	if area is BaseEnemy:
 		affected_areas.set(area.get_instance_id(), area)
 
 ## When an enemy leaves the area, remove them from the dictionary.
 func _on_area_exited(area:Area2D) -> void:
-	if area is Enemy:
+	if area is BaseEnemy:
 		if affected_areas.has(area.get_instance_id()):
 			affected_areas.erase(area.get_instance_id())
-
-

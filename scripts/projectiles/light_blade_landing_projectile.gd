@@ -6,7 +6,7 @@ func damage_area() -> void:
 	if has_overlapping_areas():
 		#print_debug("Damaging " + str(get_overlapping_areas().size()) + " targets")
 		for e in get_overlapping_areas():
-			if e is Enemy:
+			if e is BaseEnemy:
 				damage_target(e, weapon.knockback_status)
 
 # Free the bullet once the animation finishes.

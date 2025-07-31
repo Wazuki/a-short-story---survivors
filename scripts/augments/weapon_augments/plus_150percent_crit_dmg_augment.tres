@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="AdditiveCritModAugment" load_steps=2 format=3 uid="uid://b0uj4gygijyue"]
+
+[ext_resource type="Script" uid="uid://dy28y0qqbd2an" path="res://scripts/augments/weapon_augments/additive_crit_mod_augment.gd" id="1_e1swg"]
+
+[resource]
+script = ExtResource("1_e1swg")
+crit_mod_increase = 1.5
+metadata/_custom_type_script = "uid://dy28y0qqbd2an"

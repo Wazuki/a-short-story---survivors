@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="MultiplicativeCooldownAugment" load_steps=2 format=3 uid="uid://dcm3myvmsve1j"]
+
+[ext_resource type="Script" uid="uid://cn55t34g7f8be" path="res://scripts/augments/weapon_augments/multiplicative_cooldown_augment.gd" id="1_p5ryr"]
+
+[resource]
+script = ExtResource("1_p5ryr")
+cooldown_modifier = 0.875
+metadata/_custom_type_script = "uid://cn55t34g7f8be"

@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="WeaponAugment" load_steps=2 format=3 uid="uid://8kkcjqip2q78"]
+
+[ext_resource type="Script" uid="uid://dwqhjwgdxe6sg" path="res://scripts/augments/weapon_augments/weapon_augment.gd" id="1_ilcgg"]
+
+[resource]
+script = ExtResource("1_ilcgg")
+metadata/_custom_type_script = "uid://dwqhjwgdxe6sg"

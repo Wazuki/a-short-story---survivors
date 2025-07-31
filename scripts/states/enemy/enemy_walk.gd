@@ -12,7 +12,7 @@ func _enter_tree() -> void:
 func enter(_previous_state_path: String = "", _data := {}) -> void:
 	enemy.update_move_dir()
 	flip_sprite(enemy.move_dir)
-	enemy.animation_player.play(WALK)
+	enemy.animation_player.play(anim_prefix + WALK)
 
 ## Updates the enemy's move direction based on the global frame count.
 func _process(_delta: float) -> void:
@@ -29,7 +29,7 @@ func physics_update(delta) -> void:
 	# 	enemy.avoidance_dir.move_toward(Vector2.ZERO, get_physics_process_delta_time()) # Move the avoidance Vector2 towards zero.
 	# 	print_debug("avoid :(")
 
-	enemy.velocity = enemy.move_dir * enemy.stats.get(CharacterData.Stat.SPEED) * delta
+	enemy.velocity = enemy.move_dir * enemy.stats.speed * delta
 	if enemy.velocity.length() > 0:
 		enemy.move()
 	# else:
