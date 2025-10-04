@@ -37,15 +37,7 @@ target_type = 4
 damage = 4.0
 weapon_range = 100.0
 speed = 600.0
-projectile_count = 1
 cooldown = 3.0
-crit_chance = 0.0
-crit_mod = 0.0
-unique_level_augments = {
-3: [],
-5: [],
-7: []
-}
-tags = Array[int]([1, 5, 9, 12, 18])
+tags = Array[int]([2, 6, 10, 13, 19])
 weapon_scene = ExtResource("5_f2x71")
 projectile_scene_map = SubResource("Resource_kxpvp")

@@ -1,0 +1,102 @@
+[gd_resource type="SpriteFrames" load_steps=11 format=3 uid="uid://ciw3pibvjobbq"]
+
+[ext_resource type="Texture2D" uid="uid://l6vahdo5gtxr" path="res://assets/sprites/world/tilesets/winlu_spaceship_tileset/characters/!Spaceship_decoration_signs.png" id="1_di3c5"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ve1u6"]
+atlas = ExtResource("1_di3c5")
+region = Rect2(288, 192, 48, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1xm1i"]
+atlas = ExtResource("1_di3c5")
+region = Rect2(336, 192, 48, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3iowr"]
+atlas = ExtResource("1_di3c5")
+region = Rect2(384, 192, 48, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ifwen"]
+atlas = ExtResource("1_di3c5")
+region = Rect2(0, 288, 48, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3vjlu"]
+atlas = ExtResource("1_di3c5")
+region = Rect2(48, 288, 48, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cap70"]
+atlas = ExtResource("1_di3c5")
+region = Rect2(96, 288, 48, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2xbu7"]
+atlas = ExtResource("1_di3c5")
+region = Rect2(0, 192, 48, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d5ch1"]
+atlas = ExtResource("1_di3c5")
+region = Rect2(48, 192, 48, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tf0lg"]
+atlas = ExtResource("1_di3c5")
+region = Rect2(96, 192, 48, 96)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ve1u6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1xm1i")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3iowr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1xm1i")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ve1u6")
+}],
+"loop": true,
+"name": &"elevator",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ifwen")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3vjlu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cap70")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3vjlu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ifwen")
+}],
+"loop": true,
+"name": &"flickering_sign",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2xbu7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d5ch1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tf0lg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d5ch1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2xbu7")
+}],
+"loop": true,
+"name": &"security",
+"speed": 8.0
+}]

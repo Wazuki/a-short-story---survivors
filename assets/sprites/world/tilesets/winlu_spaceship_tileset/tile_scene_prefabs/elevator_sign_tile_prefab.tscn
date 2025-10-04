@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://571n8hj1wlsu"]
+
+[ext_resource type="SpriteFrames" uid="uid://ciw3pibvjobbq" path="res://assets/sprites/world/tilesets/winlu_spaceship_tileset/tile_scene_prefabs/signs_animated_sprite.tres" id="1_0kug6"]
+
+[node name="AnimatedSign" type="Node2D"]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -24)
+sprite_frames = ExtResource("1_0kug6")
+animation = &"elevator"
+autoplay = "elevator"
+frame_progress = 0.85552096

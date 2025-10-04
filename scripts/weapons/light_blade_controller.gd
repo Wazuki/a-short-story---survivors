@@ -56,7 +56,7 @@ func slash() -> void:
 
 		%Slash.play()
 		light_blade_projectile.damage = damage
-		light_blade_projectile.scale = weapon_scale
+		light_blade_projectile.scale = weapon_scale * scale_multiplier
 		light_blade_projectile.cause_knockback = false
 
 		# Adjust our rotation to account for new slash direction.

@@ -1,0 +1,8 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://bq5mjqpxxe4lr"]
+
+[ext_resource type="Script" uid="uid://bwdogbqoxxpt2" path="res://scripts/augments/weapon_augments/generic/damage_generic_augment.gd" id="1_ss1ac"]
+
+[resource]
+script = ExtResource("1_ss1ac")
+name = "Damage Augment"
+tags = Array[int]([0])

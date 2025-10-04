@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://b0j786a5m7kq2"]
+
+[ext_resource type="PackedScene" uid="uid://2rrsmkjxcdti" path="res://assets/sprites/world/tilesets/winlu_spaceship_tileset/tile_scene_prefabs/elevator_door_tile_prefab.tscn" id="1_m80wa"]
+
+[node name="AnimatedSign" instance=ExtResource("1_m80wa")]
+
+[node name="AnimatedSprite2D" parent="." index="0"]
+animation = &"door_inaccessible"
+autoplay = "door_inaccessible"
+frame_progress = 0.0

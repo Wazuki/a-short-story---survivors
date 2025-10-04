@@ -16,7 +16,6 @@ metadata/_custom_type_script = "uid://besfugoahx8v7"
 [sub_resource type="Resource" id="Resource_64xsq"]
 script = ExtResource("5_7ghqv")
 duration = 9.22337e+18
-intensity = 0.0
 metadata/_custom_type_script = "uid://bp05hgd6xgrc4"
 
 [sub_resource type="Resource" id="Resource_anldd"]
@@ -27,10 +26,6 @@ metadata/_custom_type_script = "uid://b1tlgo1r80ody"
 
 [resource]
 script = ExtResource("1_2hmb7")
-inner_ring_scale = Vector2(0.65, 0.65)
-max_inner_ring_scale = Vector2(1.15, 1.15)
-overhaul_growth_rate = Vector2(0.3, 0.3)
-max_scale = Vector2(3, 3)
 shield_cooldown = 2.0
 slow_status = SubResource("Resource_anldd")
 shield_status = SubResource("Resource_64xsq")
@@ -39,19 +34,10 @@ description = "Spinning waldos form an area of constant damage, slapping and slo
 icon = ExtResource("1_7yr2a")
 level_up_texts = Array[String](["Increased damage and size.", "Increased damage frequency.", "Slow enemies on hit.", "Inner core deals increased damage.", "Increased damage frequency and shield effect.", "Signature: Burst Mode."])
 weapon_type = 2
-target_type = 0
 damage = 10.0
 weapon_range = 40.0
 speed = 1.571
-projectile_count = 1
 cooldown = 0.5
-crit_chance = 0.0
-crit_mod = 0.0
-unique_level_augments = {
-3: [],
-5: [],
-7: []
-}
-tags = Array[int]([3, 11, 15, 18])
+tags = Array[int]([4, 12, 16, 19])
 weapon_scene = ExtResource("2_xdenm")
 projectile_scene_map = SubResource("Resource_1tffj")

@@ -19,3 +19,8 @@ signal player_defeated
 # Enemy Signals
 signal enemy_damaged(damage: float)
 signal enemy_defeated(enemy)
+
+# Leveling Signals
+# signal level_up_screen_requested
+# signal milestone_level_reached(weapon)
+# signal level_up_screen_closed

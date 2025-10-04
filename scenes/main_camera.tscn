@@ -14,7 +14,7 @@ script = ExtResource("1_2g2oe")
 
 [node name="MainCamera" type="Camera2D" parent="."]
 unique_name_in_owner = true
-zoom = Vector2(3.5, 3.5)
+zoom = Vector2(2, 2)
 process_callback = 0
 limit_left = 0
 limit_top = 0

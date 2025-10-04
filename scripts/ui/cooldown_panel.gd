@@ -31,4 +31,4 @@ func begin_attack_sequence() -> void:
 	%CooldownProgressBar.visible = false
 	%FiringText.visible = true
 
-func update_level_text(level: int) -> void: %LevelText.text = "Level: " + str(level)
+func update_level_text(weapon: Weapon) -> void: %LevelText.text = "Level: " + str(weapon.level)

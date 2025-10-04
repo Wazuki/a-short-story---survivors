@@ -25,15 +25,7 @@ target_type = 5
 damage = 25.0
 weapon_range = 300.0
 speed = 50.0
-projectile_count = 1
 cooldown = 2.0
-crit_chance = 0.0
-crit_mod = 0.0
-unique_level_augments = {
-3: [],
-5: [],
-7: []
-}
-tags = Array[int]([4, 6, 15, 17])
+tags = Array[int]([5, 7, 16, 18])
 weapon_scene = ExtResource("4_xr2rj")
 projectile_scene_map = SubResource("Resource_xalo1")

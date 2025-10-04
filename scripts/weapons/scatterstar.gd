@@ -92,6 +92,6 @@ func cause_disorient() -> bool:
 ## Healers the player on hit if applicable to the weapon's current level and unlocks.
 func heal_on_hit() -> bool:
 	if level >= HEALING_LEVEL: 
-		GameController.player.heal_damage(heal_per_hit)
+		#GameController.player.heal_damage(heal_per_hit)
 		return true
 	return false

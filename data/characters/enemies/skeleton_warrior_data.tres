@@ -9,8 +9,6 @@ script = ExtResource("3_dv8id")
 max_health = 50.0
 armor = 0.5
 speed = 60.0
-phys = 0.0
-mag = 0.0
 metadata/_custom_type_script = "uid://yduxt1ihgr3l"
 
 [resource]
@@ -18,12 +16,7 @@ script = ExtResource("1_81wdi")
 xp_value = 5
 enemy_scale = Vector2(0.75, 0.75)
 health_drop_chance = 0.01
-contact_damage = 1.0
-attack_range = 0.0
-attack_damage = 0.0
-attack_cooldown = 0.0
 prefab = ExtResource("1_drlch")
 character_name = "Skeleton Warrior"
-description = ""
 stats = SubResource("Resource_eeqcq")
 metadata/_custom_type_script = "uid://i6r3ce075a8n"

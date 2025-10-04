@@ -14,6 +14,7 @@ enum TargetType { NONE, CLOSEST, HIGHEST_HP, RANDOM, CONTINUOUS, BIGGEST_CLUSTER
 ## [b]Target:[/b] single_target, multi_target, aoe[br]
 ## [b]Scaling Type:[/b] phys, mag, hybrid[br]
 enum Tag {
+	ANY, # Used for generic augments that can apply to any weapon.
 	MELEE, PROJECTILE, ORBITAL, AURA, SUMMON,
 	BURST, DOT, PIERCE, BOUNCE, KNOCKBACK,
 	SLOW_FIRE, RAPID_FIRE, RAMP_UP,

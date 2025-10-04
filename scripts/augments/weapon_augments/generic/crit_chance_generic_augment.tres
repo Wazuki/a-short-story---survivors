@@ -1,0 +1,8 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://dvs751l5im0jf"]
+
+[ext_resource type="Script" uid="uid://caps5gymuupug" path="res://scripts/augments/weapon_augments/generic/crit_chance_generic_augment.gd" id="1_bgsjf"]
+
+[resource]
+script = ExtResource("1_bgsjf")
+name = "Critical Chance Augment"
+tags = Array[int]([0])

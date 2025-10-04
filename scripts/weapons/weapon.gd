@@ -32,7 +32,7 @@ var cooldown: float ## The cooldown of the weapon (how often it can attack)
 var crit_chance: float ## The base critical chance of the weapon.
 var crit_mod: float ## The base critical damage modifier of the weapon.
 var weapon_scale: Vector2 = Vector2.ONE ## The scale of the weapon. Used for scaling the weapon's size.
-var level_up_augments ## The augments that will be applied to the weapon on each level. Indexed at level -2 
+var level_up_augments ## @Deprecated. May be used in the future for milestones. See also [unique_level_augments].[br] The augments that will be applied to the weapon on each level. Indexed at level -2 
 
 # UI Elements
 var cooldown_timer: Timer
@@ -51,10 +51,10 @@ var projectile_scenes: Dictionary = {} ## Dictionary of packed scenes for the we
 
 # Level Up Bonuses/Multipliers
 var damage_multiplier: float = 1.0 ## The multiplier for the damage of the weapon. Effective damage = damage * damage_multiplier
-var cast_speed_multiplier: float = 1.0 ## The multiplier for the cast speed of the weapon. Effective cooldown = cooldown / cast_speed_multiplier
-var scale_multiplier: float = 1.0 ## The multiplier for the scale of the weapon. Effective scale = weapon_scale * scale_multiplier
-var duration_multiplier: float = 1.0 ## The multiplier for the duration of the weapon's effects. Effective duration = duration * duration_multiplier
-var range_multiplier: float = 1.0 ## The multiplier for the range of the weapon. Used for ranged weapons that only fire when an enemy enters the range collider. Effective range = weapon_range * range_multiplier
+var cast_speed_multiplier: float = 1.0 ## The multiplier for the cast speed of the weapon. Effective cooldown = cooldown / cast_speed_multiplier TODO
+var scale_multiplier: float = 1.0 ## The multiplier for the scale of the weapon. Effective scale = weapon_scale * scale_multiplier TODO
+var duration_multiplier: float = 1.0 ## The multiplier for the duration of the weapon's effects. Effective duration = duration * duration_multiplier TODO
+var range_multiplier: float = 1.0 ## The multiplier for the range of the weapon. Used for ranged weapons that only fire when an enemy enters the range collider. Effective range = weapon_range * range_multiplier TODO
 
 ## See [member WeaponData.unique_weapon_augments] for more information on the weapon data.
 var unique_level_augments: Dictionary = {} 
@@ -72,7 +72,7 @@ signal fire
 signal critical_hit
 #signal create_cooldown_panel
 signal begin_attack_sequence
-signal gained_level(value)
+signal gained_level(weapon: Weapon)
 
 const OVERHAUL_LEVEL = 7
 
@@ -85,7 +85,7 @@ func initialize(data: WeaponData) -> void:
 	description = data.description
 	icon = data.icon
 	level_up_texts = data.level_up_texts
-	level_up_augments = data.level_up_augments.duplicate(true) # Duplicate to prevent modifying the original data along with a deep copy to preserve each object in the array.
+	# level_up_augments = data.level_up_augments.duplicate(true) # Duplicate to prevent modifying the original data along with a deep copy to preserve each object in the array.
 
 	damage = data.damage
 	speed = data.speed
@@ -93,6 +93,7 @@ func initialize(data: WeaponData) -> void:
 	cooldown = data.cooldown
 	crit_chance = data.crit_chance
 	crit_mod = data.crit_mod
+	if crit_mod == 0.0: crit_mod = 1.0 # Set the default crit damage modifier to 1.0 to represent 100% damage so crits don't deal less
 
 	weapon_range = data.weapon_range
 	target_type = data.target_type as TargetType
@@ -141,8 +142,9 @@ func instantiate_projectile_by_key(key: SceneKey, spawn_pos: Vector2, index: Spr
 ## Level up the weapon - increase the new level, emit the signal indicating our new level, and update the weapon with all augments from the data.
 func level_up() -> void:
 	level += 1
-	gained_level.emit(level)
+	gained_level.emit(self)
 	# Check to see if our new level has any augments to apply to the weapon.
+	# TODO - this should probably be used for milestone augments maybe? See also WeaponManager._on_weapon_level_up
 	if level > 1: # Level 1 is the base level and doesn't have any augments.
 		#if level_up_augments == null: print_debug("No augments found for " + name + " at level " + str(level))
 		if level_up_augments == null or level_up_augments.size() == 0: 
@@ -157,7 +159,7 @@ func level_up() -> void:
 
 
 	
-# ## Return the level up augments from the weapon data. This is used for level up affects applied to a weapon.[br]
+# ## Return the level up augments from the weapon data. This is used for level up effects applied to a weapon.[br]
 # ## Pass in the weapons' new level. A level one or zero will return an empty array.[br]
 # ## Internally, the augments for level [i]n[/i] is at index([i]n[/i]-2).
 # func get_level_up_augments(current_level: int) -> Array[WeaponAugment]:
@@ -171,8 +173,11 @@ func level_up() -> void:
 ## Updates the target based on the targetting type. Requires any overriding derived classes to call super._process!()
 func _process(_delta: float) -> void:
 	if GameController.global_frame_count % FRAME_UPDATE_OFFSET == 0:
-		if target_type == TargetType.CLOSEST: get_closest_target()
-		elif target_type == TargetType.HIGHEST_HP: get_highest_hp_target()
+		match target_type:
+			TargetType.CLOSEST: get_closest_target()
+			TargetType.HIGHEST_HP: get_highest_hp_target()
+		#if target_type == TargetType.CLOSEST: get_closest_target()
+		#elif target_type == TargetType.HIGHEST_HP: get_highest_hp_target()
 
 	# Cleans up the enemies_in_range array every so often to clear out dead enemies. TODO - consider signals.
 	if GameController.global_frame_count % WeaponManager.ENEMY_CLEANUP_FRAME_OFFSET == 0 and not enemies_in_range.is_empty(): 
@@ -276,7 +281,7 @@ func remove_enemy(instance_id: int) -> void:
 func reset_timer() -> void:
 	# print(cooldown_timer)
 	cooldown_timer.stop()
-	cooldown_timer.wait_time = cooldown
+	cooldown_timer.wait_time = (cooldown / cast_speed_multiplier)
 	ready_to_fire = false
 	
 ## Automatically resets the cooldown timer (if stopped), sets [ready_to_fire] to false and emits the fire signal to notify listeners.
@@ -284,7 +289,7 @@ func fire_weapon() -> void:
 	# print_debug(get_parent().name + " is firing!")
 	if cooldown_timer.is_stopped():
 		ready_to_fire = false
-		cooldown_timer.wait_time = cooldown # Reset the cooldown timer to the actual cooldown in case we leveled up.
+		cooldown_timer.wait_time = (cooldown / cast_speed_multiplier) # Reset the cooldown timer to the actual cooldown in case we leveled up, taking into account our new cast_speed_multiplier.
 		cooldown_timer.start()
 		fire.emit()
 	# print_debug("fire")
@@ -294,13 +299,15 @@ func _on_weapon_timer_timeout() -> void:
 
 ## Handles damage calcs for things like critical hits etc.
 func damage_calc() -> float:
+	var multiplied_damage = damage * damage_multiplier
+
 	if crit_chance == 0:
-		return damage
+		return multiplied_damage
 	elif (randf() <= crit_chance):
 		# print("Crit with " + get_parent().name)
 		critical_hit.emit()
-		return damage * crit_mod
-	else: return damage
+		return multiplied_damage * crit_mod
+	else: return multiplied_damage
 
 ## Update the [%WeaponRange]'s [shape] to match the weapon range.
 func update_weapon_range() -> void:

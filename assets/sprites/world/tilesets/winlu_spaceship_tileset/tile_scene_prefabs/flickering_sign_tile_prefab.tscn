@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://8lq6r6ugtmji"]
+
+[ext_resource type="PackedScene" uid="uid://571n8hj1wlsu" path="res://assets/sprites/world/tilesets/winlu_spaceship_tileset/tile_scene_prefabs/elevator_sign_tile_prefab.tscn" id="1_1662q"]
+
+[node name="AnimatedSign" instance=ExtResource("1_1662q")]
+
+[node name="AnimatedSprite2D" parent="." index="0"]
+animation = &"flickering_sign"
+autoplay = "flickering_sign"
+frame_progress = 0.41481003

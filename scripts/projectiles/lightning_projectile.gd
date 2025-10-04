@@ -111,7 +111,7 @@ func jump_to_next_target() -> void:
 func deal_chain_damage() -> void:
 	#var enemy = current_jump_target as Enemy
 	damage_modifier = weapon.calculcate_chain_modifier(current_chain)
-	damage_target(current_jump_target, weapon.get_stun_effect())
+	damage_target(current_jump_target)# weapon.get_stun_effect())
 	# if is_instance_valid(current_jump_target):
 	# 	var enemy = current_jump_target as Enemy
 

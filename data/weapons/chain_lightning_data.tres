@@ -17,15 +17,10 @@ metadata/_custom_type_script = "uid://besfugoahx8v7"
 [sub_resource type="Resource" id="Resource_x861q"]
 script = ExtResource("6_tnb60")
 duration = 0.2
-intensity = 0.0
 metadata/_custom_type_script = "uid://cjd77krihx0ff"
 
 [resource]
 script = ExtResource("1_cjjkp")
-initial_max_chains = 2
-initial_jump_speed = 0.125
-initial_arc_split_chance = 0.25
-lightning_strike_modulus = 4
 stun_effect = SubResource("Resource_x861q")
 chain_modifiers = {
 2: 0.8,
@@ -44,16 +39,7 @@ weapon_type = 4
 target_type = 3
 damage = 15.0
 weapon_range = 150.0
-speed = 0.0
-projectile_count = 1
 cooldown = 2.75
-crit_chance = 0.0
-crit_mod = 0.0
-unique_level_augments = {
-3: [],
-5: [],
-7: []
-}
-tags = Array[int]([8, 14, 17])
+tags = Array[int]([9, 15, 18])
 weapon_scene = ExtResource("6_ec186")
 projectile_scene_map = SubResource("Resource_505ur")

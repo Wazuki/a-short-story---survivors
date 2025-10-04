@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="GenericAugmentCollection" load_steps=8 format=3 uid="uid://b3u0xf1ryiuqd"]
+
+[ext_resource type="Script" uid="uid://bwewtjhs6i1hc" path="res://scripts/augments/generic_augment.gd" id="1_0ps8i"]
+[ext_resource type="Script" uid="uid://bkdxh6hcg4jgm" path="res://scripts/augments/generic_augment_collection.gd" id="2_1s4xl"]
+[ext_resource type="Resource" uid="uid://bq5mjqpxxe4lr" path="res://scripts/augments/weapon_augments/generic/damage_generic_augment.tres" id="2_b7fnx"]
+[ext_resource type="Resource" uid="uid://gmo4ggxd0q8w" path="res://scripts/augments/weapon_augments/generic/cast_speed_generic_augment.tres" id="2_wmdut"]
+[ext_resource type="Resource" uid="uid://dvs751l5im0jf" path="res://scripts/augments/weapon_augments/generic/crit_chance_generic_augment.tres" id="3_w5qb4"]
+[ext_resource type="Resource" uid="uid://eyb07ghi76jw" path="res://scripts/augments/weapon_augments/generic/crit_mod_generic_augment.tres" id="4_s0wkw"]
+[ext_resource type="Resource" uid="uid://d02diohh0nabn" path="res://scripts/augments/weapon_augments/generic/scale_generic_augment.tres" id="6_w5qb4"]
+
+[resource]
+script = ExtResource("2_1s4xl")
+collection = Array[ExtResource("1_0ps8i")]([ExtResource("2_wmdut"), ExtResource("3_w5qb4"), ExtResource("4_s0wkw"), ExtResource("2_b7fnx"), ExtResource("6_w5qb4")])

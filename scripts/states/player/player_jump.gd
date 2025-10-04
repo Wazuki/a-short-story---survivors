@@ -151,7 +151,7 @@ func move(delta) -> void:
 	else:
 		direction = Input.get_vector("move_left", "move_right", "move_up", "move_down") # Normalized vector that's an aggregate of all currently pressed inputs
 	# Modify the player's velocity based on direction and the player's speed. 
-	player.velocity = direction * player.speed
+	player.velocity = direction * player.stats.speed
 	# Adjust the player's sprite direction based on the velocity lengths along the x direction. No velocity means we keep our current flip.
 	flip_sprite(player.velocity)
 	flip_jump_particles() # Set the scale of the particles to -1 if the player is currently facing left, otherwise set it to the normal 0

@@ -12,7 +12,7 @@ config_version=5
 
 config/name="A Short Story - Survivors"
 run/main_scene="res://scenes/game_scene.tscn"
-config/features=PackedStringArray("4.4", "GL Compatibility")
+config/features=PackedStringArray("4.5", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [autoload]
@@ -24,6 +24,7 @@ GameController="*res://scripts/core/game_controller.gd"
 DataManager="*res://scripts/core/data_manager.gd"
 WeaponManager="*res://scripts/core/weapon_manager.gd"
 Events="*res://scripts/core/event_bus.gd"
+AugmentManager="*res://scripts/augments/augment_manager.gd"
 
 [display]
 
@@ -34,7 +35,7 @@ window/stretch/aspect="expand"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/questify/plugin.cfg")
+enabled=PackedStringArray("res://addons/generic_augment_collection_scanner/plugin.cfg", "res://addons/questify/plugin.cfg")
 
 [global_group]
 

@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://2rrsmkjxcdti"]
+
+[ext_resource type="PackedScene" uid="uid://571n8hj1wlsu" path="res://assets/sprites/world/tilesets/winlu_spaceship_tileset/tile_scene_prefabs/elevator_sign_tile_prefab.tscn" id="1_v43o3"]
+[ext_resource type="SpriteFrames" uid="uid://ict8tw2aye8a" path="res://assets/sprites/world/tilesets/winlu_spaceship_tileset/tile_scene_prefabs/doors_animated_sprite.tres" id="2_mheva"]
+
+[node name="AnimatedSign" instance=ExtResource("1_v43o3")]
+
+[node name="AnimatedSprite2D" parent="." index="0"]
+sprite_frames = ExtResource("2_mheva")
+animation = &"door_closed"
+autoplay = "door_closed"
+frame_progress = 0.69971687

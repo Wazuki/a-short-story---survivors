@@ -1,5 +1,16 @@
 class_name Utils
 
+enum Rarity { COMMON, UNCOMMON, RARE, EPIC, LEGENDARY }
+
+## Translates the Rarity enum to a string for UI display.
+static var rarity_translation_dictionary = { 
+	Rarity.COMMON: "FAMILIAR", 
+	Rarity.UNCOMMON: "UNUSUAL", 
+	Rarity.RARE: "PECULIAR", 
+	Rarity.EPIC: "ARCANE", 
+	Rarity.LEGENDARY: "COSMIC", 
+	}
+
 ## Helper function: replaces any resource-saved text's escaped line breaks with actual line breaks.
 static func replace_line_breaks(s: String) -> String:
 	return s.replace("\\n", "\n")

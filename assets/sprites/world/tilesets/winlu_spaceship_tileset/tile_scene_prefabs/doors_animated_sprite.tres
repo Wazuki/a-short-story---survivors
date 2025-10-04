@@ -1,0 +1,152 @@
+[gd_resource type="SpriteFrames" load_steps=20 format=3 uid="uid://ict8tw2aye8a"]
+
+[ext_resource type="Texture2D" uid="uid://5lr0ad7hxfsl" path="res://assets/sprites/world/tilesets/winlu_spaceship_tileset/characters/!Spaceship_door2.png" id="1_mcnfx"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rcnik"]
+atlas = ExtResource("1_mcnfx")
+region = Rect2(0, 0, 48, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b6kyh"]
+atlas = ExtResource("1_mcnfx")
+region = Rect2(48, 0, 48, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iwrsh"]
+atlas = ExtResource("1_mcnfx")
+region = Rect2(96, 0, 48, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_00830"]
+atlas = ExtResource("1_mcnfx")
+region = Rect2(0, 384, 48, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vj0ps"]
+atlas = ExtResource("1_mcnfx")
+region = Rect2(48, 384, 48, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5ntpt"]
+atlas = ExtResource("1_mcnfx")
+region = Rect2(96, 384, 48, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mcnfx"]
+atlas = ExtResource("1_mcnfx")
+region = Rect2(0, 288, 48, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_21cwm"]
+atlas = ExtResource("1_mcnfx")
+region = Rect2(48, 288, 48, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cnx0c"]
+atlas = ExtResource("1_mcnfx")
+region = Rect2(96, 288, 48, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4sffq"]
+atlas = ExtResource("1_mcnfx")
+region = Rect2(0, 96, 48, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8shsf"]
+atlas = ExtResource("1_mcnfx")
+region = Rect2(48, 96, 48, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_34c7u"]
+atlas = ExtResource("1_mcnfx")
+region = Rect2(96, 96, 48, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rnxi3"]
+atlas = ExtResource("1_mcnfx")
+region = Rect2(0, 192, 48, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fm0p7"]
+atlas = ExtResource("1_mcnfx")
+region = Rect2(48, 192, 48, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7ekwy"]
+atlas = ExtResource("1_mcnfx")
+region = Rect2(96, 192, 48, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5hsjb"]
+atlas = ExtResource("1_mcnfx")
+region = Rect2(0, 288, 48, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rmink"]
+atlas = ExtResource("1_mcnfx")
+region = Rect2(48, 288, 48, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_62wa6"]
+atlas = ExtResource("1_mcnfx")
+region = Rect2(96, 288, 48, 96)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rcnik")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b6kyh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_iwrsh")
+}],
+"loop": true,
+"name": &"door_closed",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_00830")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vj0ps")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5ntpt")
+}],
+"loop": true,
+"name": &"door_inaccessible",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mcnfx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_21cwm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cnx0c")
+}],
+"loop": true,
+"name": &"door_open",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4sffq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8shsf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_34c7u")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rnxi3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fm0p7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7ekwy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5hsjb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rmink")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_62wa6")
+}],
+"loop": false,
+"name": &"door_opening",
+"speed": 16.0
+}]

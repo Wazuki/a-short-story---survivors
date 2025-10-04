@@ -62,6 +62,8 @@ func create_weapon(weapon_type: WeaponEnums.Type) -> Weapon:
 		GameController.player.add_child(new_weapon) # Add the new weapon to the player in the scene tree so it will also call _ready() and follow the player.
 		active_weapons.set(new_weapon.weapon_type, new_weapon) # Add the new weapon to the active weapons list.
 		create_cooldown_panel(new_weapon) # Create a cooldown panel for the weapon.
+		# Also connect to this weapon's level_up signal so we can properly adjust for milestone levels.
+		new_weapon.gained_level.connect(_on_weapon_level_up)
 		return new_weapon
 	else:
 		print_debug("Weapon scene not found for: ", str(weapon_type))
@@ -119,6 +121,9 @@ func is_weapon_valid_level_up_option(t: WeaponEnums.Type) -> bool:
 		if active_weapons[t].level >= MAX_WEAPON_LEVEL: return false
 		return true
 	elif weapon_data[t].unlock_quest == null: return true # TEMPORARY - TODO check if the quest is completed too!
+	elif weapon_data[t].unlock_quest.is_completed(): return true # If the weapon is not active but is a valid option, check if the quest is completed.
+	else: 
+		print_debug("Weapon not active and quest not completed for level up: ", str(t))
 	return false # Currently only weapons the player has "active" (starting weapons) are valid level up options.
 
 ## Instructs the weapon to level up based on the type of weapon passed in. If the weapon is not active it will be instantiated.
@@ -127,7 +132,7 @@ func level_up_weapon(t: WeaponEnums.Type) -> void:
 	if active_weapons.has(t):
 		active_weapons[t].level_up()
 		#print_debug("Leveling up weapon: ", str(active_weapons[t].name))
-		active_weapons[t].gained_level.emit(active_weapons[t].level)
+		active_weapons[t].gained_level.emit(active_weapons[t])
 	elif weapon_data.has(t): # If the weapon is not active but is a vlaid option, instantiate it.
 		create_weapon(t)
 	else:
@@ -140,3 +145,7 @@ func _on_game_state_changed(state: GameController.GameState) -> void:
 		GameController.GameState.GAME_OVER: 
 			reset()
 		_: return # Do nothing for other states.
+
+func _on_weapon_level_up(weapon: Weapon) -> void:
+	if weapon.level % 2 == 1: # If the weapon is at a milestone level, emit the signal to notify the level up UI.
+		print_debug("Weapon reached milestone level: ", weapon.name, " at level: ", weapon.level) # TODO

@@ -1,0 +1,8 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://eyb07ghi76jw"]
+
+[ext_resource type="Script" uid="uid://78peaf2c8y4n" path="res://scripts/augments/weapon_augments/generic/crit_mod_generic_augment.gd" id="1_o73ga"]
+
+[resource]
+script = ExtResource("1_o73ga")
+name = "Critical Modifier Augment"
+tags = Array[int]([0])

@@ -15,11 +15,6 @@ metadata/_custom_type_script = "uid://besfugoahx8v7"
 
 [resource]
 script = ExtResource("2_ydbtc")
-max_range = 750.0
-pierce = 1
-pierce_increase_mod = 2
-double_shot_chance = 0.25
-mini_arrow_scale = Vector2(0.5, 0.5)
 name = "Arrow"
 description = "A single piercing projectile with moderate damage."
 icon = ExtResource("1_j718u")
@@ -29,13 +24,7 @@ target_type = 2
 damage = 50.0
 weapon_range = 250.0
 speed = 400.0
-projectile_count = 1
 cooldown = 2.0
-crit_chance = 0.0
-crit_mod = 0.0
-unique_level_augments = {
-7: []
-}
-tags = Array[int]([1, 7, 13, 18])
+tags = Array[int]([2, 8, 14, 19])
 weapon_scene = ExtResource("3_ydbtc")
 projectile_scene_map = SubResource("Resource_72kjt")

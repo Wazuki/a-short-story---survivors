@@ -35,13 +35,6 @@ weapon_range = 50.0
 speed = 50.0
 projectile_count = 2
 cooldown = 1.75
-crit_chance = 0.0
-crit_mod = 0.0
-unique_level_augments = {
-3: [],
-5: [],
-7: []
-}
-tags = Array[int]([0, 5, 15, 18])
+tags = Array[int]([1, 6, 16, 19])
 weapon_scene = ExtResource("4_4y0dd")
 projectile_scene_map = SubResource("Resource_65t57")
